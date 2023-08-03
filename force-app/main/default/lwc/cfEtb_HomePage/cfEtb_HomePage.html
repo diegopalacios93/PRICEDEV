@@ -1,0 +1,51 @@
+<template>
+            <div class="slds-grid slds-wrap slds-is-relative ">
+            <div if:false={cardLoaded} class="slds-is-absolute vloc-loader_override" style="height: 100%; width: 100%; min-height:50px; background: white; z-index: 99;">
+  <div>
+   <vlocity_cmt-spinner
+      variant="brand"
+      alternative-text="Loading content..."
+      size="medium"
+      theme="slds"
+      ></vlocity_cmt-spinner>
+  </div>
+</div>
+            <template if:false={hasPermission}>
+              You don't have required permissions to view this card.
+            </template>
+            <template if:true={hasPermission}>
+              <template if:true={hasRecords}>
+                        <template for:each={_records} for:item="record" for:index="rindex">
+                            <vlocity_cmt-flex-card-state if:true={record}  key={record._flex.uniqueKey} data-recordid={record.Id} record={record} data-statue="true"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12"  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card slds-p-around_x-small slds-m-bottom_x-small" style="">
+          <div data-style-id="state0element0" class="" data-rindex={rindex} style=""><vlocity_cmt-output-field data-style-id="state0element0_child"     card={card}  record={record}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3E%3Cstrong%3E%3Cspan%20style=%22font-size:%2014pt;%22%3EBienvenido,%20%7BUser.userName%7D%3C/span%3E%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element1" class="slds-col   slds-m-bottom_small" data-rindex={rindex} style=""><vlocity_cmt-action data-style-id="state0element1_child"  tracking-obj={_childCardTrackingObj}   record={record}  card={card}  state-obj={record}  state-action='\{"id":"flex-action-1641481103974","type":"Custom","displayName":"Gestión de Clientes","vlocityIcon":"standard-default","targetType":"Navigation Item","openUrlIn":"Current Window","Navigation Item":{"targetName":"Gestion_de_Cliente"}}'  icon-only="false"  hide-action-icon="true"  display-as-button="true"  button-variant="brand"  theme="slds" ></vlocity_cmt-action>
+      </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                        </template>
+                      </template>
+                      <template if:false={hasRecords}>
+                            <vlocity_cmt-flex-card-state  record={record} data-statue="false"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12"  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card slds-p-around_x-small slds-m-bottom_x-small" style="">
+          <div data-style-id="state0element0" class="" data-rindex={rindex} style=""><vlocity_cmt-output-field data-style-id="state0element0_child"     card={card}  record={record}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3E%3Cstrong%3E%3Cspan%20style=%22font-size:%2014pt;%22%3EBienvenido,%20%7BUser.userName%7D%3C/span%3E%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element1" class="slds-col   slds-m-bottom_small" data-rindex={rindex}>
+        <vlocity_cmt-action data-style-id="state0element1_child"  tracking-obj={_childCardTrackingObj}   record={record}  card={card}  state-obj={record}  state-action='\{"id":"flex-action-1641481103974","type":"Custom","displayName":"Gestión de Clientes","vlocityIcon":"standard-default","targetType":"Navigation Item","openUrlIn":"Current Window","Navigation Item":{"targetName":"Gestion_de_Cliente"}}'  icon-only="false"  hide-action-icon="true"  display-as-button="true"  button-variant="brand"  theme="slds" ></vlocity_cmt-action>
+      </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                      </template>
+            </template>
+            <template if:true={hasError}>
+            {error}
+            </template>
+            
+      <vlocity_cmt-action action-wrapperclass="slds-hide" re-render-flyout class="action-trigger slds-col" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction}>
+      
+      </vlocity_cmt-action>
+  
+            <vlocity_cmt-action class="execute-action" re-render-flyout action-wrapperclass="slds-hide" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction}>
+            
+            </vlocity_cmt-action>
+            </div>
+          </template>

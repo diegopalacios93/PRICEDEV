@@ -1,0 +1,63 @@
+<apex:page controller="ReservaNumero_ctr" >
+<apex:form id="formReserva">
+<apex:pageMessages id="msg" />
+<apex:pageBlock id="blockReserva">
+<apex:pageBlockSection columns="6" rendered="{!procesoReserva}">
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Digite un Numero para su Busqueda" for="Busqueda"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:inputText id="numerobusqueda" value="{!numerobus}"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:commandButton action="{!BuscarNumero}" value="Buscar" id="theButton" rerender="formReserva,tabla"/>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+<apex:pageBlockSection id="generacionNumeros">
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Digite un Numero para generar Reservas" for="Busqueda"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:inputText value="{!numerogen}"/>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+<apex:commandButton action="{!generarNumeros}" value="Generar" id="theButton"/>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+<apex:pageBlockSection id="tablaNumeros">
+<apex:outputPanel id="tabla" layout="block" styleClass="tableContainer">
+                <apex:pageBlockTable var="num" value="{!numerosReserva}" styleclass="floatingHeaderTable">
+                 <apex:column >
+						<apex:facet name="header">
+                            <apex:outputText value="" />
+                                
+                            
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!num.Tomado}"/>
+                    </apex:column>
+         			  
+                    <apex:column >
+						<apex:facet name="header">
+                            <apex:outputText value="Numero" />
+                                
+                            
+                        </apex:facet>
+                        <apex:outputField value="{!num.numero.name}"/>
+                    </apex:column>
+                    <apex:column >
+                    	<apex:facet name="header">
+                            <apex:outputText value="Bloqueado" />
+                        </apex:facet>
+                        <apex:outputField value="{!num.numero.Bloqueado__c}"/>
+                    </apex:column>
+      
+                 
+         
+                </apex:pageBlockTable>
+      
+        </apex:outputPanel>
+</apex:pageBlockSection>
+<apex:commandButton action="{!Reservar}" value="Hacer Reserva" id="theButtonR" disabled="{!enableReserva}"/>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

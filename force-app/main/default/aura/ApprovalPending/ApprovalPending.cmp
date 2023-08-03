@@ -1,0 +1,56 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="getWrapData" access="global" >
+    <aura:attribute name="wp" type="getWrapData.wrapperClass"/>
+    <aura:handler name="init" value="{!this }" action="{!c.init }"/>
+    <lightning:card variant="Narrow" title="Aprobaciones Pendientes" iconName="standard:approval" >
+        <br/>
+        <p class="slds-p-horizontal_small">
+            
+            <aura:if isTrue="{!v.wp.length==0}">
+                <center>
+                    <h1 style="font-size:20px;font-weight:bold;margin-top:5%;">
+                        Actualmente no tienes aprobaciones pendientes
+                    </h1>
+                </center>
+                <aura:set attribute="else">
+                    <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table--striped">
+                        <thead>
+                            <tr>
+                                <th><div class="slds-truncate" title="Estatus">Estatus</div></th>
+                                <th><div class="slds-truncate" title="Objeto">Objeto</div></th>
+                                <th><div class="slds-truncate" title="Registro">Registro</div></th>
+                                <th><div class="slds-truncate" title="Asignado a">Asignado a</div></th>
+                                <th><div class="slds-truncate" title="Nombre del aprobador">Nombre del aprobador</div></th>
+                                <th><div class="slds-truncate" title="Fecha">Fecha</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.wp}" var="wrap" indexVar="idx">
+                                <tr class="slds-hint-parent">
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="{!wrap.Status}">{!wrap.Status}</div>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="{!wrap.RecordObject}">{!wrap.RecordObject}</div>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <a href="{! '/lightning/r/Knowledge__kav/'+wrap.RecordId+'/view' }">{!wrap.RecordName}</a>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="{!wrap.AssignedToName}">{!wrap.AssignedToName}</div>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="{!wrap.ApproverName}">{!wrap.ApproverName}</div>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="{!wrap.CreatedDate}">{!wrap.CreatedDate}</div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                    
+                </aura:set>
+            </aura:if>
+        </p>
+    </lightning:card>
+</aura:component>

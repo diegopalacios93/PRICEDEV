@@ -1,0 +1,21 @@
+<!-- sldsValidatorIgnore -->
+<!--
+  @description       : 
+  @author            : Harlinsson Chavarro (HCH)
+  @group             : 
+  @last modified on  : 01-20-2022
+  @last modified by  : j.martinez.mercado
+  Modifications Log 
+  Ver   Date         Author                      Modification
+  1.0   03-09-2021   Harlinsson Chavarro (HCH)   Initial Version
+-->
+<template>
+  <div class="slide_container">
+      <template for:each={tiles} for:item="tile">
+          <div class="tile_container" key={tile.key}>
+              <img class="slide_image" key={tile.key} src={tile.src} alt={tile.title} onclick={openImg}>
+              <h1 class="titulo" key={tile.title}>{tile.title}</h1>
+          </div> 
+      </template>      
+  </div>
+</template>

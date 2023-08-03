@@ -1,0 +1,94 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_AdicionBolsaCompartida_ctr">   
+    <script>        
+    	function seleccion(sel){
+            seleccionJS(sel.value);
+        }    
+    	function buscarProducto(id,id2,url){
+    		elementObj		=	document.getElementById(id);
+    		elementObjH		=	document.getElementById(id2);    		
+			ventana			=	window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+    	}
+    	function asignar(elId,elNombre){
+            elementObjH.value	=	elId;
+            elementObj.value	=	elNombre;                
+        }    
+    </script>
+	<apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>    
+		
+		<apex:pageBlock title="Adición bolsa compartida" >
+			<apex:pageBlockSection title="{!$Label.LTE_Cambio_Plan_Lineas}" id="_bloqueBuscar" columns="2" >
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput">
+						<label for="numConexiones" style="font: bold 11px Verdana;">{!$Label.LTE_Cambio_Plan_Num_Conexion}</label>
+						<apex:inputText value="{!numerosConexion}" id="numConexiones" />
+						<apex:commandButton value="{!$Label.Buscar}" action="{!buscar}" rendered="{!blnBuscar}" status="loading" reRender="idForm, TheMessages"/>
+					</apex:outputPanel>
+					
+					<apex:outputPanel id="_panelNumCaso" styleClass="lookupInput">
+						<label for="numCaso" style="font: bold 11px Verdana;">{!$Label.LTE_Etiqueta_Caso} </label>
+						<apex:outputText value="{!numeroCaso}" id="numCaso"/>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+			
+			<apex:pageBlockSection title="Línea padre" columns="1" id="_bloqueHomogeneos" rendered="{!blnBloqueServicios}">
+				<apex:pageBlockSection columns="2" id="_bloqueBolsaRecurrente" >					
+                	<apex:outputPanel id="_panelLineaPadreBolsaCompartida" styleClass="lookupInput" >
+						<label for="_panelLineaPadreBolsaCompartida" style="font: bold 11px Verdana;">Activo (AC) padre: </label>
+						<apex:inputText value="{!iLupas.servicioPadre}" id="servicioPadre" style="width:170px" onchange="seleccion(this)"
+                                        styleClass="textol" /> <apex:image style="cursor:pointer;" value="/s.gif"
+                                        styleClass="lookupIcon"
+                                        onClick="buscarProducto('{!$Component.servicioPadre}','{!$Component.servicioPadreId}','{!ServicioPadreInfo}')" />
+					</apex:outputPanel>
+                	<apex:inputHidden value="{!iLupas.servicioPadreId}" id="servicioPadreId" /> 
+				</apex:pageBlockSection> 
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockSection columns="1" id="_bloqueServicios" rendered="{!blnBloqueServicios}">
+				<apex:pageBlockSection title="Servicios - Página {!pageNumber} - Total Registros: {!intCantidadReg}" id="_seccionServicios" columns="1">
+					<apex:pageBlockTable value="{!lstActivosWrapper}" var="aw">
+						<apex:column width="25px">
+							<apex:facet name="header"> 
+		                        <apex:inputCheckbox value="{!blnAllChecked}">
+		                            <apex:actionSupport event="onclick" action="{!seleccionarTodos}" rerender="_seccionServicios,_botonera"/>
+		                         </apex:inputCheckbox>
+		                     </apex:facet>
+							<apex:inputCheckbox value="{!aw.checked}" disabled="{!aw.desactivado}" />
+						</apex:column>
+						<apex:column value="{!aw.activo.Name}" headerValue="Servicio"/>
+						<apex:column value="{!aw.activo.NumeroConexion__c}" headerValue="Número de Conexión"/>
+						<apex:column value="{!aw.activo.Contrato__c}" headerValue="Número de Contrato"/>
+						<apex:column value="{!aw.activo.Contrato__r.LTE_Contrato_negociado__c}" headerValue="Contrato Negociado"/>
+						<apex:column headerValue="OC's en vuelo">
+							<apex:repeat value="{!aw.activo.Operaciones_Comerciales__r}" var="oc">
+									<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+									<apex:outputText value=": {!oc.Estado__c} " />
+									<apex:outputText value=": {!oc.TOPP__r.TipodeOperacionporplan__c}" />
+									<apex:outputText value=" {!oc.Categoria__c}" /><br />
+							</apex:repeat>
+						</apex:column>						
+					</apex:pageBlockTable>
+					
+					<apex:panelGrid columns="4" id="_botonera">
+						<apex:commandLink action="{!first}" rendered="{!blnmostrarPrimero}" reRender="_seccionServicios,_botonera">Primero</apex:commandlink>
+						<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="_seccionServicios,_botonera">Anterior</apex:commandlink>
+						<apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="_seccionServicios,_botonera">Siguiente</apex:commandlink>
+						<apex:commandLink action="{!last}" rendered="{!blnmostrarUltimo}" reRender="_seccionServicios,_botonera">Último</apex:commandlink>
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+	        </apex:pageBlockSection>
+			
+	        <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.LTE_Guardar}" action="{!guardar}" rendered="{!blnBotonGuardar}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.Regresar}" action="{!regresar}" rendered="{!blnBotonRegresar}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.Cerrar}" rendered="{!blnBotonCerrar}" onClick="window.close();"/>
+			</apex:pageBlockButtons> 
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

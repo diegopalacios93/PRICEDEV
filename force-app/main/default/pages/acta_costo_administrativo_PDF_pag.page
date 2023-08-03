@@ -1,0 +1,25 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Actas_de_contrato__c" applyBodyTag="false" extensions="acta_costo_administrativo_PDF_ctr" renderAs="pdf">
+<head>
+<style type="text/css">         
+    .contenido_14px {
+       font-weight: bold;
+       font-size: 13px;
+    }
+    .contenido_14px_NB {       
+       font-size: 13px;
+    }
+    .contenido_13px_NB {       
+       font-size: 13px;
+    }
+    .contenido_13px {
+       font-weight: bold;
+       font-size: 13px;
+    }
+    @page {  
+    size: A4 landscape;
+    margin-right: 8%;    
+    } 	  
+</style>
+</head>    
+  <apex:outputtext value="{!htmlScript}" escape="false" id="htmlScript"/>           
+</apex:page>

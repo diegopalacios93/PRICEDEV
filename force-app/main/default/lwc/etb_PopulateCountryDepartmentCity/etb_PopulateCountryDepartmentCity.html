@@ -1,0 +1,26 @@
+<!--
+  @description       : 
+  @author            : gtorres@labsxd.com
+  @group             : 
+  @last modified on  : 02-21-2022
+  @last modified by  : lviacava@labsxd.com
+-->
+<template>
+    <div class="slds-grid slds-gutters slds-p-right_x-small">
+        <div class="slds-p-left_small slds-size_4-of-12" if:true={displayCountry}>
+            <lightning-combobox class="comboCountryClass" label="País" name="country" value={optionValueCountry} placeholder="Seleccione..."
+                options={optionsCountry} onchange={comboChangeCountry} required>
+            </lightning-combobox>
+        </div>
+        <div class="slds-p-left_small slds-size_4-of-12" if:true={displayState}>            
+            <lightning-combobox class="comboStateClass" label="Departamento" name="state" value={optionValueState} placeholder="Seleccione..."
+                options={optionsState} onchange={comboChangeState} required>
+            </lightning-combobox>
+        </div>
+        <div class="slds-p-left_small slds-size_4-of-12" if:true={displayCity}>
+            <lightning-combobox class="comboCityClass" label="Municipio" name="city" value={optionValueCity} placeholder="Seleccione..."
+                options={optionsCity} onchange={comboChangeCity} required>
+            </lightning-combobox>
+        </div>
+    </div>
+</template>

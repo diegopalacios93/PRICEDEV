@@ -1,0 +1,41 @@
+.testing {
+  margin-top: 5rem;
+  width: 40%;
+  height: 85vh;
+}
+
+.modal-iframe{
+  background: #fff !important;
+  overflow:hidden;
+  height:100%;
+  width:100%;
+  border:none;
+  z-index: 5050 !important;
+  padding: 0;
+}
+
+.iframe-container {
+  z-index: 5050 !important;
+  position: relative;
+  padding-top: 100%;
+  overflow: hidden;
+  width: 100%;
+  height:100%;
+}
+
+.iframe-container iframe{
+  border: 0;
+  height: -webkit-fill-available;
+  background: white;
+}
+
+/* Then style the iframe to fit in the container div with full height and width */
+iframe.responsive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+}

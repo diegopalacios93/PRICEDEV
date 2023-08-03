@@ -1,0 +1,4 @@
+"Name","Valor__c"
+"DCCedula Extranjeria","3"
+"DCCédula de ciudadanía","1"
+"DCNIT","1"

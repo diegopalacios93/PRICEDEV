@@ -1,0 +1,10 @@
+<apex:page controller="GenerarCSV_SemaforoContrato_ctr" showHeader="false" lightningStylesheets="true">
+    <apex:pageBlock title="Exportando contratos del semáforo...">
+        <apex:form id="idForm2" >
+            <apex:commandButton value="Regresar al semáforo" action="{!regresar}"/>              
+        </apex:form>
+    </apex:pageBlock>
+    <apex:pageBlock >
+        <apex:iframe src="{!pageUrlExport}" scrolling="falses" id="theIframe" frameborder="false" height="0"/>
+    </apex:pageBlock>    
+</apex:page>

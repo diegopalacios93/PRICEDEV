@@ -1,0 +1,24 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Opportunity" action="{!mostrarMensaje}" extensions="LTE_GenerarOC_ctr" lightningStylesheets="true">
+<apex:pagemessages id="TheMessages"/>
+	<apex:form id="idForm">
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="Generando..."/>
+			</apex:facet>
+		</apex:actionStatus>        
+        <apex:pageBlock title="">            
+            <apex:pageBlockButtons location="top" style="align:center">                
+                    <!-- <apex:commandButton value="Generar OCs" onclick="GenerarOCs(this)"/> -->
+                    <apex:outputPanel rendered="{!blnMostrarBoton}"><button type="button" class="btn" onclick="GenerarOCs(this)" style="padding: 4px 3px;">Generar OCs</button></apex:outputPanel>
+                    <apex:actionFunction name="GenerarOCsJs" action="{!crearOCs}" rendered="{!blnMostrarBoton}" status="loading" reRender="idForm,TheMessages" />
+                    <apex:commandButton value="Cerrar" action="{!cerrarPagina}" style="padding: 4px 3px;"/>                
+            </apex:pageBlockButtons>            
+        </apex:pageBlock>        
+	</apex:form>
+	<script>
+	function GenerarOCs(t){
+		t.disabled = true;
+		GenerarOCsJs();
+	}
+	</script>
+</apex:page>

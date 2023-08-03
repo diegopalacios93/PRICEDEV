@@ -1,0 +1,198 @@
+<apex:page docType="html-5.0" controller="AsignacionLinea_ctr"
+    id="pagina">
+    <script src="{!URLFOR($Resource.libraryjs,'angular.min.js')}"/>
+    <style type="text/css">
+        select.ng-invalid-required { background-color:lightgray; }
+        .divCentrar{width: 100% ; text-align: center;}
+    </style>
+    
+    
+    <apex:pageMessages id="msg" />
+
+<apex:sectionHeader title="{!tipoOperacion.Name}" subtitle="{!tipoOperacion.TipodeOperacionporplan__c}"/>
+
+<div ng-app="ngApp" ng-controller="lineas" class="bPageBlock">
+<div class="message errorM3" role="alert" ng-show="errorApex != null">{{errorApex}}</div>
+
+<div class="divCentrar">
+<button ng-click="consultar()" class="btn">Consultar</button>
+<input type="text" ng-model="lineas" name='lineasForm'/>
+</div>
+    
+    <form name="formLineas">
+    <table class="list">    
+    <tr>
+        <th></th>
+        <th class="headerRow">{!$ObjectType.Linea__c.fields.Name.label}</th>
+        <!-- <th class="headerRow">Numero de Cuenta</th> -->
+        <!--<th class="headerRow">{!$ObjectType.Linea__c.fields.Linea_ETB__c.label}</th>-->
+        <th class="headerRow">{!$ObjectType.Linea__c.fields.Tipo__c.label}</th>
+        <th class="headerRow">Cuenta Facturación</th>
+        <!-- <th class="headerRow">{!$ObjectType.ActivoETB__c.fields.CuentaFacturacion__c.label}</th> -->
+        <th class="headerRow">External Id</th>
+        <th class="headerRow">Validación</th>
+    </tr>
+
+
+    <tr ng-repeat="l in lineasInfo.correcto">
+        <td class="dataCell">{{$index+1}}</td>
+        <td class="dataCell">{{ l.connection_number}}</td>      
+        <td class="dataCell">{{ l.lsp_name}}</td>
+        <td class="dataCell">{{ l.billable_parent_id}}</td>
+        <td class="dataCell">{{ l.external_service_id}}</td>
+        <td class="dataCell">{{ l.error_description}}</td>
+        
+        
+        <!--<td class="dataCell">
+            <div class="requiredInput">
+            <div class="requiredBlock"></div>
+            <select ng-class="[formLineas.Tipo{{$index}}.$error.required]" ng-model="l.Linea.Linea_ETB__c" ng-options="o as o for o in options.Linea_ETB__c" ng-required="true" name="LineaETB{{$index}}"></select>
+            </div>
+        </td>-->
+        <!-- <td>
+        <apex:outputPanel rendered="{! $Profile.Name !='Agentes / Analistas'}">
+            <div class="requiredInput">
+            <div class="requiredBlock"></div>
+            <select ng-model="l.Linea.Tipo__c" ng-options="o as o for o in options.Tipo__c" ng-required="true" name="Tipo{{$index}}"></select>
+            </div>
+        </apex:outputPanel>
+        </td> 
+        <td class="dataCell">{{ conf.CuentaFacturacion }}</td>
+        <td class="dataCell">{{ l.Linea.Activo__r.CuentaFacturacion__r.Name }}</td>
+        <td class="dataCell"><span class="error" ng-show="formLineas.Tipo{{$index}}.$error.required">Faltan Campos</span></td> -->
+    </tr>
+    </table>
+
+
+
+
+
+
+
+<p>
+    <div class="message errorM3" role="alert" ng-if="lineasInfo.conErrores.length">
+        Las siguientes líneas presentan errores por favor verifique antes de continuar, solo se procesaran las líneas que no presenten errores.
+    </div>
+        
+    <div class="message errorM3" role="alert" ng-if="lineasInfo.LineasYaExisten.length">
+        Las líneas consultadas ya se encuentran relacionadas a la operación comercial.
+    </div>
+
+
+    <table class="list error" ng-if="lineasInfo.conErrores.length">
+    <tr>
+        <th></th>
+        <th class="headerRow">{!$ObjectType.Linea__c.fields.Name.label}</th>
+        <th class="headerRow">Servicio ETB</th>
+        <th class="headerRow">Cuenta Facturacion LD</th>
+        <th class="headerRow">{!$ObjectType.ActivoETB__c.fields.CuentaFacturacion__c.label}</th>
+        <th class="headerRow">Error</th>
+    </tr>
+
+
+    <tr ng-repeat="e in lineasInfo.conErrores">
+        <td class="dataCell">{{$index+1}}</td>
+        <td class="dataCell"><a ng-href="/{{e.Linea.Id}}" target="_blank">
+        {{e.Linea.Codigo_de_linea__c}}</a></td>
+        <td class="dataCell"><a ng-href="/{{e.Linea.ActivoLargaDistancia__c}}" target="_blank">
+            {{e.Linea.Activo__r.Name}}</a></td>
+        <td class="dataCell">{{ conf.CuentaFacturacion }}</td>
+        <td class="dataCell">{{ e.Linea.Activo__r.CuentaFacturacion__r.Name }}</td>
+        <td class="dataCell">{{e.status}}</td>
+    </tr>
+    </table>
+</p>
+
+    </form>
+    <div class="divCentrar">
+     <input type="submit" id="btGuardar" ng-click="guardar()" class="btn" ng-hide="formLineas.$error.required" value='Guardar' ng-if="lineasInfo.correcto.length && !!!formLineas.$error.required"/>
+     </div>
+
+<!--
+-{{formLineas.$error.required}}
+<pre>{{lineasInfo | json}}</pre>
+<pre>{{status | json}}</pre>
+<pre>{{errorApex | json}}</pre>
+<pre>myForm.$valid = {{ !!formLineas.$valid }}</pre>
+<pre>myForm.$error.required = {{ !!formLineas.$error.required}}</pre>
+<pre>{{ formLineas | json}}</pre>
+-->
+
+</div>
+
+<script type="text/javascript">
+        
+        <!-- BEGIN - Manuel Medina - Se establece el valor maximo para timeOut de 120000 milisegundos - 19112015 -->
+        Visualforce.remoting.timeout = 120000;
+        <!-- END - Manuel Medina - Se establece el valor maximo para timeOut de 120000 milisegundos - 19112015 -->
+        
+        var ngApp=angular.module("ngApp", []);
+        ngApp.controller("lineas",function ($scope) {
+
+
+
+            $scope.lineasInfo=null;
+            $scope.errorApex=null;
+            $scope.tieneError;
+            $scope.options = {!Componentes};
+            $scope.status=null;
+            $scope.conf={!Conf};
+
+
+ 
+            $scope.consultar = function() {
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.AsignacionLinea_ctr.buscarLineas}',$scope.lineas,angular.toJson($scope.conf),$scope.handleResult);
+            };
+
+            $scope.handleResult=function (result, event) {
+                if (event.status) {
+                    $scope.lineasInfo=JSON.parse(result.replace(/(&quot\;)/g,"\""));
+                    $scope.tieneError=false;                    
+                } else if (event.type === 'exception') {
+                    $scope.errorApex = event.message+"<br/>\n<pre>" + event.where + "</pre>";
+                    $scope.tieneError=true;
+                } else {
+                    $scope.errorApex=event.message;
+                    $scope.tieneError=true;
+                }
+                $scope.$apply();
+            }
+
+            $scope.handleResultGuardar=function (result, event) {
+                if (event.status) {
+                    console.log(result);
+                    $scope.status=JSON.parse(result.replace(/(&quot\;)/g,"\"").replace(/(&quot\;)/g,"\""));
+                    console.log($scope.status);                    
+                } else if (event.type === 'exception') {
+                    $scope.errorApex = event.message+" " + event.where;
+
+                } else {
+                    $scope.errorApex=event.message;
+                }
+                $scope.$apply();
+                
+                if($scope.status.datos.hasError=='False'){
+                    window.location='/'+$scope.status.datos.Redirect;
+                }
+            }
+            
+            $scope.guardar = function() {
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.AsignacionLinea_ctr.guardarLineas}',angular.toJson($scope.lineasInfo.correcto),angular.toJson($scope.conf),$scope.handleResultGuardar);
+
+            };
+
+        }
+        );
+    
+</script>
+
+
+
+</apex:page>
+<!-- 
+
+
+    
+    
+
+ -->

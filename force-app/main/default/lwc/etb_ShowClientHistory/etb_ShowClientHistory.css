@@ -1,0 +1,22 @@
+.container-history{
+    display: flex;
+    justify-content: space-between;
+    background-color: #F4F6F9;
+    height: 2.5rem;
+}
+.title-history{
+    color: #4A4A4A;
+    font-size: 17px;
+    letter-spacing: 0;
+    line-height: 22px;
+
+}
+@media (max-width: 1150px) {
+    .title-history{
+        color: #4A4A4A;
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 22px;
+    
+    }
+  }

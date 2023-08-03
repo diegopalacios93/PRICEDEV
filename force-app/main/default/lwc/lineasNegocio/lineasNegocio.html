@@ -1,0 +1,25 @@
+<template>
+    <lightning-accordion active-section-name="A"
+    onsectiontoggle={handleToggleSection}
+    allow-multiple-sections-open>          
+    <lightning-accordion-section name="A" label="Lineas de negocio por contrato" class="slds-accordion__section"> 
+        <template if:true={showTable}>
+            <c-paginator records={lstLN} 
+                         total-records={lstLN.length} 
+                         show-search-box="true" 
+                         onpaginatorchange={handlePaginatorChange}>
+            </c-paginator>
+            <lightning-datatable key-field="Id"
+                                 data={recordsToDisplay} 
+                                 columns={columns}
+                                 hide-checkbox-column
+                                 show-row-number-column
+                                 row-number-offset={rowNumberOffset}>
+            </lightning-datatable> 
+        </template>
+        <template if:true={error}>
+            {error}
+        </template>
+    </lightning-accordion-section>  
+</lightning-accordion> 
+</template>

@@ -1,0 +1,91 @@
+<apex:page standardController="ActivoETB__c" extensions="Tramites_ctr" action="{!pbxSuspender}" >
+<style type="text/css">
+        .centrar{width:100%;text-align: center;}
+    </style>
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+	<apex:form id="formulario">
+		<apex:pageMessages escape="false" />
+		<apex:pageBlock id="pbx" title="PBX">
+		
+		<div class="centrar">
+		<button type="button" id="cambiarArranque" >Cambiar Arranque</button>
+		</div>
+
+			<apex:pageBlockButtons >
+				<!--<apex:commandButton value="Save" onclick="return validateForm('SomeId',event);"/>-->
+				
+			</apex:pageBlockButtons>
+
+		    <apex:actionFunction action="{!cambiarArranque}" name="cambiarArranqueJS" rerender="formulario">
+		        <apex:param name="firstParam" assignTo="{!esArranque}" value="" />
+		    </apex:actionFunction>
+
+
+			<apex:pageBlockTable value="{!w}" var="item">
+
+            <apex:column >
+                <apex:facet name="header">
+                </apex:facet>
+                        <input type="radio" name="arranque" value="{!item.serv.id}" class="lineas {!item.serv.Tipodeprogramacion__c}"
+                        html-data-idac="{!item.serv.id}"
+                        html-data-tipo="{!item.serv.Tipodeprogramacion__c}"
+                        html-data-ilimitado="{!item.IlimitadoS}"/>
+            </apex:column>
+
+
+
+				<apex:column value="{!item.serv.name}" />
+				
+                <apex:column value="{!item.serv.Activo_Relacionado__r.Name}">
+					<apex:facet name="header">Arranque</apex:facet>
+				</apex:column>
+				
+                <apex:column value="{!item.serv.Estado__c}" />
+                <apex:column value="{!item.serv.Tipodeprogramacion__c}" />
+
+                <apex:column >
+                	{!item.IlimitadoS}
+					<apex:facet name="header">Ilimitado</apex:facet>
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+		</apex:pageBlock>
+		<input type="hidden" name="esArranque" value="" id="esArranque"/>
+	</apex:form>
+
+<script type="text/javascript">
+
+
+$( document ).ready(function() {
+	$('.Arranque').attr('checked','checked');
+	$('.Arranque').prop('disabled', true);
+
+
+
+  	$( ".lineas" ).click(function() {
+		console.log($( this ).val());
+		$('#esArranque').val($( this ).val());
+
+	});
+
+	
+	$( "#cambiarArranque" ).click(function() {
+		if($('#esArranque').val()!=''){
+			cambiarArranqueJS($('#esArranque').val());
+			console.log($('#esArranque').val());
+		}else{
+			alert('Por favor seleccione una troncal');
+			return false;
+		}
+	  
+	});
+
+
+
+});
+
+
+
+</script>
+</apex:page>

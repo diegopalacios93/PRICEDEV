@@ -1,0 +1,261 @@
+<apex:page id="jerarquiaCuentas" standardController="CuentaFacturacion__c" extensions="CreacionJerarquiaCuentasFacturacion_ctr" showHeader="true" sidebar="true" tabStyle="CuentaFacturacion__c" action="{!redirectPage}" lightningStylesheets="true">
+<style type="text/css">
+    .custPopup{
+    background-color: white;
+    border-width: 2px;
+    border-style: solid;
+    z-index: 9999;
+    padding:10px;
+    position: absolute;
+    width: 96%;
+    left: 2%;            
+    top: 0%;  
+    height: 70%;       
+    }
+    .popupBackground{
+    background-color:black;
+    opacity: 0.20;
+    filter: alpha(opacity = 20);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    }    
+    p { 
+    font-weight: bold;
+    font-size: 11px;
+    background-color: #F8F8F8;
+    color: #4A4A56; 
+    text-align: right;
+    }
+</style>
+<apex:includeScript value="{!URLFOR($Resource.jQueryUI, 'jquery-ui-1.10.4/js/jquery-1.10.2.js')}" />
+<apex:form id="frmDir">
+    <!-- Popup Estandarización de Direcciones -->        
+    <apex:outputPanel id="tstpopup">
+        <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!blnDisplayPopUp}" />
+        <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!blnDisplayPopUp}" >
+            <apex:iframe id="iframe1" scrolling="true" src="{SitePrefix}/apex/EstandarizarDireccion_pag?sinBotones=true" frameborder="true" height="85%" />								
+            <input type="button" value="Guardar" onclick="pegar();closePopup()" class="btn" style="margin-left: 40%;"/>
+            <apex:commandButton value="Cancelar" action="{!closePopup}" rerender="tstpopup" immediate="true"/>
+            <apex:actionFunction name="closePopup" action="{!closePopup}" reRender="tstpopup" immediate="true"/>								
+        </apex:outputPanel>
+    </apex:outputPanel>
+    <!-- Fin Popup Estandarización de Direcciones -->
+    <apex:sectionHeader title="Cuenta de Facturación" subtitle="Nueva cuenta de facturación"/>
+    <apex:pageBlock id="pbCF" title="" mode="edit">
+        <apex:pageMessages />
+        <apex:pageBlockButtons >            
+            <apex:commandButton value="Estandarizar dirección de facturación" action="{!showPopup}" immediate="true" rerender="tstpopup" />     
+            <apex:commandButton value="Guardar/Crear cuenta en facturador" action="{!guardar}"/>
+            <apex:commandButton value="Cancelar" immediate="true" oncomplete="goBack()"/>            
+         </apex:pageBlockButtons>         
+         <apex:pageBlockSection id="pgBlkSecCliente" title="Cuenta cliente" columns="1">
+             <apex:pageBlockSectionItem id="pgBlkCuentaCliente">
+                Cliente:<apex:inputField value="{!objCuentaFact.Cliente__c}" id="CuentaCliente" style="width:250px;" required="true"/>
+             </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+         <apex:pageBlockSection id="pgBlkSec" title="Información de facturación" columns="2">
+            <apex:pageBlockSectionItem id="pgBlkNombreCuenta">
+                Nombre cuenta de facturación:
+                    <apex:inputField id="NombreCuentaDeFacturacion" value="{!objCuentaFact.LTE_NombreCuentaFacturacion__c}" required="true" style="width:250px;"/> 
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkMetodoEnvio">
+                Método de envío:
+                	<apex:outputPanel layout="MetodoEnvio" styleClass="requiredInput">
+                        <apex:outputpanel layout="MetodoEnvio" styleClass="requiredBlock"/>
+                        	<apex:selectList label="Método de envío" required="true" value="{!strMetodoEnvio}" multiselect="false" size="1" id="MetodoDeEnvio" style="width:254px;">
+                        		<apex:selectOptions value="{!lstOpcionesMetodoEnvio}"/>     
+                			</apex:selectList>
+                    </apex:outputPanel>                       
+            </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem id="pgBlkEmail">
+                Email:
+               	<apex:inputField label="{!$Label.LTE_Email}" value="{!objCuentaFact.LTE_Email__c}"  required="true" style="width:250px;"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkConfirmacionEmail">
+                Confirmación Email:
+               	<apex:inputField label="{!$Label.Confirmacion_Email}" value="{!objCuentaFact.Confirmacion_Email__c}"  required="true" style="width:250px;"/>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem id="pgBlkTipoDeFactura">
+                Tipo de factura:
+               		<apex:outputPanel layout="Tipo_de_factura">
+                        <apex:outputpanel layout="Tipo_de_factura"/>
+                        	<apex:selectList label="Tipo de factura" value="{!strTipoFactura}" multiselect="false" size="1" id="Tipo_de_factura" style="width:254px;">
+                        		<apex:selectOptions value="{!lstOpcionesTipoFact}"/>     
+                			</apex:selectList>
+                    </apex:outputPanel>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem id="pgBlkTipoDeFacturacion">
+                Tipo de facturación:
+               		<apex:outputPanel layout="Tipo_de_facturacion">
+                        <apex:outputpanel layout="Tipo_de_facturacion"/>
+                        	<apex:selectList label="Tipo de facturación" value="{!strTipoFacturacion}" multiselect="false" size="1" id="Tipo_de_facturacion" style="width:254px;">
+                        		<apex:selectOptions value="{!lstOpcionesTipoFacturacion}"/>
+                			</apex:selectList>
+                    </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkCuentaFactDEMO">
+                Cuenta para servicios Demo:
+               	<apex:inputCheckbox label="Cuenta de facturación DEMO" value="{!objCuentaFact.Cuenta_para_servicios_Demo__c}" id="Cuenta_DEMO" onchange="RenderCuentaFactLTE()">
+                </apex:inputCheckbox>                
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="Blank_1">
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkCuentaFactLTE_1">
+                Es cuenta de facturación LTE:
+               	<apex:inputCheckbox label="Cuenta de facturación LTE" value="{!objCuentaFact.LTE_CuentaFacturacionLTE__c}" id="Cuenta_LTE" onchange="RenderCicloFacturacion()">                	
+                </apex:inputCheckbox>                
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="Blank_3">
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkCuentaFactNoIntegra">
+                No requiere crear cuenta en Revchain:
+               	<apex:inputCheckbox label="No requiere crear cuenta en Revchain" value="{!objCuentaFact.No_requiere_crear_cuenta_en_Revchain__c}" id="NoIntegra">
+                </apex:inputCheckbox>                
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="Blank_2">
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkCicloFactLTE_2">
+                Ciclo de facturación (Solo LTE):                     
+                <apex:selectList label="Ciclo de facturación" value="{!strCicloFacturacion}" multiselect="false" size="1" id="Ciclo_de_facturacion" style="width:254px;">
+                    <apex:selectOptions value="{!lstOpcionesCicloFactLTE}"/>
+                </apex:selectList>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection id="pgBlkSecJerarquia" title="Jerarquía de cuentas" columns="1">            
+			<apex:pageBlockSectionItem id="pgBlkMetodoEnvio">
+                Tipo de cuenta (Padre/Hija):
+                	<apex:outputPanel layout="Tipo_de_cuenta" styleClass="requiredInput">
+                        <apex:outputpanel layout="Tipo_de_cuenta" styleClass="requiredBlock"/>
+                        	<apex:selectList label="Tipo de cuenta" required="true" value="{!strTipoCuenta}" multiselect="false" size="1" id="Tipo_de_cuenta" onchange="RenderCtaFactPadre()" style="width:254px;">
+                        		<apex:selectOptions value="{!lstOpcionesTipoCuenta}"/>     
+                			</apex:selectList>
+                    </apex:outputPanel>                       
+            </apex:pageBlockSectionItem>                  
+            <apex:pageBlockSectionItem id="pgBlkCuentaPadre" >
+                Cuenta de facturación padre:
+               	<apex:inputField id="CuentaDeFacturacionPadre" value="{!objCuentaFact.LTE_CuentaFacturacionPadre__c}" style="width:250px;"/>
+            </apex:pageBlockSectionItem>            
+        </apex:pageBlockSection>
+        <apex:pageBlockSection id="pgBlkSecLugarFact" title="Lugar de facturación" columns="2">
+            <apex:pageBlockSectionItem id="pgBlkCuentaPadre">
+                Ciudad de facturación:
+                <apex:inputField value="{!objCuentaFact.Ciudad__c}" required="true" style="width:250px;" onselect="consultarDepartamento()"/>                	
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem id="pgBlkCiudadAlterna">
+                Ciudad alterna:
+               	<apex:inputField label="{!$Label.LTE_CiudadAlterna}" value="{!objCuentaFact.LTE_CiudadAlterna__c}" style="width:250px;"/>
+            </apex:pageBlockSectionItem>                               
+            <table border="0" style="width: 100%">
+              	<tr>
+                  <th style="width: 33%;"><p>Dirección de facturación:</p></th>
+                  <th style="width: 3%"></th>                  
+                  <th style="width: 64%">
+                    	<div class="requiredBlock"/>
+                    	<input id='inputDireccion' value="{!objCuentaFact.DirCorresp__c}" disabled="true" style="width:250px;"/>            		
+                  </th>                  
+                </tr>
+            </table>          
+            <apex:pageBlockSectionItem id="pgBlkDireccionAlterna">
+                Dirección alterna:
+               	<apex:inputField label="{!$Label.LTE_DireccionAlterna}" value="{!objCuentaFact.LTE_DireccionAlterna__c}" style="width:250px;"/>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem id="pgBlkDireccionH">
+            	<apex:inputHidden value="{!objCuentaFact.DirCorresp__c}" id="inputDireccionH"/>
+            </apex:pageBlockSectionItem> 
+        </apex:pageBlockSection>                
+	</apex:pageBlock>        
+</apex:form>
+    
+<script type="text/javascript">  
+	$j = jQuery.noConflict();
+
+	function goBack() 
+	{
+		window.history.back()
+	}   
+	// Estandarización de Direcciones
+	function pegar()
+	{
+		var inside = iframeRef( document.getElementById('iframe1') )
+		var txt = inside.getElementsByClassName('dirAbreviada')[0].value;                	
+		txt = txt + ' ' + inside.getElementsByClassName('observacion')[0].value;				
+		document.getElementById('inputDireccion').value = txt;		
+		$j('[id$=inputDireccion]').val(txt);	
+        $j('[id$=inputDireccionH]').val(txt);
+		if( inside.getElementsByClassName('observacion')[0].value != '' ){
+			$j('[id$=observacionesH]').val(true);
+		}		
+	}        
+	function iframeRef( frameRef ) {
+		return frameRef.contentWindow
+		? frameRef.contentWindow.document
+		: frameRef.contentDocument
+	} 
+	// Fin Estandarización de Direcciones    
+    jQuery(document).ready(
+        function(){
+            RenderCtaFactPadre();
+            RenderCicloFacturacion();
+        }
+    );
+	function RenderCtaFactPadre(){                 
+        if(jQuery('[id$=Tipo_de_cuenta]').children("option:selected").val() == 'Hija'){
+            jQuery('[id$=CuentaDeFacturacionPadre]')
+            .parent()
+            .parent()
+            .show(); 
+        }
+        else{
+            jQuery('[id$=CuentaDeFacturacionPadre]')
+            .parent()
+            .parent()
+            .hide(); 
+        }                    
+    }
+    function RenderCicloFacturacion(scope){                      
+        if(jQuery('[id$=Cuenta_LTE]').is(":checked")){
+            jQuery('[id$=Ciclo_de_facturacion]')
+            .parent()
+            .parent()
+            .show(); 
+        }
+        else{
+            jQuery('[id$=Ciclo_de_facturacion]')
+            .parent()
+            .parent()
+            .hide(); 
+        }
+    }
+    function RenderCuentaFactLTE(scope){                      
+        if(jQuery('[id$=Cuenta_DEMO]').is(":checked")){
+            jQuery('[id$=Cuenta_LTE]')
+            .parent()
+            .parent()
+            .hide(); 
+            jQuery('[id$=Ciclo_de_facturacion]')
+            .parent()
+            .parent()
+            .hide(); 
+        }
+        else{
+            jQuery('[id$=Cuenta_LTE]')
+            .parent()
+            .parent()
+            .show();
+            jQuery('[id$=Ciclo_de_facturacion]')
+            .parent()
+            .parent()
+            .hide(); 
+        }
+    }
+	function buscarProducto(id,id2,url){
+        elementObj		=	document.getElementById(id);
+        elementObjH		=	document.getElementById(id2);    		
+        ventana			=	window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+    }	    
+</script>
+</apex:page>

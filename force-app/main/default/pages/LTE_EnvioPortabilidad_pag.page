@@ -1,0 +1,25 @@
+<apex:page standardController="Legalizacion__c" extensions="LTE_EnvioPortabilidad_ctr" docType="html-5.0" showheader="false" sidebar="false">
+	<apex:form id="idForm">
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="Cargando..."/>
+			</apex:facet>
+		</apex:actionStatus>
+		<apex:pageMessages id="msg"/>
+		<apex:pageBlock mode="edit" id="idPageBlockMain" rendered="{!mostrarEstado}">
+			<apex:PageBlockButtons location="bottom" >
+				<apex:commandButton value="Enviar a Portabilidad" action="{!enviarPortabilidad}" rendered="true" disabled="{!blnHabilitar}" status="loading" reRender="idForm"/>
+				<apex:commandButton value="Regresar" onclick="window.close()" status="loading"/>
+			</apex:PageBlockButtons>
+			<apex:pageBlockSection columns="1" id="idFechaPortacion" title="Fecha de portabilidad">
+				<apex:pageBlockSectionItem >
+					<apex:panelGrid styleClass="fechas" columns="1">
+						<apex:outputLabel value="Seleccione la fecha de portabilidad"/>
+						<tr></tr>
+						<apex:input type="date" value="{!datFechaPortabilidad}" disabled="{!blnHabilitar}"/>
+					</apex:panelGrid>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

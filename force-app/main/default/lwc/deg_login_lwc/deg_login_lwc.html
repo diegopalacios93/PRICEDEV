@@ -1,0 +1,79 @@
+<!--
+  @description       : 
+  @author            : Pablo Arrieta 
+  @group             : 
+  @last modified on  : 05-05-2021
+  @last modified by  : Pablo Arrieta
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   03-11-2021   Pablo Arrieta                      Initial Version
+-->
+<template>
+  <template if:true={showModal}>
+    <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+      <div class="page">
+        <div class="container">
+          <template if:true={loading}>
+            <div class="spinner">
+              <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                <span class="slds-assistive-text">Loading...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+              </div>
+              <!-- <div class="loading">
+                <img src={iconoETB}>
+              </div> -->
+            </div>
+          </template>
+          <div class="header">
+            <div class="login">
+              <img src={iconoUser}>
+              <h1>Login</h1>
+            </div>
+            <div>Ingresa con tu correo electrónico y <br />tu contraseña</div>
+          </div>
+          <div class="slds-grid inputs">
+            <div class="slds-col slds-size_2-of-2 inputs-container">
+              <div class="input-container">
+                <lightning-input type="text" name="mail" autocomplete="off" placeholder="Correo electrónico"
+                  onchange={handleChange} value={emailInput}>
+                </lightning-input>
+                <template if:true={mailError}>
+                  <div class="error">
+                    Formato de correo inválido.
+                  </div>
+                </template>
+              </div>
+            </div>
+            <div class="slds-col slds-size_2-of-2 inputs-container">
+              <div class="input-container">
+                <lightning-input type="password" name="password" placeholder="******" onchange={handleChange}
+                  value={passInput}>
+                </lightning-input>
+                <template if:true={passError}>
+                  <div class="error">
+                    La contraseña debe contener mínimo 8 caracteres, una letra mayúscula y una minúscula.
+                  </div>
+                </template>
+              </div>
+            </div>
+            <template if:true={invalid}>
+              <div class="slds-col slds-size_2-of-2 error inputs-container">
+                Complete todos los campos.
+              </div>
+            </template>
+            <div class="slds-col slds-size_2-of-2 buttons">
+              <button class="slds-button btn" style="background-color: #0a5689" onclick={handleCancel}>
+                Cancelar
+              </button>
+              <button class="slds-button btn" style="background-color: #eb6625" onclick={handleSubmit}>
+                <img src={iconoKey} class="key_icon" />
+                Ingresar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template>
+</template>

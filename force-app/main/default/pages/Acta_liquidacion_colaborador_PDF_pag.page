@@ -1,0 +1,234 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Acta_de_liquidaci_n__c" applyBodyTag="false" extensions="Acta_liquidacion_colaborador_PDF_ctr" renderAs="pdf">
+<head>
+<style type="text/css" media="print"> 
+    @page {  
+    	margin-top: 1.5in;
+        size: letter;                
+    	@top-center {
+        	content: element(header);
+        }
+        @bottom-left {
+        	content: element(footer);
+        }
+    } 
+    div.header {
+    	padding: 10px;
+    	height:70px;  		
+    	position: running(header); 
+    	text-align: left;
+    }
+    div.footer {
+    	display: block;
+    	padding: 1px;    	
+        width:100%;        
+    	position: running(footer);
+    	text-align: left;    	
+    }
+    div.8 {
+  		text-align: justify;
+  		text-justify: inter-word;
+	}
+     div.lineBreak {
+  		page-break-after:auto;
+	}
+    .pagenumber:before {
+    	content: counter(page);
+    	font-family: Arial, Helvetica, sans-serif;
+    	font-size: 9px;
+    	font-weight: bold;
+    }
+    .pagecount:before {
+    	content: counter(pages);
+    	font-family: Arial, Helvetica, sans-serif;
+    	font-size: 9px;
+    	font-weight: bold;
+    }     
+    .contenido_8px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 8px;
+    }
+    .contenido_8px_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 8px;
+    } 
+    .contenido_9px_TNR {
+       	font-family: Times New Roman;
+       	font-weight: bold;
+       	font-size: 9px;
+    }
+    .contenido_9px_Italic {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;
+    	font-style: italic;
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_Italic_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;
+    	font-style: italic;
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;    
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px; 
+    	line-height: 12px;
+    	display:block;
+    }    
+    .contenido_9px_Italic_footer {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;
+    	font-style: italic;    	
+    }
+    .contenido_9px_Italic_NB_footer { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;
+    	font-style: italic;    	
+    }
+    .contenido_9px_footer {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;        	
+    }
+    .contenido_9px_NB_footer { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;     	
+    }  
+    .contenido_9px_controlversion {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px; 
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_NB_controlversion {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px; 
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_Italic_NB_controlversion { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;
+    	font-style: italic;
+    	line-height: 12px;
+    	display:block;
+    } 
+    .contenido_10px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 10px; 
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_10px_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 10px;   
+    	line-height: 12px;
+    	display:block;
+    }   
+    .contenido_11px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 11px;      	
+    }
+    .contenido_11px_NB {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 11px;    	
+    }
+    .contenido_11px_Italic_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 11px;
+    	font-style: italic;
+    }   
+    .contenido_12px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 12px;
+    }
+    .contenido_12px_NB {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 12px;
+    }
+    .contenido_13px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 13px;
+    }
+    .contenido_13px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 13px;
+    }
+    .contenido_14px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 14px;
+    }
+    .contenido_14px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 14px;
+    }
+    .contenido_15px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 15px;
+    }
+    .contenido_15px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 15px;
+    }
+    .contenido_16px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 16px;
+    }
+    .contenido_16px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 16px;
+    }
+    .contenido_17px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 17px;
+    }
+    .contenido_17px_NB {  
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 17px;
+    }
+    .contenido_18px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 18px;
+    }
+    .contenido_18px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 18px;
+    }  
+    .contenido_55px {       
+    	font-family: Times New Roman;
+       	font-size: 55px;
+    	font-weight: bold;
+    }  
+</style>
+</head>	
+       <div class="header"> 
+           <apex:outputtext value="{!htmlScriptHeader}" escape="false" id="htmlScriptHeader"/>
+       </div>
+       <div class="footer">
+           <apex:outputtext value="{!htmlPieDePagina}" escape="false" id="htmlPieDePagina"/>
+       </div> 
+       <div class="lineBreak">
+       <apex:outputtext value="{!htmlPagina_1}" escape="false" id="htmlPagina_1"/>
+       </div>               
+</apex:page>

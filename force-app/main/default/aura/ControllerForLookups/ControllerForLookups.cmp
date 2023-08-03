@@ -1,0 +1,65 @@
+<aura:component description="Lookup. Lightning component for lookup fields. Can be used standalone or with other lightning component" controller="LookupCompController">
+    <!-- Attributes -->
+    <aura:attribute name="selectedIds" type="List" default="[]" />
+    <aura:attribute name="objectAPIName" type="String" required="true" description="Object API name used for searching records"/>
+    <aura:attribute name="placeholder" type="String" default="Search..." description="Placeholder text for input search filed"/>
+    <aura:attribute name="fieldLabel" type="String" required="true" description="input search field Label"/>
+    <aura:attribute name="filter" type="String[]" default="[]" description="Array of filter for SOSL query. All the filters should be given in this field separated by comma(,) Example: AccountId='00128000002KuXU' "/>
+    <aura:attribute name="selectedRecordId" type="String" description="Used to store the selected record id. While calling this component from other component, set this attribute to the lookup field API name"/>
+    <aura:attribute name="selectedRecordLabel" type="String" description="This is used to show the selected record Name in search input"/>
+    <aura:attribute name="selectedRecord" type="String" description="Used to store the selected record id. While calling this component from other component, set this attribute to the lookup field API name"/>
+    <aura:attribute name="subHeadingFieldsAPI" type="String[]" description="Field API for the fields to be shown under the record Name. Must be comma separated. Example: Email,Phone"/>
+    <aura:attribute name="matchingRecords" type="Object[]" access="private" description="List of records returned from server side call."/>
+    <aura:attribute name="iconCategoryName" type="String" description="Lightning icon category and icon name to show with each record element. Example: standard:contact" default="standard:contact"/>
+    <aura:attribute name="type" type="String" description="The type of the input. This value defaults to search." default="search"/>
+    <aura:attribute name="readOnly" type="Boolean" description="Specifies that the input field is read-only. This value defaults to false." default="false"/>
+    <aura:attribute name="disabled" type="Boolean" description="Specifies that the input field is disabled. This value defaults to false." default="false"/>
+    <aura:attribute name="required" type="Boolean" description="Specifies that the input field is required. This value defaults to false." default="false"/>
+    <aura:attribute name="field" type="String" default="" />
+    <!-- Handlers -->
+    <aura:handler name="lookupSelect" event="c:LookupSelectEvent" action="{!c.handleLookupSelectEvent}" description="Event handler to get the selected record Id and Name from LookupItem component"/>
+    
+    <!-- Methods -->
+    <aura:method name="validate" action="{!c.validate}" />
+    
+    <!--div class="slds-form-element__control"  style="width:75%;display:inline-block;"-->
+        <div class="slds-combobox_container">
+            <div aura:id="lookupdiv" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-combobox-lookup" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                <div class="slds-combobox__form-element">
+                    <!-- using input type "search" to place the search icon input field-->
+                    <lightning:input type           = "{!v.disabled == true ? 'text' : v.type}"
+                                     aura:id        = "searchInput"
+                                     label          = "{!v.fieldLabel}"
+                                     value          = "{!v.selectedRecordLabel}"
+                                     onchange       = "{!c.searchRecords}"
+                                     isLoading      = "false"
+                                     placeholder    = "{!v.placeholder}"
+                                     onfocus        = "{!c.searchRecords}"
+                                     onblur         = "{!c.hideList}"
+                                     readonly       = "{!not(empty(v.selectedRecordId))}"
+                                     disabled       = "{!v.disabled}"
+                                     required       = "{!v.required}" />
+                </div>
+                <div id="listbox-unique-id" role="listbox">
+                    <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+                        <aura:if isTrue="{!empty(v.matchingRecords)}">
+                            <!--<ul class="slds-lookup__list" role="listbox">
+                                <li role="presentation">-->
+                            <span class="slds-lookup__item-action slds-media sl-no-results" role="option">
+                                <div class="slds-media__body">
+                                    <div class="slds-lookup__result-text">
+                                        No results found for "{!v.selectedRecordLabel}"
+                                    </div>
+                                </div>
+                            </span>
+                        </aura:if>
+                        <!-- LookupItem component for creating record list -->
+                        <aura:iteration var="rec" items="{!v.matchingRecords}">
+                            <c:ControllerItemForLookups record="{!rec}" iconCategoryName="{!v.iconCategoryName}"/>
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <!--/div-->
+</aura:component>

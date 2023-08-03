@@ -1,0 +1,195 @@
+<template>
+            <div class="slds-grid slds-wrap slds-is-relative ">
+            <div style="position: fixed;z-index: 999999;top: 0;right: 0;">
+  <vlocity_cmt-toast class="flexcard-toast-element" theme="slds" title="" message="" styletype=""> </vlocity_cmt-toast>
+</div>
+            <div if:true={showLoader} class="slds-is-absolute vloc-loader_override" style="height: 100%; width: 100%; min-height:50px; background: transparent; z-index: 99;">
+  <div>
+   <vlocity_cmt-spinner
+      variant="brand"
+      alternative-text="Loading content..."
+      size="medium"
+      theme="slds"
+      ></vlocity_cmt-spinner>
+  </div>
+</div>
+            <template if:false={hasPermission}>
+              You don't have required permissions to view this card.
+            </template>
+            <template if:true={hasPermission}>
+              <template if:true={hasRecords}>
+                        <template for:each={_records} for:item="record" for:index="rindex">
+                            <vlocity_cmt-flex-card-state if:true={record}  key={record._flex.uniqueKey} data-recordid={record.Id} record={record} data-statue="true"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card slds-border_top slds-m-vertical_xx-small " style="     border-top: #cccccc 1px solid; 
+         ">
+          <div data-style-id="state0element0" class="slds-col     slds-size_12-of-12  " data-rindex={rindex} style="      
+         box-sizing: border-box;
+border: 1px solid #DDDBDA;
+border-radius: 4px;
+background-color: #FFFFFF;
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);" >
+    <vlocity_cmt-block data-style-id="state0element0_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element0" class="slds-col   slds-text-align_center slds-p-around_x-small  slds-size_1-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         width: 4.166667%;" >
+    <vlocity_cmt-block data-style-id="state0element0block_element0_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element0block_element0" class="slds-col  slds-m-top_x-small  slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " ><vlocity_cmt-flex-icon data-style-id="state0element0block_element0block_element0_child"   record={record}  card={card}  extraclass="slds-icon_container slds-icon-standard-lead"  icon-name="standard:lead"  icon-type="Salesforce SVG"  imgsrc=""  size="medium"  variant="inverse"  theme="slds"  ></vlocity_cmt-flex-icon>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element1" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " >
+    <vlocity_cmt-block data-style-id="state0element0block_element1_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element1block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element1block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cstrong%3E%3Cspan%20style=%22font-size:%2010pt;%20font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3ERaz&oacute;n%20Social%3C/span%3E%3C/strong%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element1block_element1" class="slds-col  slds-p-top_xxx-small  slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         font-family: 'Salesforce Sans', Arial, sans-serif;
+text-decoration-color: #177AD0;" ><vlocity_cmt-action data-style-id="state0element0block_element1block_element1_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  display-as-button="false"  hide-action-icon="true"  state-action='\{"Record":{"targetAction":"view","targetId":"{Id}","targetName":"Lead"},"displayName":"{RazonSocial}","id":"flex-action-1638389823630","openUrlIn":"Current Window","targetType":"Record","type":"Custom","vlocityIcon":""}'  styles='\{"label":{"color":"#177AD0","fontSize":"10pt"}}'  theme="slds"  ></vlocity_cmt-action>
+        </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element2" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  condition-element" data-rindex={rindex} style="     : #ccc 1px solid; 
+         "  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-7","operator":"==","type":"custom","value":"true"}],"id":"state-condition-object","isParent":true}' >
+    <vlocity_cmt-block data-style-id="state0element0block_element2_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-7","operator":"==","type":"custom","value":"true"}],"id":"state-condition-object","isParent":true}'  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element2block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element2block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-size:%2010pt;%20font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3E%3Cstrong%3EC&eacute;dula%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element2block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element2block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BCedula%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element3" class="slds-col   slds-p-top_x-small slds-p-right_x-small slds-p-bottom_x-small slds-m-top_xx-small  slds-size_2-of-12  condition-element" data-rindex={rindex} style="     : #ccc 1px solid; 
+         width: 14.5833333%;"  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-0","operator":"==","type":"custom","value":"false"}],"id":"state-condition-object","isParent":true}' >
+    <vlocity_cmt-block data-style-id="state0element0block_element3_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-0","operator":"==","type":"custom","value":"false"}],"id":"state-condition-object","isParent":true}'  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element3block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element3block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cstrong%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%20font-size:%2010pt;%22%3ENIT%3C/span%3E%3C/strong%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element3block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element3block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BNIT%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element4" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " >
+    <vlocity_cmt-block data-style-id="state0element0block_element4_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element4block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element4block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cstrong%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%20font-size:%2010pt;%22%3EEmail%3C/span%3E%3C/strong%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element4block_element1" class="slds-col  slds-p-top_xxx-small  slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         font-family: 'Salesforce Sans', Arial, sans-serif;" ><vlocity_cmt-output-field data-style-id="state0element0block_element4block_element1_child"   record={record}  card={card}  field-name="\{Email}"  label=""  placeholder=""  styles='\{"label":{"fontSize":"10pt"}}'  type="text"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element5" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " >
+    <vlocity_cmt-block data-style-id="state0element0block_element5_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element5block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element5block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-size:%2010pt;%22%3E%3Cstrong%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3EContacto%3C/span%3E%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element5block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element5block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BName%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element6" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         width: 14.5833333%;" >
+    <vlocity_cmt-block data-style-id="state0element0block_element6_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element6block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element6block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%20font-size:%2010pt;%22%3E%3Cstrong%3ETel&eacute;fono%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element6block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element6block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BPhone%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element7" class="slds-col  slds-m-top_medium  slds-large-size_2-of-12 slds-medium-size_2-of-12 slds-small-size_2-of-12 slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         font-size: 11px;
+letter-spacing: 0;
+line-height: 19.5px;
+" ><vlocity_cmt-action data-style-id="state0element0block_element7_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  button-variant="neutral"  display-as-button="true"  icon-color="#034589"  icon-size="xx-small"  state-action='\{"Record":{"targetAction":"view","targetId":"{Id}","targetName":"Lead"},"displayName":"Verificar información","id":"flex-action-1639689357643","openUrlIn":"New Tab/Window","targetType":"Record","type":"Custom","vlocityIcon":"utility:new_window"}'  styles='\{"label":{"color":"#034589","fontSize":"0.75rem","textAlign":"center"}}'  theme="slds"  ></vlocity_cmt-action>
+        </div>
+        </div></vlocity_cmt-block>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                        </template>
+                      </template>
+                      <template if:false={hasRecords}>
+                            <vlocity_cmt-flex-card-state  record={record} data-statue="false"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card slds-border_top slds-m-vertical_xx-small " style="     border-top: #cccccc 1px solid; 
+         ">
+          <div data-style-id="state0element0" class="slds-col     slds-size_12-of-12  " data-rindex={rindex} style="      
+         box-sizing: border-box;
+border: 1px solid #DDDBDA;
+border-radius: 4px;
+background-color: #FFFFFF;
+box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);" >
+    <vlocity_cmt-block data-style-id="state0element0_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element0" class="slds-col   slds-text-align_center slds-p-around_x-small  slds-size_1-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         width: 4.166667%;" >
+    <vlocity_cmt-block data-style-id="state0element0block_element0_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element0block_element0" class="slds-col  slds-m-top_x-small  slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " ><vlocity_cmt-flex-icon data-style-id="state0element0block_element0block_element0_child"   record={record}  card={card}  extraclass="slds-icon_container slds-icon-standard-lead"  icon-name="standard:lead"  icon-type="Salesforce SVG"  imgsrc=""  size="medium"  variant="inverse"  theme="slds"  ></vlocity_cmt-flex-icon>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element1" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " >
+    <vlocity_cmt-block data-style-id="state0element0block_element1_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element1block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element1block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cstrong%3E%3Cspan%20style=%22font-size:%2010pt;%20font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3ERaz&oacute;n%20Social%3C/span%3E%3C/strong%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element1block_element1" class="slds-col  slds-p-top_xxx-small  slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         font-family: 'Salesforce Sans', Arial, sans-serif;
+text-decoration-color: #177AD0;" ><vlocity_cmt-action data-style-id="state0element0block_element1block_element1_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  display-as-button="false"  hide-action-icon="true"  state-action='\{"Record":{"targetAction":"view","targetId":"{Id}","targetName":"Lead"},"displayName":"{RazonSocial}","id":"flex-action-1638389823630","openUrlIn":"Current Window","targetType":"Record","type":"Custom","vlocityIcon":""}'  styles='\{"label":{"color":"#177AD0","fontSize":"10pt"}}'  theme="slds"  ></vlocity_cmt-action>
+        </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element2" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  condition-element" data-rindex={rindex} style="     : #ccc 1px solid; 
+         "  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-7","operator":"==","type":"custom","value":"true"}],"id":"state-condition-object","isParent":true}' >
+    <vlocity_cmt-block data-style-id="state0element0block_element2_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-7","operator":"==","type":"custom","value":"true"}],"id":"state-condition-object","isParent":true}'  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element2block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element2block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-size:%2010pt;%20font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3E%3Cstrong%3EC&eacute;dula%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element2block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element2block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BCedula%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element3" class="slds-col   slds-p-top_x-small slds-p-right_x-small slds-p-bottom_x-small slds-m-top_xx-small  slds-size_2-of-12  condition-element" data-rindex={rindex} style="     : #ccc 1px solid; 
+         width: 14.5833333%;"  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-0","operator":"==","type":"custom","value":"false"}],"id":"state-condition-object","isParent":true}' >
+    <vlocity_cmt-block data-style-id="state0element0block_element3_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  data-conditions='\{"group":[{"field":"isCedulaSearch","id":"state-new-condition-0","operator":"==","type":"custom","value":"false"}],"id":"state-condition-object","isParent":true}'  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element3block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element3block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cstrong%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%20font-size:%2010pt;%22%3ENIT%3C/span%3E%3C/strong%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element3block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element3block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BNIT%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element4" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " >
+    <vlocity_cmt-block data-style-id="state0element0block_element4_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element4block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element4block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cstrong%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%20font-size:%2010pt;%22%3EEmail%3C/span%3E%3C/strong%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element4block_element1" class="slds-col  slds-p-top_xxx-small  slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         font-family: 'Salesforce Sans', Arial, sans-serif;" ><vlocity_cmt-output-field data-style-id="state0element0block_element4block_element1_child"   record={record}  card={card}  field-name="\{Email}"  label=""  placeholder=""  styles='\{"label":{"fontSize":"10pt"}}'  type="text"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element5" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         " >
+    <vlocity_cmt-block data-style-id="state0element0block_element5_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element5block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element5block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-size:%2010pt;%22%3E%3Cstrong%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%22%3EContacto%3C/span%3E%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element5block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element5block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BName%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element6" class="slds-col   slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         width: 14.5833333%;" >
+    <vlocity_cmt-block data-style-id="state0element0block_element6_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state0element0block_element6block_element0" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+        color:#000000; font-size: 13px;  letter-spacing: 0;  line-height: 17px;" ><vlocity_cmt-output-field data-style-id="state0element0block_element6block_element0_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%3Cspan%20style=%22font-family:%20'Salesforce%20Sans',%20Arial,%20sans-serif;%20font-size:%2010pt;%22%3E%3Cstrong%3ETel&eacute;fono%3C/strong%3E%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element0block_element6block_element1" class="slds-col   slds-size_12-of-12  " data-rindex={rindex} style="             " ><vlocity_cmt-output-field data-style-id="state0element0block_element6block_element1_child"   record={record}  card={card}  merge-field="%3Cdiv%3E%7BPhone%7D%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element0block_element7" class="slds-col  slds-m-top_medium  slds-large-size_2-of-12 slds-medium-size_2-of-12 slds-small-size_2-of-12 slds-size_2-of-12  " data-rindex={rindex} style="     : #ccc 1px solid; 
+         font-size: 11px;
+letter-spacing: 0;
+line-height: 19.5px;
+" ><vlocity_cmt-action data-style-id="state0element0block_element7_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  button-variant="neutral"  display-as-button="true"  icon-color="#034589"  icon-size="xx-small"  state-action='\{"Record":{"targetAction":"view","targetId":"{Id}","targetName":"Lead"},"displayName":"Verificar información","id":"flex-action-1639689357643","openUrlIn":"New Tab/Window","targetType":"Record","type":"Custom","vlocityIcon":"utility:new_window"}'  styles='\{"label":{"color":"#034589","fontSize":"0.75rem","textAlign":"center"}}'  theme="slds"  ></vlocity_cmt-action>
+        </div>
+        </div></vlocity_cmt-block>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                      </template>
+            </template>
+            <template if:true={hasError}>
+            {error}
+            </template>
+            
+      <vlocity_cmt-action action-wrapperclass="slds-hide" re-render-flyout class="action-trigger slds-col" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction} onfireactionevent={actionEvtHandler}>
+      
+      </vlocity_cmt-action>
+  
+            <vlocity_cmt-action class="execute-action" re-render-flyout action-wrapperclass="slds-hide" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction} onfireactionevent={actionEvtHandler}>
+            
+            </vlocity_cmt-action>
+            </div>
+          </template>

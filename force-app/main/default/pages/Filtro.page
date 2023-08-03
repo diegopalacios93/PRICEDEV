@@ -1,0 +1,39 @@
+<apex:page controller="Filtro_cls" title="Search" showHeader="false"
+	sideBar="false" tabStyle="Account" id="pg">
+	<apex:pageMessages id="msg" />
+
+	<apex:form >
+		<apex:outputPanel id="page" layout="block"
+			style="margin:5px;padding:10px;padding-top:2px;">
+
+			<apex:pageBlock id="block" title="{!labelObj}">
+
+				<apex:pageBlockButtons >
+					Buscar: <apex:commandButton action="{!buscar}" value="Buscar" />
+				</apex:pageBlockButtons>
+
+
+				<apex:pageBlockSection >
+					<apex:inputText value="{!abuscar}" id="abuscar" />
+				</apex:pageBlockSection>
+
+				<apex:dynamicComponent componentValue="{!DynamicTable}" />
+
+			</apex:pageBlock>
+
+		</apex:outputPanel>
+	</apex:form>
+
+	<script type="text/javascript">
+
+  function cerrarA(este){
+  	info='{!infoParam}';
+      window.opener.asignar(este.rel,este.title,info);
+      window.close();
+      return false;
+    }
+    window.onblur=function(){window.close();}
+  </script>
+
+
+</apex:page>

@@ -1,0 +1,13 @@
+<apex:page lightningStyleSheets="true" showHeader="false"  applyBodyTag="false">
+	<style type="text/css">
+        div.Datepickerhide span.dateInput span.dateFormat{
+        display:none;
+        }
+        .interviewDisplayTextRow img {
+        width:40%;
+        .apexp div{
+		border: 1px solid #4CAF50;
+        }
+	</style>
+    <flow:interview name="MATRIZ_RECOMENDACIONES_ETB" buttonLocation="bottom" buttonStyle=" border:1px solid;"/>
+</apex:page>

@@ -1,0 +1,13 @@
+<apex:page Controller="validarPlanDeImpuestosServicios_ctr" action="{!GenerarIntegracion}" id="idPage" lightningStylesheets="true">
+    <apex:sectionHeader title="Consultar-Validar plan de impuestos de los servicios del trámite"/>
+      <apex:form id="idForm" >
+            <apex:pageBlock id="idPageBlock1">
+                <apex:outputPanel id="msg">
+                    <apex:pageMessages />
+                    <apex:pageBlock id="idPageBlock">                                                           
+                     <apex:commandButton value="Volver" action="{!Cancelar}"/>                      
+                  </apex:pageBlock>                    
+                </apex:outputPanel>                
+            </apex:pageBlock>    
+        </apex:form> 
+</apex:page>

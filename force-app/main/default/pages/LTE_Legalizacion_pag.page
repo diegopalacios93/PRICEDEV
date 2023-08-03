@@ -1,0 +1,28 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" controller="LTE_Legalizacion_ctr" action="{!poblarCampos}" tabStyle="OperacionComercial__c">
+	<apex:pagemessages id="TheMessages"/>
+	<apex:form id="idForm">
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="Cargando..."/>
+			</apex:facet>
+		</apex:actionStatus>
+		<apex:pageBlock id="idPB01" title="Legalización" mode="edit">
+			<apex:pageBlockSection id="idPBS">
+				<apex:repeat value="{!$ObjectType.Legalizacion__c.FieldSets.LTE_CamposPostventa}" var="R">
+					<apex:inputField value="{!objLegalizacion[R]}" rendered="{!R != 'LTE_TipoPago__c' && R != 'LTE_ValorCuentaxCobrar__c'}"/>
+				</apex:repeat>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Tipo de pago"/>
+					<apex:outputText value="{!strTipoPago}"/>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:outputLabel value="Valor cuenta por cobrar"/>
+					<apex:outputText value="{!strValorCuentaXCobrar}"/>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+			<apex:pageBlockButtons location="top">
+				<apex:commandButton value="Guardar" action="{!guardar}" status="loading" rendered="{!blnOcultaBoton}"/>
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

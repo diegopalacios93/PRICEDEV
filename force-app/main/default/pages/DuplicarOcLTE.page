@@ -1,0 +1,88 @@
+<apex:page controller="DuplicarOcLTE_ctr" id="pagina">
+	<script src="{!URLFOR($Resource.libraryjs,'angular.min.js')}"></script>
+	<apex:pageMessages id="msg" />
+		<apex:pageBlock rendered="{!Not hasError}" html-ng-app="ngApp">
+			<div ng-controller="duplicar" class="ng-cloak">
+				<div class="message errorM3" role="alert" ng-show="errorApex">
+					<img alt="ERROR" class="msgIcon" src="/s.gif" title="ERROR"/>{{errorApex}}
+				</div>
+				<div class="bPageTitle"><div class="ptBody"><div class="content"><img src="/s.gif" alt="Operación Comercial" class="pageTitleIcon" title="Operación Comercial"/><h1 class="pageType">Operación Comercial<span class="titleSeparatingColon">:</span></h1><h2 class="pageDescription">{{oc.Name}} - {{oc.Plan__r.Name}}</h2></div></div></div>
+				<div class="message infoM3" role="alert">Por favor indique la cantidad de Operaciónes Comerciales a generar se crearan con base {{oc.Name}}</div>
+				<div ng-hide="ocCreadas">
+					
+<select ng-model="ocinfo.cantidad">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="30">30</option>
+  <option value="40">40</option>
+  <option value="50">50</option>
+</select>
+					<button ng-click="validar()" class="btn">Duplicar</button>
+				</div>
+				<div ng-show="ocCreadas">
+					<button ng-click="continuar()" class="btn">Continuar</button>
+				</div>
+				<table class="list" ng-show="ocCreadas">
+					<tr>
+						<th></th>
+						<th class="headerRow">{!$ObjectType.OperacionComercial__c.fields.Name.label}</th>
+						<th></th>
+					</tr>
+					<tr ng-repeat="o in ocCreadas">
+						<td class="dataCell">{{$index+1}}</td>
+						<td class="dataCell"><a ng-href="/{{o.Id}}">{{o.Name}}</a></td>
+						<td class="dataCell"><a ng-href="/{{oc.Activo__c}}">{{o.Activo__r.Name}}</a></td>
+					</tr>
+				</table>
+			</div>
+			<script type="text/javascript">
+				var ngApp=angular.module("ngApp", []);
+				
+				ngApp.controller("duplicar",function ($scope) {
+					$scope.oc={!ocJson};
+					$scope.ocinfo={};
+					$scope.mobiles={};
+					$scope.errorApex=null;
+					$scope.ocinfo.cantidad=1;
+					
+					$scope.validar = function() {
+						if(isNaN($scope.ocinfo.cantidad) || $scope.ocinfo.cantidad==null){
+							$scope.errorApex='El valor ingresado no es numerico';
+						}else{
+							$scope.errorApex=null;
+							$scope.duplicarOC();
+						}
+					};
+				$scope.duplicarOC = function() {
+					$scope.ocinfo.Id=$scope.oc.Id;
+					$scope.ocinfo.Idac=$scope.oc.Activo__c;
+				Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.DuplicarOcLTE_ctr.duplicarOC}',angular.toJson($scope.ocinfo),angular.toJson($scope.mobiles),$scope.ResultDuplicar);
+				};
+					$scope.ResultDuplicar=function (result, event) {
+						if (event.status) {
+							$scope.ocCreadas=JSON.parse(result.replace(/(&quot\;)/g,"\"").replace(/(&quot\;)/g,"\""));
+							console.log($scope.ocCreadas);
+						} else if (event.type === 'exception') {
+							$scope.errorApex = event.message+" " + event.where;
+						} else {
+							$scope.errorApex=event.message;
+						}
+						$scope.$apply();
+						
+					}
+				$scope.continuar = function() {
+					window.location = "/"+$scope.oc.Id;
+				};
+				});
+			</script>
+		</apex:pageBlock>
+	</apex:page>

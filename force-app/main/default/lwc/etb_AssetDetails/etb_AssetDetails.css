@@ -1,0 +1,16 @@
+.incorrectyear {
+  color: orangered;
+  font-weight: bold;
+}
+.font {
+  font-size: 20px;
+}
+.space-img-text {
+  margin-bottom: 24px;
+}
+.space-text-bottom {
+  margin-bottom: 100px;
+}
+.space-img-top {
+  margin-top: 100px;
+}

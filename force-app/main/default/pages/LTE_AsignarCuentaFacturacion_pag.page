@@ -1,0 +1,129 @@
+<apex:page showHeader="true" sidebar="true" controller="LTE_AsignarCuentaFacturacion_ctr" lightningStylesheets="true">
+    <apex:sectionHeader title="Asignar Cuenta de facturación"/>
+        <apex:pageBlock >
+            <div ng-app="ngApp" ng-controller="cuentaFactCtrl" class="bPageBlock" >
+
+<div ng-hide="leg" class="ng-cloak">
+<div class="message errorM3" role="alert">No se encontraron operaciones comerciales o la legalizacion se encuentra Gestionada</div>
+</div>
+
+                <div ng-show="leg" class="ng-cloak">
+                    <table class="list">
+                        <tr>
+                            <td>
+                                Seleccione una cuenta de facturación:
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <input type="text" class="textol" ng-model="lupas['CuentaFacturacionName']" ng-readonly="true" id="CuentaFacturacionName"/>
+                                    <input type="image" src="/servlet/servlet.FileDownload?file={!idImgLupa}" class="lookupIcon" ng-click="getCuentaFact()" ng-show="habilitar"/>
+                                </div>
+                                <input type="button" ng-click="asignarCuenta()" value="Asignar Cuenta de Facturacion" ng-show="lupas['CuentaFacturacionId']"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="list ">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th class="headerRow">{!$ObjectType.OperacionComercial__c.fields.Name.label}</th>
+                            <th class="headerRow">{!$ObjectType.ActivoETB__c.fields.Name.label}</th>
+                            <th class="headerRow">{!$ObjectType.Planes__c.fields.Name.label}</th>
+                            <th class="headerRow">{!$ObjectType.CuentaFacturacion__c.fields.Name.label}</th>
+                        </tr>
+                        <tr ng-repeat="o in oc">
+                            <td class="dataCell">{{$index+1}}</td>
+                            <th><input type="checkbox" ng-model="o.option" /></th>
+                            <td class="dataCell"><a ng-href="/{{o.oc.Id}}" target="_blank">{{o.oc.Name}}</a></td>
+                            <td class="dataCell"><a ng-href="/{{o.oc.Activo__c}}" target="_blank">{{o.oc.Activo__r.Name}}</a></td>
+                            <td class="dataCell">{{o.oc.Plan__r.Name}}</td>
+                            <td class="dataCell">{{o.oc.CuentaFacturacion__r.Name}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <script src="{!URLFOR($Resource.libraryjs,'angular.min.js')}"/>
+            <script type="text/javascript">
+            function asignar(a,b,c){
+            var appElement = document.querySelector('[ng-controller=cuentaFactCtrl]');
+            var scp = angular.element(appElement).scope();
+            scp.asignarJS(a,b,c);
+            }
+            var ngApp=angular.module("ngApp", []);
+            ngApp.controller("cuentaFactCtrl",function ($scope) {
+            $scope.leg='{!leg.id}';
+            $scope.cliente='{!leg.Nombredelacuenta2__c}';
+            $scope.oc=JSON.parse('{!data}');
+            $scope.linkCuentaF='{!CuentaFact}';
+            $scope.lupas={};
+            $scope.habilitar=true;
+            $scope.cuentaF={}
+            $scope.asignarCuenta = function() {
+            for(i = 0; i < $scope.oc.length; i++){
+                if($scope.oc[i].option==true){
+                $scope.oc[i].oc.CuentaFacturacion__c=$scope.lupas['CuentaFacturacionId'];
+            }
+            }
+            $scope.NumCuentaFact = $scope.lupas['CuentaFacturacionName'];            
+            console.log($scope.ocClass);
+            console.log(angular.fromJson($scope.ocClass));
+            Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.LTE_AsignarCuentaFacturacion_ctr.setOC}',angular.toJson($scope.oc),angular.toJson($scope.NumCuentaFact),$scope.handleResult);
+            };
+            $scope.getCuentaFact=function(){
+            $scope.abrirVentana($scope.linkCuentaF);
+            };
+            $scope.getCiudad=function(){
+            $scope.abrirVentana($scope.linkCiudad);
+            };
+            
+            $scope.getCiudad=function(){
+            $scope.abrirVentana($scope.linkCiudad);
+            };
+            
+            $scope.abrirVentana=function(url,idt){
+            ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1');
+            };
+            $scope.asignarJS=function(id,name,info){
+            $scope.lupas[info+"Id"]=id;
+            $scope.lupas[info+"Name"]=name;
+            console.log($scope.lupas);
+            $scope.$apply();
+            };
+            $scope.cuentaFactResponse=function (result, event) {
+            if (event.status) {
+            $scope.responsecf=JSON.parse(result.replace(/(&quot\;)/g,"\""));
+            $scope.tieneError=false;
+            $scope.lupas['CuentaFacturacionId']=$scope.responsecf.obj.Id;
+            $scope.lupas['CuentaFacturacionName']=$scope.responsecf.obj.Name;
+            } else if (event.type === 'exception') {
+        $scope.errorApex = event.message+"<br/>\n<pre>" + event.where + "</pre>";
+        $scope.tieneError=true;
+        } else {
+        $scope.errorApex=event.message;
+        $scope.tieneError=true;
+        }
+        console.log($scope.responsecf.obj);
+        $scope.$apply();
+        }
+        $scope.handleResult=function (result, event) {
+            if (event.status) {
+                $scope.responsejs=JSON.parse(result.replace(/(&quot\;)/g,"\""));
+                $scope.tieneError=false;
+            } else if (event.type === 'exception') {
+                $scope.errorApex = event.message+"<br/>\n<pre>" + event.where + "</pre>";
+                $scope.tieneError=true;
+            } else {
+                $scope.errorApex=event.message;
+                $scope.tieneError=true;
+            }
+            if($scope.responsejs.error==''){
+                window.location = "/"+$scope.leg;                
+            }else{
+                alert($scope.responsejs);
+            }
+            $scope.$apply();
+        }
+    });
+    </script>
+</apex:pageBlock>
+</apex:page>

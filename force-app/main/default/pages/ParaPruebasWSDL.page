@@ -1,0 +1,19 @@
+<apex:page controller="ParaPruebasWSDL">
+<apex:pageMessages id="msg" />
+    <apex:pageBlock >
+    <apex:form id="form">
+    <apex:pageBlockSection title="WSDL" columns="2">
+    	<apex:outputLabel value="Endpoint:" for="endpoint"/>	
+    	<apex:inputText value="{!endpoint}" id="endpoint"/>
+    	<apex:outputLabel value="Metodo:" for="metodo"/>	
+    	<apex:inputText value="{!metodo}" id="metodo"/>
+    	<apex:outputLabel value="Request:" for="xml"/>
+        <apex:inputTextarea id="xml" value="{!xml}" rows="5" cols="120"/>
+        <apex:outputLabel value="Response:" for="xmlResp" />
+        <apex:inputTextarea id="xmlResp" value="{!xmlResp}" readonly="true" rows="5" cols="120"/>
+        <apex:commandButton value="enviar" action="{!enviar}"/>
+        </apex:pageBlockSection>
+    </apex:form>
+    </apex:pageBlock>
+    
+</apex:page>

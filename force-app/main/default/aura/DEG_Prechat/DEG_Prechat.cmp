@@ -1,0 +1,145 @@
+<!--
+  @description       : 
+  @author            : Pablo Arrieta
+  @group             : 
+  @last modified on  : 04-07-2021
+  @last modified by  : Pablo Arrieta
+  Modifications Log 
+  Ver   Date         Author          Modification
+  1.0   03-17-2021   Pablo Arrieta   Initial Version
+-->
+<aura:component controller="DEG_LiveChat" implements="lightningsnapin:prechatUI"
+  description="Sample custom pre-chat component for Snap-ins. Implemented using Aura.">
+
+  <!-- You must implement "lightningsnapin:prechatUI" for this component to appear in the "Pre-chat Component" customization dropdown in the Snap-ins setup -->
+  <lightning:notificationsLibrary aura:id="notificationsLibrary" />
+  <lightningsnapin:settingsAPI aura:id="settingsAPI" />
+  <!-- SLDS stylesheet-->
+  <!--<ltng:require styles="{!$Resource.SLDS261 +'/styles/salesforce-lightning-design-system.min.css'}" />-->
+  <!--  <ltng:require styles="{!$Resource.SLDS}"/> -->
+
+  <!-- Pre-chat field components to render -->
+  <aura:attribute name="prechatFieldComponents" type="List"
+    description="An array of objects representing the pre-chat fields specified in pre-chat setup." />
+  <aura:attribute name="personalData" type="Boolean" description="Desea Transcript Chat" />
+  <aura:attribute name="termsandConditions" type="Boolean" description="Accept terms and conditions checkbox" />
+  <aura:attribute name="notCheckboxes" type="Boolean" default="false" />
+  <aura:attribute name="showCheckboxes" type="Boolean" default="true" />
+  <aura:attribute name="notEmail" type="Boolean" default="false" />
+  <aura:attribute name="showFields" type="Boolean" default="true" />
+  <aura:attribute name="liveChatLinksWrapper" type="Object" />
+  <aura:attribute name="LinkTerminosYCondiciones" type="Object" default="optionalDefault" />
+  <aura:attribute name="blankfieldForm" type="Boolean" default="false" />
+  <aura:attribute name="notMobile" type="Boolean" default="false" />
+  <aura:attribute name="notDocument" type="Boolean" default="false" />
+  <aura:attribute name="notName" type="Boolean" default="false" />
+  <aura:attribute name="notLastname" type="Boolean" default="false" />
+  <aura:attribute name="notDocType" type="Boolean" default="false" />
+  <aura:attribute name="typePickList" type="List" default="[]" />
+
+  <!-- Handler for when this component is initialized -->
+  <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+  <!-- For Aura performance -->
+  <aura:locator target="startButton" description="Pre-chat form submit button." />
+
+  <!-- Contains methods for getting pre-chat fields, starting a chat, and validating fields -->
+  <lightningsnapin:prechatAPI aura:id="prechatAPI" />
+
+  <div class="slds-scrollable_y" style="height: 100%">
+    <div class="prechatUI">
+      <div id="intro">
+        Los datos suministrados en el formulario serán
+        utilizados para el registro de tu contacto
+      </div>
+      <div class="slds-grid slds-wrap form-content">
+        <div class="slds-col slds-size_1-of-2">
+          <lightning:input aura:id="prechatField" name="FirstName" type="text" placeholder="Nombre" class="inputs"
+            onkeydown="{!c.handleChange}">
+          </lightning:input>
+          <aura:renderIf isTrue="{!v.notName}">
+            <ui:outputText aura:id="outputTextName" value="{!$Label.c.DEG_Name}" />
+          </aura:renderIf>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+          <lightning:input aura:id="prechatField" name="LastName" type="text" placeholder="Apellidos" class="inputs"
+            onkeydown="{!c.handleChange}">
+          </lightning:input>
+          <aura:renderIf isTrue="{!v.notLastname}">
+            <ui:outputText aura:id="outputTextLastname" value="{!$Label.c.DEG_Lastname}" />
+          </aura:renderIf>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+          <lightning:select aura:id="prechatField" class="inputs select" name="DEG_Tipo_de_Documento__c">
+            <option value="" disabled="true">Tipo de documento</option>
+            <aura:iteration items="{!v.typePickList}" var="s">
+              <option value="{!s.value}">{!s.label}</option>
+            </aura:iteration>
+          </lightning:select>
+          <aura:renderIf isTrue="{!v.notDocType}">
+            <ui:outputText aura:id="outputTextTypeDoc" value="{!$Label.c.DEG_Tipo_Doc}" />
+          </aura:renderIf>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+          <lightning:input aura:id="prechatField" name="NumerodeIdentificacion__c" type="text"
+            placeholder="Número de documento" class="inputs" onkeydown="{!c.handleChange}">
+          </lightning:input>
+          <aura:renderIf isTrue="{!v.notDocument}">
+            <ui:outputText aura:id="outputTextNumDoc" value="{!$Label.c.DEG_Num_Doc_Warning}" />
+          </aura:renderIf>
+        </div>
+        <div class="slds-col slds-size_1-of-2">
+          <lightning:input aura:id="prechatField" name="DEG_Numero_Celular__c" type="text" placeholder="Celular"
+            onkeydown="{!c.handleChange}" class="inputs" maxlength="10">
+          </lightning:input>
+          <aura:renderIf isTrue="{!v.notMobile}">
+            <ui:outputText aura:id="outputTextMobile" value="{!$Label.c.DEG_Msg_Celular}" />
+          </aura:renderIf>
+        </div>
+
+        <div class="slds-col slds-size_1-of-2">
+          <lightning:input aura:id="prechatField" name="Email" type="text" placeholder="Correo" class="inputs"
+            onkeydown="{!c.handleChange}">
+          </lightning:input>
+          <aura:renderIf isTrue="{!v.notEmail}">
+            <ui:outputText aura:id="outputTextEmail" value="{!$Label.c.DEG_Email_Warning}" />
+          </aura:renderIf>
+        </div>
+      </div>
+
+      <!-- <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-12">
+          <ui:inputCheckbox aura:id="pData" change="{!c.onCheckpData}" />
+        </div>
+        <div class="slds-col slds-size_11-of-12" style="text-align: left;">
+          <p class="checkBoxLabel">{!$Label.c.DEG_Transcript_ETB}</p>
+        </div>
+      </div> -->
+
+      <div class="terms">
+        <div>
+          <ui:inputCheckbox aura:id="terms" change="{!c.onCheckTerms}" required="true" />
+        </div>
+        <div>
+          <p class="checkBoxLabel">Aceptar <a href="{!v.liveChatLinksWrapper.linkTermConditions}"
+              target="_blank">términos y condiciones *</a></p>
+        </div>
+      </div>
+
+
+      <div>
+        <aura:renderIf isTrue="{!v.showCheckboxes}">
+          <aura:renderIf isTrue="{!v.notCheckboxes}">
+            <ui:outputText aura:id="outputTextId" value="{!$Label.c.DEG_Box_Warning}" />
+          </aura:renderIf>
+        </aura:renderIf>
+      </div>
+
+      <div class="startButtonWrapper">
+        <button class="slds-button startButton" aura:id="startButton" onclick="{!c.handleStartButtonClick}">
+          CONTINUAR
+        </button>
+      </div>
+    </div>
+  </div>
+</aura:component>

@@ -1,0 +1,53 @@
+<template>
+    <template if:false={noHayDatos}>
+        <div if:true={showTable}>
+            <div
+                class="slds-p-around_xx-small slds-col slds-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                <div class="slds-form-element__control responsive_class">
+                    <lightning-input placeholder="Buscar" variant="label-hidden" type="search" onchange={handleKeyUp}>
+                    </lightning-input>
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap">
+                <template for:each={pagedData} for:item="asset">
+                    <div class="slds-col slds-size_1-of-2" key={asset.Iden}>
+                        <c-cf-etb_360-view-asset-container parent-data=true records={asset}>
+                        </c-cf-etb_360-view-asset-container>
+                    </div>
+                </template>
+            </div>
+            <!-- Paginacion -->
+            <div class="slds-clearfix slds-m-top_medium slds-m-bottom_large">
+                <div class="slds-float_left slds-p-left_x-small" if:true={isMoreDataThanDataShow}>
+                    <span class="slds-m-top_xx-small slds-m-right_small">{getDatosMostrados} -
+                        {getDataShow} / {maxPages}
+                    </span>
+                    <lightning-button-icon icon-name="utility:left" onclick={handleButtonFirstPage}
+                        disabled={disabledPreviousButton} class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:chevronleft" onclick={handleButtonPrevious}
+                        disabled={disabledPreviousButton} class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:chevronright" onclick={handleButtonNext}
+                        disabled={disabledNextButton} class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:right" onclick={handleButtonLastPage}
+                        disabled={disabledNextButton} class="slds-m-left_xxx-small slds-m-bottom_large">
+                    </lightning-button-icon>
+                </div>
+                <!-- Ajustar Tamanio  -->
+                <div class="slds-float_right slds-grid slds-wrap">
+                    <div class="slds-clearfix">
+                        <p class="slds-float_left slds-p-top_xx-small slds-p-left_large slds-p-right_medium">
+                            Item por página
+                        </p>
+                        <lightning-combobox class="slds-float_right slds-p-right_x-small" variant="label-hidden"
+                            placeholder={pageSize} value={pageSize} options={optionsPage} onchange={elegirMaxMostrados}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin Paginacion -->
+        </div>
+    </template>
+</template>

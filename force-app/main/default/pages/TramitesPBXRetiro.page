@@ -1,0 +1,137 @@
+<apex:page standardController="ActivoETB__c" extensions="Tramites_ctr" action="{!pbxRetiro}" doctype="html-5.0">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+<style type="text/css">
+        .centrar{width:100%;text-align: center;}
+    </style>
+	<apex:form id="formulario">
+		<apex:pageMessages escape="false" />
+		<apex:pageBlock id="pbx" title="PBX">
+			
+			<div class="centrar">
+			<input class="btn" type="button" id="botonRetiro" value="Retirar lineas"/>
+			</div>
+			<apex:actionFunction name="RetiroJS" action="{!setRetiro}" rerender="formulario">
+			<apex:param name="firstParam" assignTo="{!sonTodos}" value="" />
+			</apex:actionFunction>
+			<apex:pageBlockTable value="{!w}" var="item">
+            
+            <!-- 
+            <apex:column >
+                <apex:facet name="header">Todos: <input type="checkbox" name="todos" value="todos" id="todasLin"/></apex:facet>
+                        <apex:inputCheckbox value="{!item.opcion}"
+                        styleClass="lineas {!item.serv.Tipodeprogramacion__c} {!item.IlimitadoS} {!item.serv.Tipodeprogramacion__c}"
+                        html-data-idac="{!item.serv.id}"
+                        html-data-tipo="{!item.serv.Tipodeprogramacion__c}"
+                        html-data-ilimitado="{!item.IlimitadoS}"/>
+            </apex:column>
+            -->
+
+
+
+				<apex:column value="{!item.serv.name}" />
+				
+                <apex:column value="{!item.serv.Activo_Relacionado__r.Name}">
+					<apex:facet name="header">Arranque</apex:facet>
+				</apex:column>
+				
+                <apex:column value="{!item.serv.Estado__c}" />
+                <apex:column value="{!item.serv.Tipodeprogramacion__c}" />
+
+                <apex:column >
+                	{!item.IlimitadoS}
+					<apex:facet name="header">Ilimitado</apex:facet>
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+		</apex:pageBlock>
+	</apex:form>
+
+<script type="text/javascript">
+
+
+$( document ).ready(function() {
+  	$( "#botonRetiro" ).click(function() {
+		validar();
+	});
+
+	var todos=true;
+	var arran=0;
+	var ilim=0;
+	var tron=0;
+	var opt=0;
+
+	function validar(){
+		if(todos){
+			if(confirm("Esta seguro que desea retirar todos los servicios")){
+				todos=true;
+				RetiroJS(todos);
+			}
+		}else{
+			opt=0;
+			arran=0;
+			ilim=0;
+			tron=0;
+			//validarServicios();
+		}
+	}
+	/*
+
+	function validarServicios(){
+		$( ".lineas" ).each(function( index ) {
+		  if($( this ).attr('checked')!='checked'){
+			  if($(this).data('tipo')=='Arranque'){arran++}
+			  if($(this).data('tipo')=='Troncal'){tron++}
+			  if($(this).data('ilimitado')=='Ilimitado'){ilim++}
+			}else{
+				opt++;
+			}
+		});
+
+		if(opt<=0){
+			alert('Seleccione una opcion');
+			return false;
+		}
+
+		if(arran<=0 || ilim<=0 || tron<=0){
+			alert('No se puede realizar la operacion al menos debe dejar una Troncal con arranque y un plan debe ser ilimitado');
+			console.debug(arran+'-'+ilim+'-'+tron);
+			return false;
+		}
+
+		suspenderJS(todos);
+		return true;
+
+	}
+
+	function selccionarTodos(){
+			$('.lineas').attr('checked','checked');
+		    $('.lineas').prop('disabled', true);
+		    todos=true;
+		}
+
+	function deSelccionarTodos(){
+			$('.lineas').prop('checked',false);
+			$('.lineas').prop('disabled', false);
+			todos=false;
+		}
+
+
+	$("#todasLin").click(function () {
+	    if($('#todasLin').attr('checked')=='checked'){
+	    	selccionarTodos();
+		}else{
+			deSelccionarTodos();
+		}
+
+	});
+	*/
+
+
+
+});
+
+
+
+</script>
+</apex:page>

@@ -1,0 +1,27 @@
+.THIS .slds-lookup__item-action.sl-no-results,
+.THIS .slds-lookup__item-action.sl-no-results:hover,
+.THIS .slds-lookup__item-action.sl-searching,
+.THIS .slds-lookup__item-action.sl-searching:hover {
+    cursor: auto;
+}
+
+.THIS .slds-lookup__item-action.sl-no-results:hover,
+.THIS .slds-lookup__item-action.sl-no-results:focus,
+.THIS .slds-lookup__item-action.sl-no-results:active,
+.THIS .slds-lookup__item-action.sl-searching:hover,
+.THIS .slds-lookup__item-action.sl-searching:focus,
+.THIS .slds-lookup__item-action.sl-searching:active {
+    background: white;
+}
+
+.THIS input:read-only {
+    padding-left: 20px;
+}
+
+.THIS input:disabled {
+    padding-left: 0.75rem !important;
+}
+
+.THIS .slds-input {
+    padding-left: 2rem !important;
+}

@@ -1,0 +1,74 @@
+<apex:page id="pgTrasladoServicioCuentaFacturacion" controller="TramitesCuentaDeFacturacion_ctr" lightningStylesheets="true">
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+    <apex:form id="frmActivos">        
+        <apex:outputPanel >
+        	<apex:pageBlock id="bloqueTabla" title="Traslado de servicio" tabStyle="Account">        		
+                <apex:pageMessages />
+                <apex:actionRegion rendered="{!showRenderVisual}">                        
+                    <apex:pageBlockSection columns="4" rendered="{!showTraslado}">
+                        <label style="font: 12px Verdana;" aling= "right">Seleccione la cuenta de facturación destino:</label>
+                        	<div>
+                                <apex:outputpanel id="opCuentaFacturacion">
+                                    <apex:inputText value="{!iLupas.cuentaFacturacion}" id="cuentaFacturacion" style="width:280px" onchange="seleccion(this)"
+                                    styleClass="textol" /> <apex:image style="cursor:pointer;" value="/servlet/servlet.FileDownload?file={!idImgLupa}"
+                                    styleClass="lookupIcon" 
+                                    onClick="buscarProducto('{!$Component.cuentaFacturacion}','{!$Component.cuentaFacturacionId}','{!CuentaFacturacionInfo}')" />
+                                </apex:outputpanel>                               
+                        	</div>
+                        	<apex:inputHidden value="{!iLupas.cuentaFacturacionId}" id="cuentaFacturacionId" />                        	
+                    </apex:pageBlockSection>                    
+                </apex:actionRegion>
+                
+                <apex:outputPanel id="out">
+                    <apex:actionRegion rendered="{!showRenderVisual}">
+                        <apex:actionFunction name="checkAll" action="{!checkAll}" rerender="out"/>
+                            <apex:actionFunction name="habilitarControles" action="{!habilitarControles}" >
+                            <apex:param name="firstParam" assignTo="{!cuenta}" value=""/>
+                        </apex:actionFunction>                        
+                        <apex:pageBlockSection id="sectabla" Columns="1" rendered="{!showTraslado}">                                                       
+                          	<apex:pageBlockTable value="{!wActivos}" var="Est" align="center" id="tablaRegistros"  styleClass="checkableTable">                                                              
+                                <apex:column headerValue="Servicio ETB" value="{!Est.activo.Name}"/>
+                                <apex:column headerValue="Nombre del producto" value="{!Est.activo.NombredelProducto__r.Name}"/>
+                                <apex:column headerValue="Nombre del plan" value="{!Est.activo.Plan__r.Name}"/>
+                                <apex:column headerValue="{!$ObjectType.ActivoETB__c.fields.CuentaFacturacion__c.Label}" value="{!Est.activo.CuentaFacturacion__r.Name}"/>
+                                <apex:column headerValue="{!$ObjectType.ActivoETB__c.fields.IDservicio__c.Label}" value="{!Est.activo.IDservicio__c}"/>
+                                <apex:column headerValue="{!$ObjectType.ActivoETB__c.fields.NumeroConexion__c.Label}" value="{!Est.activo.NumeroConexion__c}"/>                                                                                                    
+                            </apex:pageBlockTable>
+                    	</apex:pageBlockSection>                        
+                    </apex:actionRegion>
+                    <apex:actionRegion >
+                        <div align="center" draggable="false" > 
+                            <apex:outputPanel >                                
+                                <apex:commandButton value="Trasladar" action="{!ejecutarTramite}" rendered="{!showBtnEjecutar}"/>
+                                <apex:commandButton value="Regresar" action="{!regresar}"/>
+                            </apex:outputPanel>
+                        </div>                        
+                    </apex:actionRegion>
+                </apex:outputPanel>                      
+            </apex:pageBlock>
+		</apex:outputPanel>
+    </apex:form>
+    
+    <script type="text/javascript">
+    	var cuenta;
+        var elementObj;
+        var elementObjH;
+        var idcuenta;
+    
+    	function seleccion(sel){
+            seleccionJS(sel.value);
+        }    	
+    	function buscarProducto(id,id2,url){
+    		elementObj		=	document.getElementById(id);
+    		elementObjH		=	document.getElementById(id2);    		
+			ventana			=	window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+    	}
+    
+    	function asignar(elId,elNombre){
+            elementObjH.value	=	elId;
+            elementObj.value	=	elNombre;
+            //console.log(elId+'---'+elNombre);
+            //console.log(elementObjH.value+'---'+elementObj.value);        
+        }
+    </script>
+</apex:page>

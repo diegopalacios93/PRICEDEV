@@ -1,0 +1,2 @@
+<apex:page standardController="Procesos_Masivos__c"  extensions="CallProcesosMasivos" action="{!runBatch}">
+</apex:page>

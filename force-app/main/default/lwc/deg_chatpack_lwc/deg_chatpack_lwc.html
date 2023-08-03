@@ -1,0 +1,88 @@
+<!--
+  @description       : 
+  @author            : Harlinsson Chavarro (HCH)
+  @group             : 
+  @last modified on  : 01-03-2022
+  @last modified by  : j.martinez.mercado
+  Modifications Log 
+  Ver   Date         Author                      Modification
+  1.0   02-16-2021   Harlinsson Chavarro (HCH)   Initial Version
+-->
+<template>
+  <div class={messageStyle}>
+    <template if:false={isBaseTextVisible}>
+      <template for:each={strMessage} for:item="msj">
+        <div key={msj.orden}>
+          <template if:true={msj.esMsn}>
+            <template if:true={msj.validMsn}>
+              <div class="aligntxt">
+                <lightning-formatted-rich-text value={msj.mensaje} key={msj.orden}></lightning-formatted-rich-text>
+              </div>
+            </template>
+          </template>
+          <template if:true={msj.esImage}>
+            <div class={space}>
+              <c-deg_chatpackimage_lwc input-params={strMessage} image-lst-params={imageLst}></c-deg_chatpackimage_lwc>
+            </div>
+          </template>
+          <template if:true={msj.esVideo}>
+            <div class="space">
+              <c-deg_chatpack-video_lwc input-params={strMessage} video-lst-params={videoLst}
+                btn-link-lst-params={btnLinkLst}>
+              </c-deg_chatpack-video_lwc>
+            </div>
+          </template>
+          <template if:true={msj.esBtnLink}>
+            <div class="space">
+              <c-deg_chatpackbtnenlace_lwc input-params={strMessage} btn-link-lst-params={msj.btnLinkLst}>
+              </c-deg_chatpackbtnenlace_lwc>
+            </div>
+          </template>
+          <!-- <template if:false={msj.esMsn}>
+              <div>
+                <lightning-formatted-rich-text value={msj.mensaje} key={msj.orden}></lightning-formatted-rich-text>
+              </div>
+            </template> -->
+          <template if:true={msj.esBtn}>
+            <div class="bottomSpace">
+              <template for:each={msj.lBotones} for:item="btn">
+                <div key={btn.texto} class="space2">
+                  <button data-id={btn.texto} key={btn} title={btn.texto} onclick={handlePostMessage}
+                    class="slds-button slds-m-left_x-small botones">
+                    {btn.texto}
+                  </button>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+    </template>
+    <template if:true={isBaseTextVisible}>
+      <div>
+        <lightning-formatted-rich-text value={strMessage}></lightning-formatted-rich-text>
+      </div>
+    </template>
+    <template if:true={esEventUrl}>
+      <div>
+        <c-deg_chatpackurl_lwc input-params={eventLst}>
+        </c-deg_chatpackurl_lwc>
+      </div>
+    </template>
+  </div>
+  <template if:true={esFecha}>
+    <c-deg_datepicker_lwc dates-lst={datesLst} days={days} session-id={sessionId} token={token}></c-deg_datepicker_lwc>
+  </template>
+  <template if:true={esLogin}>
+    <c-deg_login_lwc session-id={sessionId} token={token}></c-deg_login_lwc>
+  </template>
+  <template if:true={esLoginEmp}>
+    <c-deg_login_webchat-Empresas_lwc session-id={sessionId} token={token}></c-deg_login_webchat-Empresas_lwc>
+  </template>
+  <template if:true={showPopupFin}>
+      <c-deg_popupsessiontimeout_lwc></c-deg_popupsessiontimeout_lwc>
+  </template>
+  <template if:true={closeChat}>
+    <c-deg_closechat_lwc></c-deg_closechat_lwc>
+  </template>
+</template>

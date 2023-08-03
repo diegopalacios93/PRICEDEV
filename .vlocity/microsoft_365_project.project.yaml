@@ -1,0 +1,12 @@
+Name: Microsoft 365 Project
+ignoreDependencies: false
+VlocityDataPackKeys:
+    - AttributeCategory/ATTCAT_Características_Generales
+    - ObjectClass/0e21aa-1ac2cc-a260c5-a852cd-7b4c8cfe8
+    - ObjectClass/a17948-ebc6b3-5507e6-105e26-879643a70
+    - AttributeCategory/ATTCAT_Caracteristicas_Avanzadas
+VlocityTypesToFetch:
+    - AttributeCategory
+    - ObjectClass
+    - VlocityPicklist
+SalesforceTypesToFetch:

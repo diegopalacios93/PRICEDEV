@@ -1,0 +1,104 @@
+.THIS.scrollerSize {
+  height: 300px;
+}
+
+.THIS .prechatUI {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  margin: 0 0.7rem 0 0.7rem;
+}
+
+.THIS #intro {
+  margin: 2.5rem 0 1.3rem;
+  font-size: 15px !important;
+  color: #808285;
+  text-align: center;
+}
+
+.THIS .inputs {
+  margin-right: 3px;
+  margin-left: 2px;
+  margin-bottom: 0.3rem;
+  color: #808285;
+  font-size: small;
+}
+
+.THIS .select {
+  font-size: small;
+}
+
+.THIS .form-content {
+  margin-bottom: 1rem;
+}
+
+.THIS .checkBoxLabel {
+  color: #808285;
+  font-size: 15px;
+  margin-left: 1rem;
+}
+
+.THIS .startButtonWrapper {
+  width: 100%;
+  margin-top: 1.3rem;
+  margin-bottom: 2rem;
+}
+
+.THIS .startButtonWrapper button {
+  width: 80%;
+  height: 2.7rem;
+}
+
+.THIS .embeddedServiceHelpButton .helpButton .uiButton {
+  background-color: #373e41;
+  font-family: "Salesforce Sans", sans-serif;
+}
+
+.THIS .terms {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.THIS .uiOutputText {
+  color: #a72121 !important;
+  font-size: 12px;
+  text-align: left;
+  margin-left: 5px;
+}
+
+.THIS .startButton {
+  background-color: #00aecb;
+  border-radius: 45px;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  color: white !important;
+  font-family: Arial;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.THIS icon {
+  display: none !important;
+}
+
+.THIS.textClass {
+  color: red !important;
+}
+
+.THIS ::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  font-size: small;
+}
+.THIS ::-moz-placeholder {
+  /* Firefox 19+ */
+  font-size: small;
+}
+.THIS :-ms-input-placeholder {
+  /* IE 10+ */
+  font-size: small;
+}
+.THIS :-moz-placeholder {
+  /* Firefox 18- */
+  font-size: small;
+}

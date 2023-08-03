@@ -1,0 +1,192 @@
+<apex:page standardController="Case" extensions="CrearTipificacion_ctr" id="idPage">
+    <apex:sectionHeader title="{!strTitle}" subtitle="{!strSubTitle}"/>
+    <apex:form id="idForm" >
+        
+        <apex:pageMessages />
+        
+        <apex:outputPanel id="thePanel" layout="block" rendered="{!Not esTipificado}">
+            
+            <apex:pageBlock id="idPageBlock1" title="{!$Label.MatrizTip_PB1Title}"
+                            rendered="{! IF(CaseInfo.Recordtype.Name='SOPORTE TECNICO',TRUE,FALSE) }"> 
+                
+                <!-- ACTION FUNCTIONS-->
+                <apex:actionFunction action="{!Refresco0}" name="JSRefresco0" reRender="idPage:idForm:idPageBlock1" />
+                <apex:actionFunction action="{!Refresco1}" name="JSRefresco1" reRender="idPage:idForm:idPageBlock1" />
+                <apex:actionFunction action="{!Refresco2}" name="JSRefresco2" reRender="idPage:idForm:idPageBlock1" />
+                <apex:actionFunction action="{!Refresco3}" name="JSRefresco3" reRender="idPage:idForm:idPageBlock1" />
+                <!-- /ACTION FUNCTIONS-->
+                
+                <table border="0" id="idTable1">
+                    <tr>
+                        <td>
+                            {!$Label.MatrizTip_TipoCaso}
+                        </td>
+                        <td>
+                            {!strInTipo}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$Label.MatrizTip_Agrupacion}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!strInAgrupacion}" multiselect="false" size="1" onchange="JSRefresco1()">
+                                <apex:selectOptions value="{!lstAgrupacion}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td>
+                            {!$Label.MatrizTip_Proceso}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!strInProceso}" multiselect="false" size="1" onchange="JSRefresco2()">
+                                <apex:selectOptions value="{!lstProceso}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$Label.MatrizTip_Tipologia}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!strInTipologia}" multiselect="false" size="1" onchange="JSRefresco3()">
+                                <apex:selectOptions value="{!lstTipologia}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> 
+                            {!$Label.MatrizTip_Descripcion}
+                        </td>
+                        <td>
+                            <apex:outputLabel value="{!strDescripcion}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p></p> 
+                            {!$ObjectType.MatrizTipificacion__c.Fields.LTE_SistemaLegado__c.Label}
+                        </td>
+                        <td><p></p>
+                            <apex:outputLabel value="{!strSistemaLegado}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p></p> 
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Requiere_CUN__c.Label}
+                        </td>
+                        <td><p></p>
+                            <apex:inputCheckbox value="{!reqCUN}" disabled="{!(!enbCUN)}" />
+                        </td>
+                    </tr> 
+                </table>                   
+                <apex:pageBlockButtons location="bottom">
+                    <apex:commandButton value="Guardar" action="{!Guardar}" />
+                    <!--<apex:commandButton value="Volver" action="{!Cancelar}" /> -->
+                </apex:pageBlockButtons>    
+            </apex:pageBlock>
+            
+            <!-- CASOS PQR -->
+            <apex:pageBlock id="idPageBlock2" title="{!$Label.MatrizTip_PB1Title}"
+                            rendered="{! IF(CaseInfo.Recordtype.Name='CASO PQR',TRUE,FALSE) }">
+                
+                <apex:actionFunction action="{!Nivel02}" name="JSNivel02" reRender="idPage:idForm:idPageBlock2" />
+                <apex:actionFunction action="{!Nivel03}" name="JSNivel03" reRender="idPage:idForm:idPageBlock2" />
+                <apex:actionFunction action="{!Nivel04}" name="JSNivel04" reRender="idPage:idForm:idPageBlock2" />
+                <apex:actionFunction action="{!Nivel05}" name="JSNivel05" reRender="idPage:idForm:idPageBlock2" />
+                <apex:actionFunction action="{!Nivel06}" name="JSNivel06" reRender="idPage:idForm:idPageBlock2" />
+                
+                
+                <table border="0" id="idTable1">
+                    <tr>
+                        <td>
+                            {!$Label.MatrizTip_TipoCaso}
+                        </td>
+                        <td>
+                            {!strInTipo}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Nivel_1__c.Label}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!nivel01}" multiselect="false" size="1" onchange="JSNivel02()">
+                                <apex:selectOptions value="{!niveles['Nivel01']}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Nivel_2__c.Label}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!nivel02}" multiselect="false" size="1" onchange="JSNivel03()">
+                                <apex:selectOptions value="{!niveles['Nivel02']}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Nivel_3__c.Label}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!nivel03}" multiselect="false" size="1" onchange="JSNivel04()">
+                                <apex:selectOptions value="{!niveles['Nivel03']}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Tipologia__c.Label}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!strInTipologia}" multiselect="false" size="1" onchange="JSNivel05()">
+                                <apex:selectOptions value="{!niveles['Nivel04']}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Causal__c.Label}
+                        </td>
+                        <td>
+                            <apex:selectList value="{!nivel04}" multiselect="false" size="1" onchange="JSNivel06()">
+                                <apex:selectOptions value="{!niveles['Nivel05']}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> 
+                            {!$Label.MatrizTip_Descripcion}
+                        </td>
+                        <td>
+                            <apex:outputLabel value="{!strDescripcion}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p></p> 
+                            {!$ObjectType.MatrizTipificacion__c.Fields.Requiere_CUN__c.Label}
+                        </td>
+                        <td><p></p>
+                            <apex:outputLabel value="{!reqCUN}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p></p> 
+                            {!$ObjectType.MatrizTipificacion__c.Fields.LTE_SistemaLegado__c.Label}
+                        </td>
+                        <td><p></p>
+                            <apex:outputLabel value="{!strSistemaLegado}"/>
+                        </td>
+                    </tr>
+                    
+                    <apex:pageBlockButtons location="bottom">
+                        <apex:commandButton value="Guardar" action="{!Guardar}" />
+                        <!--<apex:commandButton value="Volver" action="{!Cancelar}" /> -->
+                    </apex:pageBlockButtons>
+                </table>
+            </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,59 @@
+<template>
+  <div>
+    <vlocity_cmt-b2b-header category={headerData.category} description={headerData.description} title={headerData.title}
+      route-back="selectOffer" show-tabs=true></vlocity_cmt-b2b-header>
+  </div>
+  <div if:false={loading}>
+    <div if:true={showSelectServices}>
+      <div class="nds-b2b-configure-offer-container b2b-config-offer">
+        <div if:true={cartItems.messages.length}>
+          <div for:each={messages} for:item="message" key={message.messageId}>
+            <div class="nds-m-bottom_small nds-b2b-error-message">
+              <div class="slds-notify__content slds-grid">
+                <div class="slds-col slds-align-middle">
+                  <h2 class="slds-text-heading_small">{message.message}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div if:true={cartItems.records.length}>
+          <div for:each={cartItems.records} for:item="cartItem" key={cartItem.id}>
+            <!-- promotions -->
+            <div if:true={cartItem.promotions}>
+              <template if:true={cartItem.promotions.records}>
+                <div class={promotionBorderClass} for:each={cartItem.promotions.records} for:item="promo" key={promo.Id}>
+                  <vlocity_cmt-b2b-config-promotion promotion={promo} product={cartItem}></vlocity_cmt-b2b-config-promotion>
+                </div>
+              </template>
+            </div>
+            <!--Product-->
+            <template if:true={eligibilityErrors}>
+              <c-etb_b2b-config-card extra-actions={configCardExtraActions} title={cartItem.name} eligibile-error={eligibilityErrors} offer={cartItem} expand={expand} parent={cartItem}
+              macd={cartItem.isAssets} cart-count={cartItems.records.length} ></c-etb_b2b-config-card>
+            </template>
+            <hr class="nds-b2b-hr">
+          </div>
+          <div if:true={isShowMoreButtonApplicable} class="nds-text-align_center nds-m-top_x-large">
+            <vlocity_cmt-button variant="neutral" label={labels.CMEXShowMore} onclick={showMoreCartItems} theme={theme}>
+            </vlocity_cmt-button>
+          </div>
+        </div>
+      </div>
+      <div if:false={cartItems.records.length} class="nds-align_absolute-center b2b-config-offer">
+        {labels.CMEXNoItemsCart}</div>
+    </div>
+    <div class="nds-m-bottom_xx-large" if:false={showSelectServices}>
+      <vlocity_cmt-b2b-data-table-wrapper></vlocity_cmt-b2b-data-table-wrapper>
+    </div>
+    <div>
+      <slot name="totalBarConfigSlot">
+        <c-etb_b2b-total-bar due-total={oneTimeTotal} recurring-total={recurringTotal} cart-count={cartItems.records.length}
+        disable-add-product={isCartHasError}></c-etb_b2b-total-bar>
+      </slot>
+    </div>
+  </div>
+  <div class="slds-spinner_container" if:true={loading}>
+    <lightning-spinner alternative-text={labels.CMEXLoading} size="large" variant="brand"></lightning-spinner>
+  </div>
+</template>

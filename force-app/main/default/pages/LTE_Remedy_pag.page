@@ -1,0 +1,140 @@
+<!-- ********************************************************************** 
+Develope by:            Avanxo Colombia
+Author:                 Andrés Ferney Oliva Gutiérrez 
+Project:                ETB-LTE   
+Description:            VisualForce encargada de la información y el consumo del sistema Remedy                          
+Sprint                  1
+Release                 1
+
+Cambios (Versiones)
+********************************
+No.     Fecha       Autor                           Descripción
+******  **********  ********************            ****************
+1.0     14/08/2015  Andres F. Oliva G.              Creation. 
+**************************************************************************** -->
+<apex:page id="idPage" controller="LTE_Remedy_ctr" tabstyle="Case"  action="{!validacionInicial}">
+
+	<apex:form id="idForm" >
+	<apex:pageBlock title="Información del caso" id="blockFields">
+        <apex:pageMessages id="TheMessages" />
+        <apex:actionFunction action="{!CargarSubResponsable}" name="JSCargarSubResponsable" reRender="idPage:idForm:blockFields" />
+			
+		<apex:pageBlockSection columns="2" title="Información de la cuenta">
+			<apex:outputField value="{!objcase.Account.Name}"/>
+			<apex:outputField value="{!objcase.Account.Direccion__c}"/>
+		  	<apex:outputField value="{!objcase.Account.AccountNumber}"/>
+			<apex:outputField value="{!objcase.Account.Phone}"/>
+			<apex:outputField value="{!objcase.Account.Tipodedocumento__c}"/>
+			<apex:outputField value="{!objcase.Account.TipodeAtencion__c}"/>
+		</apex:pageBlockSection>
+		<apex:pageBlockSection columns="2" title="Información del contacto">
+		    <apex:outputField value="{!objcase.Contact.Name}"/>
+			<apex:outputField value="{!objcase.Contact.Email}"/>
+			<apex:outputField value="{!objcase.Contact.Phone}"/>
+		</apex:pageBlockSection>
+		<apex:pageBlockSection columns="2" title="Información del caso">
+		    <apex:outputField value="{!objcase.CaseNumber}"/>
+			<apex:outputField value="{!objcase.Agrupacion__c}"/>
+			<apex:outputField value="{!objcase.CodigouniconumericoCUN__c}"/>
+			<apex:outputField value="{!objcase.Proceso__c}"/>
+			<apex:outputField value="{!objcase.FechaInicioAfectacion__c}"/>
+			<apex:outputField value="{!objcase.Tipologia__c}"/>
+            
+            <apex:outputField value="{!objcase.Responsable_Legado__c}" rendered="{!(!blnHabilitarIntegracion && blnHabilitarIntegracionPS)}"/>
+            <apex:outputField value="{!objcase.SubResponsable_Legado__c}" rendered="{!(!blnHabilitarIntegracion && blnHabilitarIntegracionPS)}"/>
+			
+            <apex:selectList Label="Responsable"  value="{!strResponsable}" multiselect="false" size="1" id="liResponsable" rendered="{!(blnHabilitarIntegracion && blnHabilitarIntegracionPS)}" onchange="JSCargarSubResponsable()">
+                <apex:selectOptions value="{!lstResponsable}"/>
+            </apex:selectList>
+            <apex:selectList Label="SubResponsable"  value="{!strSubResponsable}" multiselect="false" size="1" id="liSubResponsable" rendered="{!(blnHabilitarIntegracion && blnHabilitarIntegracionPS)}">
+                <apex:selectOptions value="{!lstSubResponsable}"/>
+            </apex:selectList>
+            
+            <apex:outputField value="{!objcase.Status}"/>
+			<apex:outputField value="{!objcase.Causal_Estado__c}" rendered="{!(!blnActualizarEstado)}"/>
+            <apex:inputField value="{!objcase.Causal_Estado__c}" style="width:75%" required="true" rendered="{!blnActualizarEstado}"/>
+			<apex:outputField value="{!objcase.Fuente_Reportada_Legado__c}" rendered="{!(!blnHabilitarIntegracion)}"/>
+			<apex:selectList Label="Fuente de registro"  value="{!strFuenteIncidente}" multiselect="false" size="1" id="org" rendered="{!blnHabilitarIntegracion}">
+                <apex:selectOptions value="{!FuenteIncidente}"/>
+            </apex:selectList>
+			<apex:outputField value="{!objcase.SubCausal_Estado__c}" rendered="{!(!blnActualizarEstado)}"/>
+            <apex:inputField value="{!objcase.SubCausal_Estado__c}" style="width:75%" required="true" rendered="{!blnActualizarEstado}"/>
+			<apex:outputField value="{!objcase.Subject}" />
+		</apex:pageBlockSection>
+		<apex:pageBlockSection columns="2" title="Información del Servicio">
+			<apex:outputField value="{!objcase.LTE_Servicio__r.SucursalDestino__r.Direccion__c}"/>
+		</apex:pageBlockSection>
+		<apex:pageBlockSection columns="1" title="Nota Adicional" rendered="{!blnActualizarNota}">
+			<apex:inputTextarea rows="5" value="{!strNota}" style="width:100%" rendered="{!blnActualizarNota}" />
+		</apex:pageBlockSection>
+
+	<!--	<apex:pageBlockButtons location="bottom">
+		<apex:commandButton value="Guardar" action="{!guardar}" rerender="showmsg"/>
+		</apex:pageBlockButtons>
+		-->
+		<apex:pageBlockButtons location="bottom" >
+			<apex:actionStatus id="disablebtn" rendered="{!blnHabilitarIntegracion}">
+				<apex:facet name="stop">
+					   <apex:commandButton action="{!Guardar}" status="disablebtn" value="Crear" disabled="false" reRender="idPage:idForm:blockFields" />
+				</apex:facet>
+				<apex:facet name="start">
+				  <apex:commandButton action="{!Guardar}" status="disablebtn" value="Procesando..." disabled="true"/>
+				</apex:facet>
+			</apex:actionStatus>
+			<apex:actionStatus id="actActualizar" rendered="{!((blnActualizarEstado||blnActualizarNota)&&!blnHabilitarIntegracion) }">
+				<apex:facet name="stop">
+					   <apex:commandButton action="{!Actualizar}" status="actActualizar" value="Actualizar" disabled="false" reRender="idPage:idForm:blockFields" />
+				</apex:facet>
+				<apex:facet name="start">
+				  <apex:commandButton action="{!Actualizar}" status="actActualizar" value="Procesando..." disabled="true"/>
+				</apex:facet>
+			</apex:actionStatus>
+			<apex:actionStatus id="actConsultaTareas" rendered="{!blnCreadoRemedy}" >
+				<apex:facet name="stop">
+					   <apex:commandButton action="{!ConsultarTareasRemedy}" status="actConsultaTareas" value="Consultar Tareas Remedy" disabled="false" reRender="idPage:idForm:blockFields" />
+				</apex:facet>
+				<apex:facet name="start">
+				  <apex:commandButton action="{!ConsultarTareasRemedy}" status="actConsultaTareas" value="Procesando..." disabled="true"/>
+				</apex:facet>
+			</apex:actionStatus>
+		</apex:pageBlockButtons>
+        <apex:outputPanel id="statuses">
+            <div>
+                <apex:actionStatus id="statInProgress" startText="Procesando..." />
+            </div>
+        </apex:outputPanel>
+		
+	</apex:pageBlock>
+	<apex:pageBlock title="Actividades Salesforce" rendered="{!blnActualizarEstado}">
+        <apex:pageBlockTable value="{!lstTareasSalesforce}" var="tareaSF" style="text-align:center">
+            <apex:column headerValue="Integrar"><apex:inputCheckbox value="{!tareaSF.IntegrarLegado}" disabled="{!(!tareaSF.validoIntegracion)}"/></apex:column>
+            <apex:column value="{!tareaSF.objTarea.Subject}" headerValue="Asunto"/>
+            <apex:column value="{!tareaSF.objTarea.Status}" headerValue="Estado"/>
+            <apex:column value="{!tareaSF.objTarea.ActivityDate}" headerValue="Fecha de vencimiento"/>
+            <apex:column value="{!tareaSF.objTarea.ID_externo__c}" headerValue="Id Externo"/>
+        </apex:pageBlockTable>
+		<apex:pageBlockButtons location="top" >
+			<apex:actionStatus id="actTareasSF" >
+				<apex:facet name="stop">
+					   <apex:commandButton action="{!IntegrarTareasRemedy}" status="actTareasSF" value="Integrar Tareas" disabled="false" reRender="idPage:idForm:blockFields" />
+				</apex:facet>
+				<apex:facet name="start">
+				  <apex:commandButton action="{!IntegrarTareasRemedy}" status="actTareasSF" value="Procesando..." disabled="true"/>
+				</apex:facet>
+			</apex:actionStatus>
+		</apex:pageBlockButtons>
+	</apex:pageBlock>
+	<apex:pageBlock title="Información que será enviada a Remedy" rendered="{!(blnMostrarTareas)}" >
+        <apex:pageBlockTable value="{!lstTareas}" var="tarea" style="text-align:center">
+            <apex:column value="{!tarea.TaskID}" headerValue="Id Tarea Remedy"/>
+            <apex:column value="{!tarea.NombreTask}" headerValue="Nombre Tarea"/>
+            <apex:column value="{!tarea.Estado_SF}" headerValue="Estado SF"/>
+            <apex:column value="{!tarea.Estado_RMD}" headerValue="Estado Remedy"/>
+            <apex:column value="{!tarea.ID_Tarea_SF}" headerValue="Id Tarea SF"/>
+            <apex:facet name="footer">
+                <apex:outputText value="Showing Page {!intActualTareasRemedy} pageNumber of {!intTotalTareasRemedy}"/>
+            </apex:facet>
+        </apex:pageBlockTable>
+	</apex:pageBlock>
+	</apex:form>
+</apex:page>

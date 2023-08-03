@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-m-bottom_x-small slds-m-top_medium slds-size_1-of-1">
+            <p class="font">{messageError}</p>
+            <p class="font" if:true={esService}><b>Si su intención es vender un producto Móvil o Avanzado, puede
+                    saltarse este paso.</b></p>
+        </div>
+        <lightning-radio-group class="slds-size_1-of-1" label={labelRadioGroup} type="radio" value={value}
+            options={options} onchange={handleChange}>
+        </lightning-radio-group>
+    </div>
+</template>

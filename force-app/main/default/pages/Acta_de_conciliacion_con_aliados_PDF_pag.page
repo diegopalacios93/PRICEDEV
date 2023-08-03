@@ -1,0 +1,195 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Actas_de_contrato__c" applyBodyTag="false" extensions="Acta_de_conciliacion_con_aliados_PDF_ctr" renderAs="pdf">
+<head>
+<style type="text/css">         
+    .contenido_8px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 8px;
+    }
+    .contenido_8px_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 8px;
+    } 
+    .contenido_9px_TNR {
+       	font-family: Times New Roman;
+       	font-weight: bold;
+       	font-size: 9px;
+    }
+    .contenido_9px_Italic {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;
+    	font-style: italic;
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_Italic_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;
+    	font-style: italic;
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;    
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px; 
+    	line-height: 12px;
+    	display:block;
+    }    
+    .contenido_9px_Italic_footer {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;
+    	font-style: italic;    	
+    }
+    .contenido_9px_Italic_NB_footer { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;
+    	font-style: italic;    	
+    }
+    .contenido_9px_footer {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px;        	
+    }
+    .contenido_9px_NB_footer { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;     	
+    }  
+    .contenido_9px_controlversion {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 9px; 
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_NB_controlversion {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px; 
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_9px_Italic_NB_controlversion { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 9px;
+    	font-style: italic;
+    	line-height: 12px;
+    	display:block;
+    } 
+    .contenido_10px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 10px; 
+    	line-height: 12px;
+    	display:block;
+    }
+    .contenido_10px_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 10px;   
+    	line-height: 12px;
+    	display:block;
+    }   
+    .contenido_11px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 11px;      	
+    }
+    .contenido_11px_NB {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 11px;    	
+    }
+    .contenido_11px_Italic_NB { 
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 11px;
+    	font-style: italic;
+    }   
+    .contenido_12px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 12px;
+    }
+    .contenido_12px_NB {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 12px;
+    }
+    .contenido_13px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 13px;
+    }
+    .contenido_13px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 13px;
+    }
+    .contenido_14px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 14px;
+    }
+    .contenido_14px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 14px;
+    }
+    .contenido_15px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 15px;
+    	font-style: italic;
+    }
+    .contenido_15px_TNR {
+    	font-family: Times New Roman;
+       	font-weight: bold;
+       	font-size: 15px;
+    	font-style: italic;
+    }
+    .contenido_15px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 15px;
+    }
+    .contenido_16px {
+       	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 16px;
+    }
+    .contenido_16px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 16px;
+    }
+    .contenido_17px {
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-weight: bold;
+       	font-size: 17px;
+    }
+    .contenido_17px_NB {  
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 17px;
+    }
+    .contenido_18px {    
+       font-weight: bold;
+       font-size: 18px;
+       font-style: italic;
+    }
+    .contenido_18px_NB {       
+    	font-family: Arial, Helvetica, sans-serif;
+       	font-size: 18px;
+    }  
+    .contenido_55px {       
+    	font-family: Times New Roman;
+       	font-size: 55px;
+    	font-weight: bold;
+    }  
+    @page {  
+    size: A4 landscape;
+    margin-right: 8%; 
+    }
+</style>
+</head>    
+  <apex:outputtext value="{!htmlScript}" escape="false" id="htmlScript"/>           
+</apex:page>

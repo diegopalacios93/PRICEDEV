@@ -1,0 +1,11 @@
+<apex:page standardController="ActivoETB__c" extensions="Tramites_ctr" action="{!crearArranque}">
+    <apex:form >
+        <apex:pageMessages escape="false" />
+        <apex:pageBlock id="pbx" title="PBX">
+
+            <apex:pageBlockButtons location="top" rendered="{!IF((visible=='creaArranque'),true,false)}">
+                <apex:commandButton value="Crear Arranque"  action="{!getArranque}"/>
+            </apex:pageBlockButtons>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

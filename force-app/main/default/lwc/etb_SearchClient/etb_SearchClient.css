@@ -1,0 +1,23 @@
+.os-step-label {
+  font-weight: 700 !important;
+  font-size: 18px;
+  height: 23px;
+  color: #0f0f0f;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 23px;
+}
+.vlc-separator {
+  width: 3.2rem !important;
+  border-color: #285dac !important;
+  margin-top: 1rem !important;
+  box-sizing: border-box;
+  border: 1px solid #034589;
+  border-width: 0.1rem;
+}
+.searchButton {
+  border: #0070d2 !important;
+}
+.buttonCrearNuevoCandidato {
+  background-color: #034589 !important;
+}

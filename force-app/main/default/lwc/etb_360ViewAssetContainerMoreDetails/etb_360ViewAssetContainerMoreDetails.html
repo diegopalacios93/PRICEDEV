@@ -1,0 +1,150 @@
+<template>
+  <!-- lightning button for open modal window -->
+  <button class="button" onclick={openModal}>
+    <svg class="slds-button__icon slds-button__icon_left icon">
+      <use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+    </svg>Más detalles</button>
+  <!--Use template if:true to display/hide popup based on isModalOpen value-->
+  <template if:true={isModalOpen}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <!-- Modal/Popup Box LWC header here -->
+        <header class="slds-modal__header">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+            onclick={closeModal}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+            </lightning-icon>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="font-size: 20px;">Detalles de
+            la línea</h2>
+        </header>
+        <div if:true={registro.moreInfo} class="slds-modal__content modalBody slds-p-around_large">
+          <div class="slds-grid slds-wrap">
+            <div class="slds-form-element slds-size_1-of-2 slds-p-right_x-small slds-p-bottom_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-51"
+                style="font-size: 12px;color: #4A4A4A;">Numero de
+                Contrato</label>
+              <div if:true={registro.moreInfo.ContractNumber} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.moreInfo.ContractNumber} />
+              </div>
+              <div if:false={registro.moreInfo.ContractNumber} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div class="slds-form-element slds-size_1-of-2 slds-p-left_x-small slds-p-bottom_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47" style="font-size: 12px;color: #4A4A4A;"
+                id="fixed-text-label">Precio</label>
+              <div if:true={registro.moreInfo.AssetPrice} class="slds-form-element__control slds-input-has-fixed-addon">
+                <input type="text" id="text-input-id-47" value={precioFormateado}
+                  style="font-size: 14px;color: #000000;"
+                  aria-labelledby="fixed-text-label fixed-text-addon-pre fixed-text-addon-post" class="slds-input"
+                  readonly />
+              </div>
+              <div if:false={registro.moreInfo.AssetPrice} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div if:true={esmovilofija}
+              class="slds-form-element slds-size_1-of-2 slds-p-right_x-small slds-p-vertical_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47"
+                style="font-size: 12px;color: #4A4A4A;">Teléfono</label>
+              <div if:true={registro.moreInfo.AccountPhone} class="slds-form-element__control">
+                <input type="number" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.moreInfo.AccountPhone} />
+              </div>
+              <div if:false={registro.moreInfo.AccountPhone} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div if:false={esmovilofija}
+              class="slds-form-element slds-size_1-of-2 slds-p-right_x-small slds-p-vertical_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47" style="font-size: 12px;color: #4A4A4A;">Id
+                Servicio</label>
+              <div if:true={registro.moreInfo.AssetIdService} class="slds-form-element__control">
+                <input type="number" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.moreInfo.AssetIdService} />
+              </div>
+              <div if:false={registro.moreInfo.AssetIdService} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div class="slds-form-element slds-size_1-of-2 slds-p-left_x-small slds-p-vertical_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47"
+                style="font-size: 12px;color: #4A4A4A;">Plan</label>
+              <div if:true={registro.AssetType} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.AssetType} />
+              </div>
+              <div if:false={registro.AssetType} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div class="slds-form-element slds-size_1-of-2 slds-p-right_x-small slds-p-vertical_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47"
+                style="font-size: 12px;color: #4A4A4A;">Ubicación</label>
+              <div if:true={Ubicacion} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={Ubicacion} />
+              </div>
+              <div if:false={Ubicacion} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div class="slds-form-element slds-size_1-of-2 slds-p-left_x-small slds-p-vertical_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47"
+                style="font-size: 12px;color: #4A4A4A;">Fecha de Instalación</label>
+              <div if:true={registro.AssetInstallationDate} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.AssetInstallationDate} />
+              </div>
+              <div if:false={registro.AssetInstallationDate} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div class="slds-form-element slds-size_1-of-2 slds-p-right_x-small slds-p-top_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-59"
+                style="font-size: 12px;color: #4A4A4A;">Fecha de Contrato</label>
+              <div if:true={registro.moreInfo.StartDate} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.moreInfo.StartDate} />
+              </div>
+              <div if:false={registro.moreInfo.StartDate} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+            <div class="slds-form-element slds-size_1-of-2 slds-p-left_x-small slds-p-top_xx-small">
+              <label class="slds-form-element__label" for="text-input-id-47"
+                style="font-size: 12px;color: #4A4A4A;">Fecha de Fin</label>
+              <div if:true={registro.moreInfo.AssetEndDate} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;"
+                  value={registro.moreInfo.AssetEndDate} />
+              </div>
+              <div if:false={registro.moreInfo.AssetEndDate} class="slds-form-element__control">
+                <input type="text" readonly class="slds-input" style="font-size: 14px;color: #000000;" value="" />
+              </div>
+              <hr class="slds-m-around_none">
+            </div>
+          </div>
+        </div>
+        <!-- Modal/Popup Box LWC body starts here -->
+        <footer class="slds-modal__footer">
+          <lightning-button style="font-size: 13px;" variant="brand-outline" label="Cerrar" onclick={closeModal}>
+          </lightning-button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>

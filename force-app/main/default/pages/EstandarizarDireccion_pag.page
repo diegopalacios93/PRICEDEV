@@ -1,0 +1,163 @@
+<apex:page controller="EstandarizarDireccion_ctr" showHeader="false">
+
+<apex:stylesheet value="{!URLFOR($Resource.bootstrap_min,'')}" />
+
+<script type="text/javascript">
+    function concatenar()
+    {
+        var dir = '';
+        var dirCompleta = '';
+        var controles = document.getElementsByClassName('clsControl');
+        
+        for (var i=0;i<controles.length;i++)
+        {
+            if(controles[i].options != null)
+            {
+                var e = controles[i];
+                if(controles[i].value.length > 0)
+                {
+                    dir = dir + controles[i].value + ' ';
+                    dirCompleta = dirCompleta  + e.options[e.selectedIndex].text +  ' ';                
+                }
+            }
+            else
+            {
+                if(controles[i].value.length > 0)
+                {            
+                    dir = dir + controles[i].value + ' ';
+                    dirCompleta = dirCompleta  + controles[i].value +  ' ';
+                }
+            }
+        }
+        dir = dir.toUpperCase();
+        dirCompleta = dirCompleta.toUpperCase();
+        document.getElementsByClassName('dirAbreviada')[0].value = dir;
+        document.getElementsByClassName('dirCompleta')[0].value = dirCompleta;
+    }
+    
+    function collapsible()
+    {
+        
+    }
+
+    function copyToClipboard() {
+        var elem = document.getElementsByClassName('dirAbreviada')[0];
+        var targetId = "_hiddenCopyText_";
+        var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+        var origSelectionStart, origSelectionEnd;
+        if (isInput) {
+            // can just use the original source element for the selection and copy
+            target = elem;
+            origSelectionStart = elem.selectionStart;
+            origSelectionEnd = elem.selectionEnd;
+        } else {
+            // must use a temporary form element for the selection and copy
+            target = document.getElementById(targetId);
+            if (!target) {
+                var target = document.createElement("textarea");
+                target.style.position = "absolute";
+                target.style.left = "-9999px";
+                target.style.top = "0";
+                target.id = targetId;
+                document.body.appendChild(target);
+            }
+            target.textContent = elem.textContent;
+        }
+        // select the content
+        var currentFocus = document.activeElement;
+        target.focus();
+        target.setSelectionRange(0, target.value.length);
+        
+        // copy the selection
+        var succeed;
+        try {
+              succeed = document.execCommand("copy");
+        } catch(e) {
+            succeed = false;
+        }
+        // restore original focus
+        if (currentFocus && typeof currentFocus.focus === "function") {
+            currentFocus.focus();
+        }
+        
+        if (isInput) {
+            // restore prior selection
+            elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+        } else {
+            // clear temporary content
+            target.textContent = "";
+        }
+        return succeed;
+    }
+</script>
+
+<style>
+body { padding-top: 10px; }
+</style>
+    <apex:form id="vpForm">
+           
+         <apex:pageBlock > 
+            <apex:pagemessages id="msj" />  
+            
+            <apex:pageBlockSection columns="1" id="vpBlock2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!strDireccionOld}</apex:outputLabel>
+                </apex:pageBlockSectionItem>           
+				<apex:pageBlockSectionItem id="vpSec1">
+                    <apex:outputLabel >{!$Label.DireccionEstandarizadaED}&nbsp;<apex:image onclick="copyToClipboard();" url="{!$Resource.IconoCopiar}" style="width: 6%; heigth: 6%;"/></apex:outputLabel>    
+                    <apex:inputText styleClass="dirAbreviada" value="{!dirAbreviada }" style="width:100%;" disabled="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="vpSec2">
+                    <apex:outputLabel >{!$Label.DireccionDigitadaED}</apex:outputLabel>  
+                    <apex:inputText styleClass="dirCompleta" value="{!dirCompleta }" style="width:100%;" disabled="true" />                   
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="vpSec3">
+                    <apex:outputLabel >{!$Label.ObservacionesED}</apex:outputLabel>
+                    <apex:inputText styleClass="observacion" value="{!observacion }" disabled="{!NOT( CONTAINS( $Label.AVX_PerfilesHabilitados, $Profile.Name ) )}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>                        
+                       
+            <apex:repeat id="rep1" value="{!lstSecciones}" var="itemSeccion" >           
+            <apex:pageBlockSection title="{!itemSeccion.strNomSeccion}" collapsible="true"  columns="1"  >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel layout="none">   
+                           
+                        <!-- Div tag Malla Vial -->
+                        <div class="container-fluid">
+                          <div class="row" id="thumRow1" >
+                            <apex:repeat value="{!itemSeccion.lstControl}" var="item" >
+                            <div class="col-sm-5 col-md-2" style="width:15%">
+                                
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" style="font-size: 9px; height:30px;">
+                                        <apex:outputLabel value="{!item.strEtiqueta}"  style="text-align: center;"  />   
+                                        <img src="/img/alohaSkin/help_orange.png" onclick="alert('{!item.strAyuda}');" align="right"/>                                     
+                                    </div>
+                                    <div class="panel-body" style="height:40px;">
+                                        <p>
+                                            <apex:selectList styleClass="clsControl" value="{!item.strValor}" multiselect="false" size="1"  style="width: 100%; " rendered="{!item.strTipoControl == '1'}" onchange="concatenar();" >
+                                                <apex:selectOptions value="{!item.lstOpciones}" />
+                                            </apex:selectList> 
+                                            <apex:inputText styleClass="clsControl" value="{!item.strValor}" rendered="{!item.strTipoControl == '2'}" style="width: 100%; height: 100%;" onkeyup="concatenar();" maxlength="{!item.strLong}" />                                                                                            
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            </apex:repeat>
+                          </div>
+                        </div>  
+                        
+                     </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>             
+            </apex:repeat>                                                
+            <apex:pageBlockButtons rendered="{!verBotones}"> <!-- rendered="{!verBotones}" -->
+                <apex:commandButton value="Guardar" action="{!guardar}" rendered="{!sinObjeto==false}"/>
+                <apex:commandButton value="Cancelar" action="{!cancelar}" rendered="{!sinObjeto==false}"/>
+                <apex:image onclick="copyToClipboard();" url="{!$Resource.IconoCopiar}" style="width: 3%; heigth: 3%;"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+               
+    </apex:form>
+</apex:page>

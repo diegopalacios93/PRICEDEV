@@ -1,0 +1,30 @@
+<template>
+    <div class="doneStyle">
+        <div class="iconStyle">
+            <img src={statusImage} class="slds-size--12-of-12"></img>
+        </div>
+        <header>
+            <div class="titleMessage">{message.TitleMessage}
+            </div>
+            <p class="slds-m-top_x-small">
+                <lightning-formatted-rich-text if:true={validateSuccess} value={message.MainMessage}>
+                </lightning-formatted-rich-text>
+            </p>
+            <div class="orderMessage slds-m-top_x-small">{message.OrderMessage}
+            </div>
+            <lightning-button variant="brand" onclick={openUrl} class="styleButton" label="Finalizar">
+            </lightning-button>
+            <!-- <p class="one-flow-message" if:true={hasOneFlowCleanStorage}>Si cree que este mensaje es un error, puede
+                hacer click <a href="#" onclick={handlerCleanLocalStorageOneFlow}>aqui</a> e intentar nuevamente.</p> -->
+        </header>
+    </div>
+    <div if:true={showCallSpinner} class="demo-only">
+        <div class="slds-spinner_container">
+            <div role="status" class="slds-spinner slds-spinner_large">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </div>
+</template>

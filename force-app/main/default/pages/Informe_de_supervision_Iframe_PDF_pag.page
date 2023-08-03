@@ -1,0 +1,10 @@
+<apex:page standardController="Contract" extensions="Informe_de_supervision_PDF_ctr" showHeader="false" lightningStylesheets="true">
+    <apex:pageBlock >
+        <apex:form id="idForm" >
+            <apex:commandButton value="Regresar al contrato" action="{!regresar}"/>              
+        </apex:form>
+    </apex:pageBlock>
+    <apex:pageBlock >
+        <apex:iframe src="{!pageUrlExport}" scrolling="true" id="theIframe" frameborder="true" title="Informe de supervisión"/>
+    </apex:pageBlock>  
+</apex:page>

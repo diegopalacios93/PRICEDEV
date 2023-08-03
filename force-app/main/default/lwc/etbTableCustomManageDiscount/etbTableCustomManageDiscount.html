@@ -1,0 +1,192 @@
+<template>
+    <div class="inlinecss">
+        <div>
+            <table if:false={spinnerActive} class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout myTableCustomCss" 
+            aria-label="Example table of Opportunities with no row hovers">
+                <thead>
+                    <tr class="slds-line-height_reset myHeaderCssCustom">
+                        <th class="" scope="col" style="width: 20%;">
+                            <div class="slds-truncate" title="Ubicación">Ubicación</div>
+                        </th>
+                        <th class="" scope="col" style="width: 13%;">
+                            <div class="slds-truncate" title="Producto">Producto</div>
+                        </th>
+                        <th class="slds-cell-wrap" scope="col" style="width: 6%;">
+                            <div class="slds-line-clamp" title="Cantidad">Cantidad</div>
+                        </th>
+                        <th class="" scope="col" style="text-align: right; width: 11%;">
+                            <div class="slds-truncate" title="Tarifa Lista">Tarifa Lista</div>
+                        </th>
+                        <th class="" scope="col" style="text-align: right; width: 11%;">
+                            <div class="slds-truncate" title="Tarifa Piso">Tarifa Piso</div>
+                        </th>
+                        <th class="slds-cell-wrap" scope="col" style="padding-left: 1rem; width: 10%;">
+                            <div class="sslds-line-clamp" title="Descuento comercial máximo">Descuento Máximo Comercial</div>
+                        </th>
+                        <th class="slds-cell-wrap" scope="col"  style="width: 8%;">
+                            <div class="slds-line-clamp" title="Descuento máximo permitido">Descuento Máximo permitido</div>
+                        </th>
+                        <th class="slds-cell-wrap" scope="col" style="width: 9%;">
+                                <div class="slds-line-clamp" title="Descuento">Descuento</div>
+                        </th>
+                        <th class="slds-cell-wrap" scope="col" style="width: 12%;">
+                            <div class="slds-line-clamp" title="Agregar"></div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={pagedData} for:item="descuento" for:index="index">
+                        <tr class="slds-hint-parent" key={descuento.Id}>
+                            <td data-label="Ubicacion" scope="row" class="slds-cell-wrap">
+                                <div class="slds-truncate slds-line-clamp" title="Ubicacion" >
+                                    {descuento.ServiceAccount}
+                                </div>
+                            </td>
+                            <td data-label="Producto" scope="row" class="slds-cell-wrap">
+                                <div class="slds-truncate slds-line-clamp" title="Producto">
+                                    {descuento.ProductName}
+                                </div>
+                            </td>
+                            <td data-label="Cantidad" scope="row" class="slds-cell-wrap">
+                                <div class="slds-truncate slds-line-clamp" title="Cantidad">
+                                    {descuento.Quantity}
+                                </div>
+                            </td>
+                            <td data-label="Tarifa Lista" scope="row" class="slds-cell-wrap" style="text-align: right;">
+                                <lightning-formatted-number class="slds-truncate slds-line-clamp" tittle="Tarifa Lista" value={descuento.RecurringCharge} format-style="currency" currency-code="COP" currency-display-as="code">
+                                </lightning-formatted-number>
+                            </td>
+                            <td data-label="Tarifa Piso" scope="row" class="slds-cell-wrap" style="text-align: right;">
+                                <lightning-formatted-number class="slds-truncate slds-line-clamp" tittle="Tarifa Piso" value={descuento.RecurringCost} format-style="currency" currency-code="COP" currency-display-as="code">
+                                </lightning-formatted-number>
+                            </td>
+                            <td data-label="Descuento comercial máximo" scope="row" class="slds-cell-wrap" style="padding-left: 1.5rem;">
+                                <lightning-formatted-number if:true={descuento.ManualPricing} class="slds-truncate slds-line-clamp" title="Descuento comercial máximo" value={descuento.AllowedDiscount} format-style="percent" maximum-fraction-digits="3">
+                                </lightning-formatted-number>
+                                <p if:false={descuento.ManualPricing}> - </p>
+                            </td>
+                            <td data-label="Descuento máximo permitido" scope="row" class="slds-cell-wrap">
+                                <lightning-formatted-number if:true={descuento.ManualPricing} class="slds-truncate slds-line-clamp" title="Descuento máximo permitido" value={descuento.NextPossibleDiscount} format-style="percent" maximum-fraction-digits="3">
+                                </lightning-formatted-number>
+                                <p if:false={descuento.ManualPricing}> - </p>
+                            </td>
+                            <!-- <td data-label="Descuento" scope="row" class="slds-cell-wrap">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right slds-truncate slds-p-bottom_medium slds-line-clamp" title="Descuento">
+                                        <span class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default">
+                                            %
+                                        </span>
+                                        <lightning-input 
+                                        type="number" 
+                                        name="inputNumber"
+                                        label=""
+                                        min="0"
+                                        step="0.01"
+                                        max={descuento.MaxInputDiscount}
+                                        value={descuento.DiscountToApply}
+                                        onchange={handleChangeDesc}
+                                        data-index={index}
+                                        class="inputNumberCssCustom">
+                                        </lightning-input>
+                                    </div>
+                                    </div>
+                            </td> -->
+                            <td data-label="Descuento" scope="row" class="slds-cell-wrap">
+                                <div if:true={descuento.isOk} class="slds-form-element" style="width: 90px;">
+                                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                                        <span class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default" aria-hidden="true">
+                                        %
+                                        </span>
+                                        <input if:true={descuento.ManualPricing} type="number" class="slds-input inputNumberCssCustom" min="0" name="inputNumber" autocomplete="off" step="0.01" max={descuento.MaxInputDiscount} value={descuento.DiscountToApply} onchange={handleChangeDesc} data-index={index}/>
+                                        <input if:false={descuento.ManualPricing} disabled type="number" class="slds-input" min="0" name="inputNumber" autocomplete="off" step="0.01" max={descuento.MaxInputDiscount} value={descuento.DiscountToApply} onchange={handleChangeDesc} data-index={index}/>
+                                    </div>
+                                </div>
+                                <div if:false={descuento.isOk} class="slds-form-element slds-has-error" style="width: 90px;">
+                                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                                        <span class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default" aria-hidden="true">
+                                        %
+                                        </span>
+                                        <input if:true={descuento.ManualPricing} type="number" class="slds-input inputNumberCssCustom" min="0" name="inputNumber" autocomplete="off" step="0.01" max={descuento.MaxInputDiscount} value={descuento.DiscountToApply} onchange={handleChangeDesc} data-index={index}/>
+                                        <input if:false={descuento.ManualPricing} disabled type="number" class="slds-input" min="0" name="inputNumber" autocomplete="off" step="0.01" max={descuento.MaxInputDiscount} value={descuento.DiscountToApply} onchange={handleChangeDesc} data-index={index}/>
+                                    </div>
+                                    <div class="slds-form-element__help">{descuento.errorMessage}</div>
+                                </div>
+                            </td>
+                            <td data-label="Agregar" scope="row" class="slds-cell-wrap">
+                                <div class="slds-truncate slds-line-clamp" title="Agregar">
+                                    <lightning-button
+                                        if:true={descuento.ManualPricing}
+                                        icon-name= "utility:add"
+                                        label="Agregar"
+                                        title="Agregar descuento"
+                                        onclick={handleClick}
+                                        class="slds-m-left_x-small"
+                                        data-index={index}
+                                        disabled={descuento.buttonEnabled}>
+                                    </lightning-button>
+                                    <lightning-button
+                                        if:false={descuento.ManualPricing}
+                                        icon-name= "utility:add"
+                                        label="Agregar"
+                                        title="Agregar descuento"
+                                        onclick={handleClick}
+                                        class="slds-m-left_x-small"
+                                        data-index={index}
+                                        disabled>
+                                    </lightning-button>
+                                    <!-- <lightning-helptext class="slds-p-bottom_xx-small slds-p-left_small myCustomTooltip" content="Este producto esta sujeto a modifaciones en el porcentaje de descuento aplicado."></lightning-helptext> -->
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+            <template if:true={spinnerActive}>
+                <div class="alignSpinner">
+                    <div class="exampleHolder">
+                        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                    </div>
+                </div>
+            </template>
+
+            <div class="slds-clearfix slds-m-top_medium slds-m-bottom_large">
+                <div class="slds-float_left slds-p-right_x-large" if:true={isMoreDataThanDataShow}>
+                    <span class="slds-m-top_xx-small slds-m-right_small">{getDatosMostrados} -
+                        {getDataShow} / {maxPages}
+                    </span>
+                    <lightning-button-icon icon-name="utility:left" onclick={handleButtonFirstPage}
+                        disabled={disabledPreviousButton} class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:chevronleft" onclick={handleButtonPrevious}
+                        disabled={disabledPreviousButton} class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:chevronright" onclick={handleButtonNext}
+                        disabled={disabledNextButton} class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:right" onclick={handleButtonLastPage}
+                        disabled={disabledNextButton} class="slds-m-left_xxx-small slds-m-bottom_large">
+                    </lightning-button-icon>
+                </div>
+                <div class="slds-float_right slds-grid slds-wrap">
+                    <div class="slds-clearfix">
+                        <p class="slds-float_left slds-p-top_xx-small slds-p-left_large slds-p-right_medium">
+                            Item por página
+                        </p>
+                        <lightning-combobox class="slds-float_right" variant="label-hidden"
+                            placeholder={pageSize} value={pageSize} options={optionsPage} onchange={elegirMaxMostrados}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rectangle">
+                <div class="rawAmount">
+                    <p>Total de contratación: {rawAmount}</p>
+                </div>
+                <div if:true={isDiscount} class="totalDiscount">
+                    <p>{totalDiscount}</p>
+                </div>
+            </div>
+        </div>
+    </div>	
+</template>

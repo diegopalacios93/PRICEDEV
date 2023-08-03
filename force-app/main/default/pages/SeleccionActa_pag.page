@@ -1,0 +1,69 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Actas_de_contrato__c" extensions="SeleccionActa_ctr" lightningStylesheets="true">
+    <style type="text/css">
+        .myClass{        
+        	text-decoration:underline;
+        } 
+        .sboxActa { 
+        	width: 320px;         	
+        }
+        .sboxIVA { 
+        	width: 100px;         	
+        }
+        .texto{
+        	font-weight: bolder;
+        	font: 16px Verdana;        	
+        }    
+        .panel { 
+        	width: 100px;         	
+        }
+        
+    </style>
+    <apex:form id="idForm">
+        <apex:sectionHeader title="" subtitle="Generación de actas" />
+        <apex:pageBlock title="" id="seleccionActa">
+            <apex:pageMessages />            
+       		<apex:pageBlockSection title="" columns="2" id="seleccionActa_1" collapsible="false" rendered="{!blnActivarFormulario}">
+                <apex:outputPanel id="tipoActa">
+                    <label style="font: 12px Verdana;" aling= "center">Tipo de acta:  </label>
+                    <apex:selectList value="{!tipoInforme}" size="1" id="SeleccionTipoActa"  styleClass="sboxActa">
+                    	<apex:selectOptions value="{!itemsActa}"/>
+                	</apex:selectList>	
+                </apex:outputPanel>
+                <apex:outputPanel id="origenIva">
+                    <label style="font: 12px Verdana;">Cambiar el valor de IVA del acta:  </label>
+                    <apex:selectList value="{!nuevoIVA}" size="1" id="nuevoIVA" styleClass="sboxIVA">
+                        <apex:selectOptions value="{!itemsIVA}"/>
+                    </apex:selectList> 
+                </apex:outputPanel>
+                <apex:outputPanel id="IVAContrato">
+                    <label style="font: 12px Verdana;">Valor de IVA del contrato (%):</label>
+                    &nbsp;&nbsp;
+                    <apex:outputpanel styleClass="texto" > 
+                        <apex:outputField value="{!objActa.Contrato_relacionado__r.Param_Anexo_IVA__c}"/>                      
+                    </apex:outputpanel> 
+                </apex:outputPanel>
+                <apex:outputPanel id="nuevoValorIVA">
+                    <label style="font: 12px Verdana;">Nuevo valor de IVA del acta: </label>
+                    <apex:inputField value="{!objActa.Param_Anexo_IVA__c}" style="width:120px;"/>
+                    <br/>
+                    <label style="font: 10px Verdana;color: #DC143C;">(Ingrese un valor entero, para el valor "Exento de IVA" ingrese un 0)</label>
+                </apex:outputPanel>
+                <apex:outputPanel id="IVA_de_Acta">                
+                    <label style="font: 12px Verdana;">Valor de IVA del acta (%):</label>
+                    &nbsp;&nbsp;
+                    <apex:outputpanel styleClass="texto" > 
+                        <label style="font: 16px Verdana;">{!ivaDelActa}</label>                        
+                    </apex:outputpanel>                    
+            	</apex:outputPanel>
+            </apex:pageBlockSection>            
+            <apex:pageBlockSection >
+                <apex:outputText ></apex:outputText>
+            </apex:pageBlockSection>
+                <apex:commandlink style="padding-left:450px;" action="{!generarActa}" target="_blank">
+                <apex:commandButton value="Generar acta" rendered="{!blnActivarFormulario}"/>
+                </apex:commandLink>               
+               <apex:commandButton value="Volver"  styleClass="myClass" action="{!cerrarPagina}" rendered="{!NOT(blnActivarBtnCerrar)}"/>
+            	<apex:commandButton value="Cerrar pestaña"  onclick="window.top.close()" rendered="{!blnActivarBtnCerrar}"/>
+        	</apex:pageBlock>
+    </apex:form>        
+</apex:page>

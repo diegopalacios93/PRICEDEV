@@ -1,0 +1,13 @@
+<template>
+    <iframe src={cartURL} style="width:100%; min-height:650px;border-color: white;border-width: 0px;"
+      onload={onSpinner}></iframe>
+    <template if:true={showSpinner}>
+      <div class="slds-spinner_container">
+        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+          <span class="slds-assistive-text">Espere un momento por favor</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </template>
+  </template>

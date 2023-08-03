@@ -1,0 +1,78 @@
+.widthTotals {
+  padding-right: 0px;
+  width: 58.5%;
+}
+.divisor {
+  height: 25.5px;
+}
+.slds-grid {
+  margin-right: 5.57%;
+}
+.table {
+  text-overflow: clip;
+}
+.title {
+  color: #024587;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 50px;
+  padding-left: 3%;
+}
+.label {
+  color: #0f0f0f;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: pre-line;
+  line-height: 0px;
+}
+.value {
+  color: #0f0f0f;
+  font-size: 14px;
+  white-space: pre-line;
+  line-height: 0px;
+}
+.labelTotalsFalse {
+  color: #0f0f0f;
+  font-size: 14px;
+  white-space: pre-line;
+  line-height: 0px;
+}
+.valueTotalsFalse {
+  color: #0f0f0f;
+  font-size: 14px;
+  white-space: pre-line;
+  line-height: 0px;
+}
+.labelTotalsTrue {
+  color: #0f0f0f;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: pre-line;
+  line-height: 0px;
+}
+.valueTotalsTrue {
+  color: #0f0f0f;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: pre-line;
+  line-height: 0px;
+}
+.slds-box {
+  padding: 0;
+  width: 90%;
+  display: grid;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.column-border {
+  border-right: 1px solid #e2e2e2;
+  margin-left: 3%;
+  display: flex;
+  align-content: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.horizontal-line {
+  height: 0px;
+  width: 94%;
+  border: 1px solid #e2e2e2;
+}

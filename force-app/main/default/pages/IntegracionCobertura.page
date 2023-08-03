@@ -1,0 +1,15 @@
+<apex:page standardController="Account" extensions="IntegracionCobertura_ctr" action="{!generarIntegracion}">
+    
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Información de cobertura">
+                <apex:outputField value="{!account.Descripcion_cobertura__c}"/>
+                <br/>
+                <apex:form >
+                    <div align="center" draggable="false">
+                        <apex:commandButton action="{!save}" value="Volver a la cuenta" id="theButton"/>
+                    </div>
+                </apex:form>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+</apex:page>

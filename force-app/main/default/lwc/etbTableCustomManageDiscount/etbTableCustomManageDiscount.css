@@ -1,0 +1,109 @@
+.inlinecss{
+    font-size: 0.75rem;
+    color: #0F0F0F;
+}
+
+.rectangle {
+    height: 4rem;
+    background-color: rgba(2,69,135,0.13);
+    text-align: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.rawAmount{
+    margin-right: 0.938rem;
+    color: #0F0F0F;
+    font-size: 0.875rem;
+    font-weight: bold;
+    letter-spacing: 0;
+    text-align: right;
+}
+.totalDiscount{
+    margin-right: 0.938rem;
+    color: #8B8885;
+    font-size: 0.625rem;
+    font-weight: bold;
+    text-align: right;
+    text-decoration: line-through;
+}
+
+.myTableCustomCss{
+    border: 1px solid #dddbda;
+    border-top-color: rgb(221, 219, 218);
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-right-color: rgb(221, 219, 218);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-bottom-color: rgb(221, 219, 218);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-left-color: rgb(221, 219, 218);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    width: 100%;
+} 
+.myHeaderCssCustom{
+    height: 3rem;
+}
+.myHeaderCssCustom th{
+    background-color: transparent;
+}   
+
+.divInputNumberCssCustom{
+    position: relative;
+}
+.inputNumberCssCustom div .slds-input{
+    text-align: right !important;
+}
+
+.percentCssCustom{
+    position: absolute;
+    display: block;
+    bottom: 1.5rem;
+    right: 0.5rem;
+}
+
+.alignSpinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.exampleHolder{
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    padding: 5%;
+}
+
+.mySpanCustom{
+    top: 40%;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] { -moz-appearance:textfield; }
+
+.myCustomTooltip div{
+    padding-top: 0 !important;
+}
+.discountCustomCss{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

@@ -1,0 +1,25 @@
+.modalBody {
+  position: relative;
+}
+.button {
+  --sds-c-button-brand-color-background: #bb00ff;
+  --sds-c-button-text-color: #080707;
+  --sds-c-button-text-color-hover: #f5f5f5;
+  background-color: #f5f5f5;
+  border-style: none;
+  padding-top: 7px;
+  padding-left: 13px;
+  font-size: 13px;
+}
+.icon {
+  /* fill: rgb(3, 69, 137); */
+  fill: #0ACCF9;
+}
+.slds-input {
+  border-radius: 0px;
+}
+.slds-input:focus,
+.slds-input:active {
+  box-shadow: none;
+  outline: none;
+}

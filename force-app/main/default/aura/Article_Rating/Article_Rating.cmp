@@ -1,0 +1,79 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="Article_Rating_Controller" access="global" >
+    <aura:attribute name="liked" default="false" type="Boolean" />
+    <aura:attribute name="disliked" default="false" type="Boolean" />
+    <aura:attribute name="showForm" default="true" type="Boolean" />
+    <aura:attribute name="disabledThumb" default="false" type="Boolean" />
+    <aura:attribute name="OS" default="" type="string"/>
+    <aura:attribute name="Version" default="" type="string"/>
+    <aura:attribute name="Description" default="" type="string"/>
+    <aura:attribute name="Layout" default="" type="string"/>
+    <aura:attribute name="Manufacturer" default="" type="string"/>
+    <aura:attribute name="Name" default="" type="string"/>
+    <aura:attribute name="Product" default="" type="string"/>
+    <aura:attribute name="showError" default="false" type="Boolean"/>
+    <aura:attribute name="errorMessage" default="" type="string"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="Device" default="{!$Browser.formFactor}" type="string"/>
+    <aura:attribute name="newHistorialArt" type="Historial_de_Articulos__c"
+                    default="{ 'sobjectType': 'Historial_de_Articulos__c',
+                             'Correo_Electronico__c': '',
+                             'Calificaci_n__c':'',
+                             'Articulo_de_base_de_conocimiento__c':'',
+                             'Comentario__c': '' }" />
+    <ltng:require scripts="{!$Resource.platform+ '/platform.js-master/platform.js'}" 
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+    
+    
+    
+    <div style="border-width:4px;border-color:#22a4d2;border-style:groove;padding:0.1rem;border-radius:0.2rem">
+        <table>
+            <tr> 
+                <td style="font-size:1.0rem">
+                    ¿Le resultó este artículo de ayuda?
+                </td>
+                <td style="width:10%">
+                    <center>
+                        <lightning:buttonIconStateful iconName="utility:like" selected="{! v.liked }" onclick="{! c.handleLikeButtonClick }" alternativeText="Like" disabled="{!v.disabledThumb}"/>
+                    </center>
+                </td>
+                <td style="width:10%">
+                    <center>
+                        <lightning:buttonIconStateful iconName="utility:dislike" selected="{! v.disliked }" onclick="{! c.handleDisLikeButtonClick }" alternativeText="DisLike" disabled="{!v.disabledThumb}"/>
+                    </center>
+                </td>
+            </tr>
+        </table>
+        <aura:if isTrue="{!or(v.liked,v.disliked)}">
+            <br/>
+            <aura:if isTrue="{!v.showForm}">
+                <div style="font-size:1.2rem;font-weight:bold;">
+                    <center>
+                        Cuéntanos más
+                    </center>
+                </div>
+                <div style="font-size:1.0rem">
+                    Le recordamos que este es un espacio para conocer su opinión sobre las preguntas frecuentes. No es un espacio para recibir PQRs.
+                </div>
+                
+                <aura:if isTrue="{!v.showError}">
+                    <ui:message title="Error" severity="error" closable="false">
+                        {!v.errorMessage}
+                    </ui:message>
+                </aura:if>
+                
+                <lightning:layoutItem size="10" padding="around-small">
+                    <lightning:input aura:id="email" label="Correo electrónico" type="email" value="{!v.newHistorialArt.Correo_Electronico__c}" required  ="true"/>
+                    <lightning:textarea aura:id="comments" label="Sus comentarios" value="{!v.newHistorialArt.Comentario__c}" required="true"/>
+                    <lightning:button label="Enviar" onclick="{!c.handlesendcomments}" variant="brand" class="slds-m-top_medium"/>
+                </lightning:layoutItem>
+                <aura:set attribute="else">
+                    <div>
+                        <center style="font-size:1.2rem;color:#22a4d2">
+                            Gracias por sus comentarios.
+                        </center>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </div>
+</aura:component>

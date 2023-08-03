@@ -1,0 +1,87 @@
+<apex:page docType="html-5.0" showHeader="{!blnOportunidad}" title="{!$Label.Titulo_SeleccionarActivoExistente}" controller="SeleccionarActivoExistente_ctr" action="{!TraerActivos}" tabStyle="OperacionComercial__c">
+    <apex:form >
+        <apex:pageBlock title="{!$Label.Titulo_SeleccionarActivoExistente}" id="BloqueFiltros" rendered="{!blnOportunidad}">
+            <apex:pageBlockSection id="SeccionFiltros" title="Filtros" collapsible="false" columns="1" rendered="{!blnActivos}">
+                <apex:inputCheckbox id="chkNumeroConexion"  value="{!blnFiltro}" label="ID de Servicio o Número de Conexión">
+                    <apex:actionSupport event="onchange"  action="{!TraerActivos}" reRender="SeccionFiltro,bloqueActivos" id="chkFiltro" status="loading"/>
+                </apex:inputCheckbox>
+                <apex:outputPanel id="SeccionFiltro" html-label="SeccionFiltro">
+                    <apex:outputPanel id="Filtro" rendered="{!blnFiltro}">
+                        <apex:outputLabel value="Parámetro" for="inputParametro"/>
+                        <apex:input id="inputParametro" value="{!strParametro}" />
+                        <apex:commandButton action="{!FiltrarActivos}" reRender="bloqueActivos" status="loading" />
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            </apex:pageBlock>
+            <apex:pageBlock id="bloqueActivos" tabStyle="ActivoETB__c" rendered="{!blnOportunidad}">
+            <apex:outputPanel >
+            <apex:pageBlockSection id="SeccionActivos" title="{!$Label.Mensaje_SeleccionarActivo}" collapsible="false" columns="1" rendered="{!blnActivos}" >
+                <apex:outputPanel >
+                    <apex:pageBlockTable id="TablaListado" value="{!lstActivos}" var="activo">
+                        <apex:column headerValue="{!$ObjectType.ActivoETB__c.fields.Name.Label}">
+                            <apex:commandLink action="{!ElegirActivo}" value="{!activo.Name}">
+                                <apex:param name="idActivo" value="{!activo.Id}" assignTo="{!idActivo}" />
+                            </apex:commandLink>
+                        </apex:column>
+                        <apex:column headerValue="Producto" value="{!activo.NombredelProducto__r.Name}" />
+                        <apex:column value="{!activo.IDservicio__c}" />
+                        <apex:column value="{!activo.NumeroConexion__c}" />
+                        <apex:column headerValue="Sucursal (Origen)" value="{!activo.SucursalOrigen__r.Name}" />
+                        <apex:column headerValue="Ancho de Banda" value="{!activo.AnchoBanda__r.Name}" />
+                        <apex:column value="{!activo.MedioUM__c}" />
+                        <apex:column headerValue="Plan" value="{!activo.Plan__r.Name}" />
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            </apex:outputPanel>
+            <apex:outputText rendered="{!!blnActivos}" value="{!$Label.Mensaje_NoSeleccionarActivos}" />
+            <apex:pageBlockButtons location="bottom" rendered="{!blnActivos}">
+                <span class="paginator">
+                    {!intInicioPagina}-{!intFinPagina} de {!intTotalActivos}
+                    <span class="prevNextLinks">
+                        <apex:outputPanel html-class="prevNext" rendered="{!!blnAnterior}">
+                            <img src="/s.gif" class="firstoff" alt="Primera página"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!blnAnterior}">
+                            <apex:commandLink status="loading" reRender="bloqueActivos" action="{!IrPrimeraPagina}">
+                                <img src="/s.gif" class="first" alt="Primera página"/>
+                            </apex:commandLink>
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!!blnAnterior}">
+                            <img src="/s.gif" class="prevoff" alt="Anterior"/>Anterior
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!blnAnterior}">
+                            <apex:commandLink status="loading" reRender="bloqueActivos" action="{!IrAnteriorPagina}">
+                                <img src="/s.gif" class="prev" alt="Anterior"/>Anterior
+                            </apex:commandLink>
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!!blnSiguiente}">
+                            Siguiente
+                            <img src="/s.gif" class="nextoff" alt="Siguiente"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!blnSiguiente}">
+                            <apex:commandLink status="loading" reRender="bloqueActivos" action="{!irSiguientePagina}">
+                            Siguiente
+                            <img src="/s.gif" class="next" alt="Siguiente"/>
+                            </apex:commandLink>
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!!blnSiguiente}">
+                            <img src="/s.gif" class="lastoff" alt="Última página" />
+                        </apex:outputPanel>
+                        <apex:outputPanel html-class="prevNext" rendered="{!blnSiguiente}">
+                            <apex:commandLink status="loading" reRender="bloqueActivos" action="{!IrUltimaPagina}">
+                                <img src="/s.gif" class="last" alt="Última página" />
+                            </apex:commandLink>
+                        </apex:outputPanel>
+                    </span>
+                </span>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+         <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <c:Loading Titulo="Cargando..."/>
+            </apex:facet>
+        </apex:actionStatus>
+</apex:page>

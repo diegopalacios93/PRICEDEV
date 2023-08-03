@@ -1,0 +1,64 @@
+<apex:page standardController="ActivoETB__c" extensions="Tramites_ctr" action="{!pbxCuentaFacturacion}" doctype="html-5.0">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+<style type="text/css">
+        .centrar{width:100%;text-align: center;}
+    </style>
+	<apex:form id="formulario">
+	
+	
+	
+		<apex:pageMessages escape="false" />
+		<apex:pageBlock id="pbx" title="PBX">
+			
+			<div class="centrar">
+			<apex:inputField value="{!servicio.CuentaFacturacion__c}"/>
+			<input class="btn" type="button" id="CuentaFacturacion" value="Cambiar Cuenta de Facturacion"/>
+			
+			</div>
+			<apex:actionFunction name="CuentaFacturacionJS" action="{!setCuentaFacturacion}">
+			</apex:actionFunction>
+			<apex:pageBlockTable value="{!w}" var="item">
+                
+				<apex:column value="{!item.serv.name}" />
+				
+                <apex:column value="{!item.serv.Activo_Relacionado__r.Name}">
+					<apex:facet name="header">Arranque</apex:facet>
+				</apex:column>
+				
+                <apex:column value="{!item.serv.Estado__c}" />
+                <apex:column value="{!item.serv.Tipodeprogramacion__c}" />
+
+                <apex:column >
+                	{!item.IlimitadoS}
+					<apex:facet name="header">Ilimitado</apex:facet>
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+		</apex:pageBlock>
+	</apex:form>
+
+<script type="text/javascript">
+
+
+$( document ).ready(function() {
+  	$( "#CuentaFacturacion" ).click(function() {
+		validar();
+	});
+
+	function validar(){
+			if(confirm("Esta seguro que desea cambiar la cuenta de facturacion")){
+				CuentaFacturacionJS();
+			}
+
+	}
+
+
+
+
+});
+
+
+
+</script>
+</apex:page>

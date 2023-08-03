@@ -1,0 +1,10 @@
+<apex:page controller="GenerarCSVAnexoColaborador" showHeader="false" lightningStylesheets="true">
+    <apex:pageBlock title="Exportando observaciones del contrato...">
+        <apex:form id="idForm2" >
+            <apex:commandButton value="Regresar al contrato" action="{!regresar}"/>              
+        </apex:form>
+    </apex:pageBlock>
+    <apex:pageBlock >        
+        <apex:iframe src="{!pageUrlExportObservaciones}" scrolling="falses" id="theIframe" frameborder="false" height="0"/>
+    </apex:pageBlock>    
+</apex:page>

@@ -1,0 +1,18 @@
+.slds-visual-picker {
+  width: 32%;
+}
+.alinearLeft {
+  text-align: left;
+  min-height: 6rem;
+}
+.Titulo {
+  font-size: 20px;
+  color: #080707;
+}
+.slds-text-title {
+  color: #3E3E3C;
+}
+.StepTitle {
+  color: #0F0F0F;
+  font-weight: normal;
+}

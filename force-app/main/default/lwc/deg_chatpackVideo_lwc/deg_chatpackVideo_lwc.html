@@ -1,0 +1,26 @@
+<!--
+  @description       : 
+  @author            : Harlinsson Chavarro (HCH)
+  @group             : 
+  @last modified on  : 06-04-2021
+  @last modified by  : Pablo Arrieta
+  Modifications Log 
+  Ver   Date         Author                      Modification
+  1.0   03-02-2021   Harlinsson Chavarro (HCH)   Initial Version
+-->
+<template>
+  <div>
+    <div class="container-video">
+      <div class="">
+        <iframe height="200px" width="200px" src={url} allowfullscreen>
+        </iframe>
+      </div>
+      <div>
+        <lightning-formatted-rich-text value={titleVideo}></lightning-formatted-rich-text>
+      </div>
+      <div>
+        <lightning-formatted-rich-text value={subTitleVideo}></lightning-formatted-rich-text>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,81 @@
+.slide_container {
+    padding: var(--lwc-spacingMedium, 0.6rem);
+    text-align: center;
+    justify-content: space-around;
+    border-radius: 10px;
+    border-color: #ececec;
+}
+.titulo{
+    font-weight: bold;
+    color: #fff;
+    margin: 5%;
+}
+
+.slide_image{
+    border-radius: 10px 10px 0px 0px;
+}
+
+.slide_image:hover{
+    cursor: pointer;
+}
+
+.slide_image:focus {
+    transform: scale(0.98);
+}
+/* Controlador imagenes */
+.arrow{
+    transition: all 0.2s ease;
+    fill: #ffffff;
+}
+
+.up_button:hover > .arrow, .down_button:hover > .arrow{
+    fill: #2791bb !important;
+}
+.up_button:focus > .arrow, .down_button:focus > .arrow{
+    fill: #2791bb;
+}
+
+.up_button:focus, .down_button:focus{
+    background: #ffffff;
+}
+
+.up_button, .down_button{
+    background: #2791bb;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    border-color: #ffffff;
+    border-style: solid;
+}
+
+.up_button:hover, .down_button:hover{
+    cursor: pointer;
+    background: #ffffff !important;
+    opacity: 1 !important;
+}
+
+.up_button:active {
+      transform: translateY(-5px);
+}
+
+.down_button:active{
+    transform: translateY(5px);
+}
+
+.slide_controls{
+    padding: 0 0 5px 0;
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    margin: 0px 0px 2.5%;
+}
+
+.tile_container {
+    border: white;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 0px 0px 10px;
+    border-width: 1.9px;
+}

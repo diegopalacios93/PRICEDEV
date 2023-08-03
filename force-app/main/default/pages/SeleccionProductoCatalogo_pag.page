@@ -1,0 +1,244 @@
+<apex:page Controller="SeleccionProductoCatalogo_ctr" action="{!AnalizaAccion}" id="idPage" lightningStylesheets="true">
+    <apex:sectionHeader title="{!strTitle}" subtitle="{!strSubTitle}"/>
+
+    <apex:form id="idForm">      
+    <script>
+        function DesCantidad(){
+            var lista = document.getElementById("idPage:idForm:idPageBlock2:idSelCantidad");
+            if(lista!=null){                
+                lista.disabled=true;
+            }       
+        }
+        
+        //window.onload=DesCantidad;
+        //Event listener de evento redireccion.
+    document.addEventListener("redirect", function(event){
+
+        if (UITheme.getUITheme() === 'Theme4d' || UITheme.getUITheme() === 'Theme4u') {
+        sforce.one.editRecord(event.detail.data);
+    }
+        else{
+            window.location ='/'+event.detail.data+'/e';
+        }
+    });
+   //     --- Función de apertura de modal modificarSVA_modal ---
+        function showModal(){
+
+            if({!blnRender}){
+            $Lightning.use(
+                "c:modificarSVA_modal_auraApp", 
+                function() { 
+                    
+                    $Lightning.createComponent(
+                        "c:modificarSVA_modal", 
+                        {recordId: "{!strOcId}"}, 
+                        "LightningAppDivId" ,
+                        function(cmp){}
+                    );
+                }
+            );
+        } else {
+            window.opener.location.refresh();
+        }
+
+    }   
+    </script>         
+        <!-- Imagen de Cargando (waitStatus).... -->
+         <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <c:Loading Titulo="Cargando..."/>
+            </apex:facet>
+        </apex:actionStatus>
+
+        
+        <!-- ACTION FUNCTIONS-->
+        <apex:actionFunction action="{!Refresco1}" name="JSRefresco1" reRender="idPage:idForm:idPageBlock1, idPage:idForm:idPageBlock2, idPage:idForm:idPageBlock3, idPage:idForm:idPanel1, idPage:idForm:idPageBlockPlanesLD" status="loading"/>
+        <apex:actionFunction action="{!Refresco2}" name="JSRefresco2" reRender="idPage:idForm:idPageBlock1, idPage:idForm:idPageBlock2, idPage:idForm:idPageBlock3, idPage:idForm:idPanel1, idPage:idForm:idPageBlockPlanesLD" status="loading"/>
+        <apex:actionFunction action="{!Refresco3}" name="JSRefresco3" reRender="idPage:idForm:idPageBlock1, idPage:idForm:idPageBlock2, idPage:idForm:idPageBlock3, idPage:idForm:idPanel1, idPage:idForm:idPageBlockPlanesLD" status="loading"/> 
+        <apex:actionFunction action="{!Refresco4}" name="JSRefresco4" reRender="idPage:idForm:idPageBlock2, idPage:idForm:idPageBlock3, idPage:idForm:idPanel1, idPage:idForm:idPageBlockPlanesLD" status="loading"/>
+        <apex:actionFunction action="{!Refresco5}" name="JSRefresco5" reRender="idPage:idForm:idPageBlock3, idPage:idForm:idPanel1, idPage:idForm:idPageBlockPlanesLD" status="loading"/>  
+        <apex:actionFunction action="{!Refresco6}" name="JSRefresco6" reRender="idPage:idForm:idPageBlock3, idPage:idForm:idPanel1, idPage:idForm:idPageBlockPlanesLD" status="loading"/>
+    
+        <apex:pageMessages id="msgs" />
+        <apex:pageBlock id="idPageBlock1" title="Producto Catálogo" rendered="{!blnSeccionProd}">                    
+                
+            <table border="0" id="idTable1">
+                <tr>
+                    <td>
+                        <B>{!$Label.SelProdCat_LineaNegocio}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strInLineaNegocio}" multiselect="false" size="1" onchange="JSRefresco1()">
+                            <apex:selectOptions value="{!lstLineaNegocio}" />
+                        </apex:selectList>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <B>{!$Label.SelProdCat_Familia}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strInFamilia}" multiselect="false" size="1" onchange="JSRefresco2()">
+                            <apex:selectOptions value="{!lstFamilia}" />
+                        </apex:selectList>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td> 
+                        <B>{!$Label.SelProdCat_Producto}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strInProducto}" multiselect="false" size="1" onchange="JSRefresco3()">
+                            <apex:selectOptions value="{!lstProducto}" />
+                        </apex:selectList>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td> 
+                        <B>{!$Label.SelProdCat_Descripcion}</B>
+                    </td>
+                    <td>
+                        <apex:outputField value="{!insCata.Descripcion__c}"/>
+                    </td>
+                </tr>
+            </table> 
+              
+            <br/>
+            
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="idPageBlock2" title="Planes" rendered="{!blnSeccionProd}">
+            <table border="0" id="idTable2">
+                <tr>
+                    <td>
+                        <B>{!$Label.SelProdCat_Planes}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strInPlan}" multiselect="false" size="1" onchange="JSRefresco5()">
+                            <apex:selectOptions value="{!lstPlanes}" />
+                        </apex:selectList>
+                    </td>
+                </tr>
+                <tr>
+                    <td> 
+                        <B>{!$Label.SelProdCat_Cantidad}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strInCantidad}" multiselect="false" size="1" id="idSelCantidad" disabled="{!blnEditarCantidad}" >
+                            <apex:selectOptions value="{!lstCantidad}" />
+                        </apex:selectList> 
+                    </td> 
+                </tr>
+                <tr>
+                    <td> 
+                        <B>{!$Label.SelProdCat_Descripcion2}</B>
+                    </td>
+                    <td>
+                        <apex:outputField value="{!insPlanes.Descripcion__c}"/>
+                    </td>
+                </tr>                
+            </table>
+        </apex:pageBlock>
+       
+        <apex:pageBlock id="idPageBlock3" title="Operación" >
+            <table border="0" id="idTable3">
+                <tr>
+                    <td>
+                        <B>{!$Label.SelProdCat_Operacion}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strInOperacion}" multiselect="false" size="1" onchange="JSRefresco6()">
+                            <apex:selectOptions value="{!lstOperaciones}" />
+                        </apex:selectList>
+                    </td>
+                </tr> 
+                <!-- INICIO DETALLES DEL TOPP -->
+                <tr>
+                    <td>
+                        <B>{!$Label.SelProdCat_Detalle}</B>
+                    </td>
+                    	<td>
+                        	<apex:selectList value="{!strInDetalle}" multiselect="false" size="1">
+                            	 <apex:selectOptions value="{!lstDetalle}" />
+                        	</apex:selectList>
+                    	</td>
+                	</tr> 
+                <tr>
+                <!-- FIN DETALLES DEL TOPP -->
+                    <td>
+                        <B>{!$Label.SelProdCat_InfoPlanesAdicionales}</B>
+                    </td>
+                    <td>
+                        <apex:outputField value="{!insPlanes.InformacionPlanesAdicionales__c}"/>                        
+                    </td>
+                </tr>                                
+            </table>
+
+            <!-- PLANES LARGA DISTANCIA -->
+            <apex:outputText rendered="{!esPlanLD}">
+            <table border="0" id="idTable2">
+                <tr>
+                    <td>
+                        <B>Plan Larga Distancia</B>
+                    </td>
+                    <td><apex:selectList value="{!pLD}" multiselect="false" size="1"><apex:selectOptions value="{!PlanesLD}"></apex:selectOptions></apex:selectList></td>
+                </tr>
+            </table>
+            </apex:outputText>
+
+
+
+            
+            <apex:pageBlockButtons location="bottom" style="{!IF(blnBtnBW,'Display:none','')}" id="idPBB1">
+                <apex:commandButton value="Crear" action="{!Guardar}" status="spinnerStatus" rendered="{!blnBtnCrear}" oncomplete="showModal();" rerender="idForm,msgs,spinner"/>
+                <!--
+                <apex:commandButton value="Crear y Nuevo" action="{!GuardarNuevo}" rendered="{!blnBtnCrear}" />
+                -->    
+                
+                   
+
+                <apex:commandButton value="Volver" action="{!Cancelar}" /> 
+            </apex:pageBlockButtons>
+            
+            
+        </apex:pageBlock>
+
+
+
+                 <!-- Ventana Modal LWC - modificarSVA_modal -->
+                 <apex:includeLightning />
+                    
+                 <div id="LightningAppDivId">
+                 </div>
+                 
+
+        
+        <apex:outputPanel id="idPanel1" style="{!IF(blnBtnBW,'','Display:none')}">
+            <apex:pageBlock id="idPageBlock4" title="Ancho de Banda" >
+                <table border="0" id="idTable4">
+                    <tr>
+                        <td>
+                            <B>{!$Label.SelProdCat_AnchoBanda}</B> 
+                        </td>
+                        <td>
+                            <apex:selectList value="{!strInBW}" multiselect="false" size="1" >
+                                <apex:selectOptions value="{!lstBWs}" />
+                            </apex:selectList>
+                        </td>
+                    </tr>                
+                </table>
+                <apex:pageBlockButtons location="bottom" id="idPBB2">
+                <apex:commandButton value="Crear" action="{!Guardar}" rendered="{!blnBtnCrear}" oncomplete="window.opener.location.refresh();" rerender="idForm,msgs"/>
+                <!--
+                <apex:commandButton value="Crear y Nuevo" action="{!GuardarNuevo}" rendered="{!blnBtnCrear}" />
+                -->      
+                <apex:commandButton value="Volver" action="{!Cancelar}" /> 
+            </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </apex:outputPanel>
+
+    </apex:form>
+</apex:page>

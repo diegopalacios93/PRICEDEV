@@ -1,0 +1,102 @@
+<template>
+    <template if:true={soloLectura}>
+        <div class="c-container" style="background-color:white" >
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item padding="around-small" size="12">
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="12">
+                    <lightning-layout>
+                        <lightning-layout-item padding="around-small" size="4">
+                            <div class="page-section page-right">
+                                <h2>Parametros de la cotización</h2>
+                                <div class="slds-form">
+                                 <template if:true={quoteParameters}>
+                                      <template for:each={quoteParameters} for:item="params">
+                                           <lightning-layout  key={params}>
+                                                <div class="slds-form-element slds-form-element_stacked">                                               
+                                                  <div class="slds-form-element__control">
+                                                     <lightning-input label={params.key} type="text" id={params.key} name={params.key} placeholder={params.key} value={params.value} readonly="" onchange={handleChange}>{params.value}</lightning-input>
+                                                 </div>
+                                                </div>
+                                             </lightning-layout>
+                                        </template>                                     
+                                 </template>       
+                                </div>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="8">
+                            <div class="page-section page-main">
+                                <h2>Costos</h2>
+                                <div class="slds-form">
+                                 <template if:true={quoteCost}>
+                                      <template for:each={quoteCost} for:item="quotes">
+                                           <lightning-layout  key={quotes}>
+                                                <div class="slds-form-element slds-form-element_stacked">                                               
+                                                  <div class="slds-form-element__control">
+                                                     <lightning-input label={quotes.key} type="text" id={quotes.key} name={quotes.key} placeholder={quotes.key} value={quotes.value.Valor} readonly="" onchange={handleChange}>{quotes.value.Valor}</lightning-input>
+                                                 </div>
+                                                </div>
+                                             </lightning-layout>
+                                        </template>                                                                          
+                                 </template>       
+                                </div>
+   
+   
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </template>
+    <template if:false={soloLectura}>
+        <div class="c-container" style="background-color:white" >
+            <lightning-layout multiple-rows="true">
+                <lightning-layout-item padding="around-small" size="12">
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" size="12">
+                    <lightning-layout>
+                        <lightning-layout-item padding="around-small" size="4">
+                            <div class="page-section page-right">
+                                <h2>Parametros de la cotización</h2>
+                                <div class="slds-form">
+                                 <template if:true={quoteParameters}>
+                                      <template for:each={quoteParameters} for:item="params">
+                                           <lightning-layout  key={params}>
+                                                <div class="slds-form-element slds-form-element_stacked">                                               
+                                                  <div class="slds-form-element__control">
+                                                     <lightning-input label={params.key} type="text" id={params.key} name={params.key} placeholder={params.key} value={params.value} onchange={handleChange}>{params.value}</lightning-input>
+                                                 </div>
+                                                </div>
+                                             </lightning-layout>
+                                        </template>                                     
+                                 </template>       
+                                </div>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="8">
+                            <div class="page-section page-main">
+                                <h2>Costos</h2>
+                                <div class="slds-form">
+                                 <template if:true={quoteCost}>
+                                      <template for:each={quoteCost} for:item="quotes">
+                                           <lightning-layout  key={quotes}>
+                                                <div class="slds-form-element slds-form-element_stacked">                                               
+                                                  <div class="slds-form-element__control">
+                                                     <lightning-input label={quotes.key} type="text" id={quotes.key} name={quotes.key} placeholder={quotes.key} value={quotes.value.Valor} readonly={quotes.value.SoloLectura} onchange={handleChange}>{quotes.value.Valor}</lightning-input>
+                                                 </div>
+                                                </div>
+                                             </lightning-layout>
+                                        </template>                                                                          
+                                 </template>       
+                                </div>
+   
+   
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </template>     
+</template>

@@ -1,0 +1,10 @@
+<apex:page Controller="EntregaGestionProyecto_ctr" action="{!AnalizaAccion}" id="idPage"> 
+    <apex:sectionHeader title="{!$Label.EntregaGestionProy_Titulo}" subtitle="{!strNombreLeg}"/>        
+    <apex:form id="idForm" >              
+        <apex:pageBlock id="idPageBlock1">    
+            <apex:pageMessages />    
+            <apex:commandButton value="Enviar" action="{!Enviar}" rendered="{!blnBtnEnviar}"/>      
+            <apex:commandButton value="Volver" action="{!Cancelar}" />                         
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

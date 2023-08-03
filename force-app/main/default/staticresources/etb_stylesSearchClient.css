@@ -1,0 +1,41 @@
+.os-step-label[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  font-weight: 700 !important;
+  font-size: 18px;
+  font-family: sans-serif;
+}
+.omniscript-step__body[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  min-height: 150px;
+  padding-right: 0.2rem;
+  padding-top: 30px;
+}
+.vlc-separator[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  border-width: 0.2rem !important;
+  width: 3.5rem !important;
+  border-color: #285DAC !important;
+  margin-top: 1rem !important;
+}
+.slds-m-horizontal_xx-small,
+.slds-m-horizontal--xx-small {
+  margin-left: var(--lwc-spacingXxSmall, 0.25rem);
+  margin-right: var(--lwc-spacingXxSmall, 0.25rem);
+  margin-top: var(--lwc-spacingXxSmall, 0.5rem);
+}
+.omniscript-step__body[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  min-height: 150px;
+  padding-right: 0.2rem;
+}
+.slds-scope .slds-button_brand, .slds-button_brand{
+  background-color: #034589;
+  border-color: #034589;
+  color: white;
+}
+
+.slds-scope .slds-button_brand:hover, .slds-button_brand:hover{
+  background-color: rgb(7, 47, 87);
+  border-color: rgb(7, 47, 87);
+  color: white;
+}
+
+a.slds-action_item:hover,  a.slds-action_item:active, a.slds-action_item:focus{
+    text-decoration-color: #177AD0;
+}

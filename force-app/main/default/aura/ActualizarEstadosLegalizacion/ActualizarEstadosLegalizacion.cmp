@@ -1,0 +1,26 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickAction" controller="AccesoLightningComToWSMethods">
+    
+<aura:html tag="style">
+
+.slds-modal__container{
+            height : auto;
+            width: 30%;
+            max-width: 70rem;
+            }
+            .modal-body{
+            height : auto;
+            max-height: 100px !important;
+            }
+
+</aura:html>
+    
+   <aura:attribute name="record" type="Campaign" />
+    <force:recordData recordId="{!v.recordId}" targetFields="{!v.record}" fields="['Name']"/>
+    <div class="c-container">
+   <lightning:layout verticalAlign="center" horizontalAlign="center" pullToBoundary="medium" class="x-large">
+            <lightning:layoutItem flexibility="auto">
+				 <lightning:button label="Actualizar Estado" onclick="{!c.handleClick}"/>
+            </lightning:layoutItem>
+         </lightning:layout>
+    </div>
+</aura:component>

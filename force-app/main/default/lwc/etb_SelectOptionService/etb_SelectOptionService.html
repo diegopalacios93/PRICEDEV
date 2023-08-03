@@ -1,0 +1,44 @@
+<template>
+    <div if:true={showMessageErrorRadioOption} class="slds-text-color_error">* Debe seleccionar una opción para poder
+        continuar</div>
+    <fieldset class="slds-form-element">
+        <legend
+            class="slds-form-element__legend slds-form-element__label slds-m-top_large slds-m-bottom_medium StepTitle">
+            Seleccione la opción que corresponda a la
+            cotización que quiere realizar:</legend>
+        <div class="slds-form-element__control">
+            <div class="slds-visual-picker">
+                <input type="radio" id="visual-picker-91" value="unique" data-pos="unique" name="example-unique-name-35" onclick={handleClick}/>
+                <label for="visual-picker-91">
+                    <span class="slds-visual-picker__figure slds-visual-picker__text slds-p-around_small alinearLeft">
+                        <span>
+                            <span class="Titulo">Dirección única</span>
+                            <span class="slds-text-title slds-m-top_x-small">Si se requiere instalación productos y servicios en una misma locación</span>
+                        </span>
+                    </span>
+                    <span class="slds-icon_container slds-visual-picker__text-check">
+                        <svg class="slds-icon slds-icon-text-check slds-icon_x-small" aria-hidden="true">
+                            <use xlink:href="/resource/ETB_StaticResources/img/CheckIcon.svg#check"></use>
+                        </svg>
+                    </span>
+                </label>
+            </div>
+            <div class="slds-visual-picker">
+                <input type="radio" id="visual-picker-93" value="none" data-pos="none" name="example-unique-name-35" onclick={handleClick}/>
+                <label for="visual-picker-93">
+                    <span class="slds-visual-picker__figure slds-visual-picker__text slds-p-around_small alinearLeft">
+                        <span>
+                            <span class="Titulo">Ninguna dirección</span>
+                            <span class="slds-text-title slds-m-top_x-small">Si los productos y servicios a adquirir no requieren de instalación.</span>
+                        </span>
+                    </span>
+                    <span class="slds-icon_container slds-visual-picker__text-check">
+                        <svg class="slds-icon slds-icon-text-check slds-icon_x-small" aria-hidden="true">
+                            <use xlink:href="/resource/ETB_StaticResources/img/CheckIcon.svg#check"></use>
+                        </svg>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+</template>

@@ -1,0 +1,13 @@
+<apex:page lightningStyleSheets="true" showHeader="false"  applyBodyTag="false">
+	<style type="text/css">
+        div.Datepickerhide span.dateInput span.dateFormat{
+        display:none;
+        }
+        .interviewDisplayTextRow img {
+        width:35%;
+        .apexp div{
+		border: 1px solid #4CAF50;
+        }
+	</style>
+    <flow:interview name="FLUJO_CU" buttonLocation="bottom" buttonStyle=" border:1px solid;"/>
+</apex:page>

@@ -1,0 +1,574 @@
+<template>
+    <template if:true={openReliesOnQuoteModal}>
+        <c-etb-_-relies-on-modal id-qli={qliId}></c-etb-_-relies-on-modal>
+   </template>
+    <div class={dtWrapperClass}>
+        <div class="nds-m-vertical_medium">
+            <div if:true={showWaitG}>
+                <vlocity_cmt-spinner variant="brand" size="medium" extraouterclass="nds-is-fixed"></vlocity_cmt-spinner>
+            </div>
+            <div if:false={hideHeader}
+                class="nds-grid nds-color__background_gray-1 nds-wrap nds-grid_vertical-align-center nds-p-top_small">
+                <div
+                    class="nds-col nds-size_12-of-12 nds-large-size_6-of-12 nds-p-horizontal_medium nds-p-bottom_small nds-b2b-flex">
+                    <div class="nds-grid nds-max-medium-size_6-of-12 nds-grid_vertical-align-center">
+                        <label class="nds-m-right_medium">{labels.CMEXGroupBy}</label>
+                        <vlocity_cmt-combobox class="nds-b2b-input" theme={theme} value={groupVal} options={groupList}
+                            onchange={handleGroupChange}>
+                        </vlocity_cmt-combobox>
+                    </div>
+
+                    <div class="nds-grid nds-max-medium-size_6-of-12 nds-grid_vertical-align-center nds-b2b-filter">
+                        <label class="nds-m-right_medium">{labels.CMEXDisplaying}</label>
+                        <vlocity_cmt-combobox class="nds-b2b-input" theme={theme} value={displayValue}
+                            options={displayFieldGroups} onchange={changeFieldGroup}>
+                        </vlocity_cmt-combobox>
+                    </div>
+                </div>
+                <div
+                    class="nds-size_6-of-12 nds-large-size_2-of-12 nds-p-horizontal_medium nds-text-body_small nds-p-bottom_small">
+                    <span>{labels.CMEXTotal} : {records.length}</span>
+                    <span class="nds-m-left_medium">{labels.CMEXShowing} : <span
+                            if:true={tablePageData.length}>{tablePageData.length}</span> <span
+                            if:true={tablePageGroupData.length}>{tablePageGroupData.length} {labels.CMEXGroups} &
+                            {totalGroupRecords} {labels.CMEXRecords}</span></span>
+                </div>
+
+                <div
+                    class="nds-size_6-of-12 nds-large-size_4-of-12 nds-b2b-input nds-p-horizontal_medium nds-p-bottom_small nds-b2b-flex-btn">
+                    <template if:true={issearchavailable}>
+                        <div
+                            class="nds-large-size_8-of-12 nds-form-element__control nds-input-has-icon nds-input-has-icon_left nds-b2b-search-records">
+                            <div if:false={displaySearchIcon}>
+                                <vlocity_cmt-icon theme={theme} icon-name="utility:search" size="xx-small" color="#b0adab"
+                                    extraclass="nds-icon nds-input__icon nds-input__icon_left">
+                                </vlocity_cmt-icon>
+                            </div>
+                            <input type="text" class="nds-input" placeholder="search" onkeyup={searchKeyChangeHandler}
+                                value={searchInput} onfocusin={hideSearchIcon} onfocusout={showSearchIcon}>
+                        </div>
+                        <!-- <vlocity_cmt-button if:false={readMode} variant="neutral" label={labels.CMEXUpload}
+                            onclick={showUploadScreenbtn} extraclass="nds-b2b-upload-btn" theme={theme}>
+                        </vlocity_cmt-button> -->
+                    </template>
+                    <template if:true={readMode}>
+                        <vlocity_cmt-button disabled={validateDisabled} variant={getValidateVariant} label={labels.CMEXValidate}
+                            onclick={validateQlis} theme={theme}>
+                        </vlocity_cmt-button>
+                        <vlocity_cmt-b2b-button class="nds-p-horizontal_medium" disabled={validateDisabled} theme="nds"
+                            variant={getValidateVariant} label={labels.CMEXEnrichQuote} onclick={communicateToAura}>
+                        </vlocity_cmt-b2b-button>
+                    </template>
+                </div>
+            </div>
+            <div>
+                </br>
+                {labels.CMEXTotalRecordsSelected} = {recordsSelected.length}
+            </div>
+            <div class={getTableParentWrapper}>
+                <table class={getTableWrapper} style="border-collapse:collapse">
+                    <thead if:false={hideTableHeader} class="nds-b2b-table_head">
+                        <tr class="nds-line-height_reset nds-b2b-table_row nds-b2b-table_head-row">
+                            <th class="nds-b2b-table_cell nds-b2b-icon_cell">
+                                <div class="nds-b2b-table_cell-box nds-form-element">
+                                    <div class="nds-form-element__control nds-b2b-table_checkbox">
+                                        <label class="nds-checkbox nds-p-top_none">
+                                            <input type="checkbox" data-check="checkall" onchange={handleRowSelect}
+                                                value="All" checked={checkAllValue}>
+                                            <span class="nds-checkbox_faux"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </th>
+                            <th if:true={isGrouped} class="nds-b2b-table_cell">
+                                <div class="nds-b2b-table_cell-box">{groupBy.groupFieldName}</div>
+                            </th>
+                            <template for:each={dataColumns} for:item="item" for:index="index">
+                                <th if:true={item.visible} key={item.id} class={item.class} data-label={item.label}>
+                                    <div class="nds-b2b-table_cell-box">
+                                        <a if:true={issortavailable}
+                                            class="nds-text-link_reset nds-b2b-table_sort nds-grid" data-reverse="false"
+                                            data-field={item.fieldName} data-sortable={item.sortable}
+                                            data-datatype={item.columnDataType} onclick={sortByField} role="button"
+                                            tabindex="-1">
+                                            <span class="nds-truncate" title={item.label}>{item.label}</span>
+                                            <div class="nds-icon_container">
+                                                <span aria-hidden="true">
+                                                    <vlocity_cmt-icon class="sorted-icon sort-direction"
+                                                        if:true={item.sortingEnabled} icon-name={sortingObj.icon}
+                                                        size="x-small" theme={theme}>
+                                                    </vlocity_cmt-icon>
+                                                    <vlocity_cmt-icon if:false={item.sortingEnabled}
+                                                        class="nds-b2b-hover-icon nds-transition-hide"
+                                                        icon-name="utility:arrowdown" size="x-small" theme={theme}>
+                                                    </vlocity_cmt-icon>
+                                                </span>
+                                            </div>
+                                        </a>
+                                        <a if:false={issortavailable} class="nds-th__action nds-text-link_reset">
+                                            <span class="nds-truncate" title={item.label}>{item.label}</span>
+                                        </a>
+                                    </div>
+                                </th>
+                            </template>
+                            <th if:true={hasActions} class="nds-b2b-table_cell nds-b2b-icon_cell nds-b2b-action_cell">
+                                <span class="nds-b2b-dropdown_trigger" tabindex="-1" onclick={toggleList}>
+                                    <vlocity_cmt-icon theme="nds" icon-name="utility:threedots_vertical" size="xx-small">
+                                    </vlocity_cmt-icon>
+                                    <ul class="nds-b2b-dropdown nds-b2b-dropdown_right nds-m-top_xx-small">
+                                        <template for:each={headerActionList} for:item="action" for:index="actionIndex">
+                                            <li key={action.label} class="nds-b2b-dropdown_item"
+                                                data-method={action.method} data-operation={action.operation}
+                                                onclick={executeAction}>
+                                                {action.label}
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="nds-b2b-table_body">
+                        <!--No Group-->
+                        <tr if:true={hasHeaderLookupConfig} class="nds-b2b-table_row">
+                            <td></td>
+                            <td if:true={isGrouped} class="nds-b2b-table_cell">
+                            </td>
+                            <template for:each={dataColumns} for:item="item" for:index="index">
+                                <td class="nds-b2b-table_cell nds-b2b-summary-cell" if:true={item.visible} key={item.id}>
+                                    <template if:true={item.headerLookupConfig}>
+                                        <div if:false={item.headerLookupConfig.showElement}>
+                                            <vlocity_cmt-button theme={theme} icon-name={item.headerLookupConfig.leadingIcon}
+                                                icon-size="x-small" label={item.headerLookupConfig.label}
+                                                data-columnid={item.id} data-calledfrom="button" data-fieldname={item.fieldName}
+                                                onclick={toggleTypeAheadElement}>
+                                            </vlocity_cmt-button>
+                                        </div>
+                                        <template if:true={item.headerLookupConfig.showElement}>
+                                            <vlocity_cmt-b2b-typeahead type="text"
+                                                field-level-help={item.headerLookupConfig.fieldLevelHelp}
+                                                field-level-help-position={item.headerLookupConfig.fieldLevelHelpPosition}
+                                                label={item.headerLookupConfig.fieldLabel} oninput={handletypeaheadInput}
+                                                single-select={item.headerLookupConfig.singleSelect}
+                                                onfocus={handletypeaheadFocus}
+                                                onblur={handletypeaheadBlur} onselect={handletypeaheadSelect}
+                                                onclear={handletypeaheadClear} options={typeaheadOptions}
+                                                placeholder={item.headerLookupConfig.placeholder}
+                                                required={item.headerLookupConfig.required}
+                                                min-length={item.headerLookupConfig.minLength}
+                                                max-length={item.headerLookupConfig.maxLength}
+                                                required-label={item.headerLookupConfig.requiredLabel}
+                                                no-results-found-message={labels.CMEXNoResults}
+                                                message-when-value-missing={item.headerLookupConfig.valueMissingMessage}
+                                                message-when-too-short={item.headerLookupConfig.valueShortMessage}
+                                                message-when-too-long={item.headerLookupConfig.valueLongMessage} theme="nds"
+                                                value={elementValue} remote-source=true
+                                                disable-filter={item.headerLookupConfig.disableFilter}
+                                                json-data={item.headerLookupConfig} icon-name-right="utility:search"
+                                                data-omni-input data-columnid={item.id} data-fieldname={item.fieldName}
+                                                data-index={index} data-placeslookup={item.headerLookupConfig.placesLookup}>
+                                                <div if:true={item.headerLookupConfig.customAction} slot="lastItem">
+                                                    <div class="nds-border_top nds-p-around_small nds-text-align_center">
+                                                        <vlocity_cmt-button theme="nds" icon-name={item.headerLookupConfig.customActionIcon} icon-size="x-small"
+                                                        label={item.headerLookupConfig.customActionLabel} data-calledfrom="button" data-fieldname={item.fieldName} onclick={handleTypeaheadActions}>
+                                                        </vlocity_cmt-button>
+                                                    </div>
+                                                </div>
+                                            </vlocity_cmt-b2b-typeahead>
+                                        </template>
+                                    </template>
+                                </td>
+                            </template>
+                        </tr>
+                        <template if:true={newRecords.length} for:each={newRecords} for:item="row" for:index="rowIndex">
+                            <tr key={row.rowId} class="nds-b2b-table_row" data-index={row.originalItemIndex}>
+                                <td class="nds-b2b-table_cell nds-b2b-icon_cell">
+                                </td>
+                                <td if:true={isGrouped}
+                                    class="nds-b2b-table_cell nds-b2b-table_cell-readonly nds-b2b-table_transition-hide">
+                                </td>
+                                <template if:true={baseVersion} for:each={row.columns} for:item="cell"
+                                    for:index="colIndex">
+                                    <td key={cell.cellId} class={cell.class}>
+                                        <div class="nds-b2b-table_cell-box">
+                                            <label class="nds-b2b-table_cell-label">{cell.fieldLabel}</label>
+                                            <vlocity_cmt-b2b-data-table-cell data-field-name={cell.fieldName}
+                                                data-index={row.originalItemIndex} column-data={cell}
+                                                cell-data={cell.data} onedit={handleFieldEdit}
+                                                onclick={handleFieldClick} theme={theme}>
+                                            </vlocity_cmt-b2b-data-table-cell>
+                                            <div if:true={rowDetail}>
+                                                <div if:true={cell.isFirst}>
+                                                    <vlocity_cmt-b2b-data-row-detail></vlocity_cmt-b2b-data-row-detail>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </template>
+                                <template if:true={row.isNewRecord}>
+                                    <td
+                                        class="nds-p-horizontal_none nds-p-vertical_small nds-b2b-icon_cell nds-b2b-action_cell">
+                                        <span data-calledfrom="button" data-index={row.originalItemIndex}
+                                            class="nds-m-right_x-small" onclick={saveNewRecord}>
+                                            <vlocity_cmt-icon extraclass="nds-p-around_xxx-small nds-avatar_circle" theme="nds"
+                                                bg-color="green" variant="inverse" icon-name="utility:check"
+                                                size="x-small">
+                                            </vlocity_cmt-icon>
+                                        </span>
+                                        <span data-calledfrom="button" data-index={row.originalItemIndex}
+                                            onclick={removeNewRecord}>
+                                            <vlocity_cmt-icon extraclass="nds-p-around_xxx-small nds-avatar_circle" theme="nds"
+                                                bg-color="red" variant="inverse" icon-name="utility:close"
+                                                size="x-small">
+                                            </vlocity_cmt-icon>
+                                        </span>
+                                    </td>
+                                </template>
+                            </tr>
+                        </template>
+                        <template if:true={tablePageData.length} if:false={isGrouped} for:each={tablePageData}
+                            for:item="row" for:index="rowIndex">
+                            <tr key={row.rowId} class={row.class} data-index={row.originalItemIndex}>
+                                <td class="nds-b2b-table_cell nds-b2b-icon_cell">
+                                    <div if:false={row.isNewRecord} class="nds-b2b-table_cell-box nds-form-element">
+                                        <div class="nds-form-element__control nds-b2b-table_checkbox">
+                                            <label class="nds-checkbox nds-p-top_none">
+                                                <input type="checkbox" name="options" onchange={handleRowSelect}
+                                                    checked={row.isItemSelected} value={row.originalItemIndex}>
+                                                <span
+                                                    class="nds-checkbox_faux nds-transition-hide nds-b2b-row_hover-show"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <template if:true={baseVersion} for:each={row.columns} for:item="cell"
+                                    for:index="colIndex">
+                                    <td key={cell.cellId} class={cell.class}>
+                                        <div class="nds-b2b-table_cell-box">
+                                            <label class="nds-b2b-table_cell-label">{cell.fieldLabel}</label>
+                                            <vlocity_cmt-b2b-data-table-cell if:false={readMode} data-field-name={cell.fieldName}
+                                                data-index={row.originalItemIndex} column-data={cell}
+                                                cell-data={cell.data} onedit={handleFieldEdit}
+                                                onclick={handleFieldClick} theme={theme}>
+                                            </vlocity_cmt-b2b-data-table-cell>
+                                            <vlocity_cmt-b2b-data-table-cell-list if:true={readMode} list-items={cell.data.value}
+                                                is-first={cell.isFirst} group-type={row.group.type} cell-data={cell}
+                                                summary-data-info={summaryDataToCell} oncpqitemcollapsed={collapseItems}
+                                                ontabupdate={handleTabUpdate} onfieldclick={handleFieldClick}
+                                                onfieldedit={handleSummaryEdit}></vlocity_cmt-b2b-data-table-cell-list>
+                                            <div if:true={rowDetail}>
+                                                <div if:true={cell.isFirst}>
+                                                    <vlocity_cmt-b2b-data-row-detail></vlocity_cmt-b2b-data-row-detail>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </template>
+                                <td if:true={hasActions}
+                                    class="nds-b2b-table_cell nds-b2b-icon_cell nds-b2b-action_cell">
+                                    <span class="nds-b2b-dropdown_trigger" tabindex="-1" onclick={toggleList}>
+                                        <vlocity_cmt-icon theme="nds" icon-name="utility:threedots_vertical" size="xx-small">
+                                        </vlocity_cmt-icon>
+                                        <ul class="nds-b2b-dropdown nds-b2b-dropdown_right nds-m-top_xx-small">
+                                            <template if:true={readMode} for:each={summaryActionList} for:item="action"
+                                                for:index="actionIndex">
+                                                <li key={action.label} class="nds-b2b-dropdown_item"
+                                                    data-method={action.method} data-index={row.originalItemIndex}
+                                                    data-operation={action.operation} onclick={executeAction}>
+                                                    {action.label}
+                                                </li>
+                                            </template>
+                                            <template if:false={readMode} for:each={memberActionList} for:item="action"
+                                                for:index="actionIndex">
+                                                <li key={action.label} class="nds-b2b-dropdown_item"
+                                                    data-method={action.method} data-index={row.originalItemIndex}
+                                                    data-operation={action.operation} onclick={executeAction}>
+                                                    {action.label}
+                                                </li>
+                                            </template>
+                                            <template if:false={readMode} if:true={row.actions} for:each={row.actions} for:item="action"
+                                              for:index="actionIndex">
+                                              <li key={action.label} class="nds-b2b-dropdown_item"
+                                                 data-method={action.method} data-index={row.originalItemIndex}
+                                                 data-operation={action.operation} onclick={executeAction}>
+                                                 {action.label}
+                                              </li>
+                                            </template>
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                        </template>
+                        <!--Group-->
+                        <template if:true={isGrouped} for:each={tablePageGroupData} for:item="group"
+                            for:index="groupIndex">
+                            <!--Group Header Row-->
+                            <tr key={group.groupRowId} class="nds-theme_shade nds-b2b-table_row">
+                                <td class="nds-b2b-table_cell nds-b2b-icon_cell">
+                                    <div class="nds-b2b-table_cell-box nds-form-element">
+                                        <div class="nds-form-element__control nds-b2b-table_checkbox">
+                                            <label class="nds-checkbox nds-p-top_none">
+                                                <input type="checkbox" name="options" onchange={handleRowSelect}
+                                                    checked={group.isGroupSelected} value={group.groupRowId}>
+                                                <span
+                                                    class="nds-checkbox_faux nds-transition-hide nds-b2b-row_hover-show"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td if:true={group.isReadOnly}
+                                    class="nds-b2b-table_cell nds-b2b-table_cell-readonly nds-b2b-table_cell-full">
+                                    <div class="nds-b2b-table_cell-box">
+                                        <a data-index={groupIndex} onclick={toggleGroupedRow}
+                                            class="nds-text-link_reset nds-grid">
+                                            <vlocity_cmt-icon theme={theme} data-index={groupIndex} baseurl={iconUrl}
+                                                icon-name="utility:chevrondown" extraclass="nds-m-right_x-small"
+                                                size="x-small"></vlocity_cmt-icon>
+                                            {group.groupName} ({group.groupRecords.length})
+                                        </a>
+                                    </div>
+                                </td>
+                                <td if:false={group.isReadOnly} class="nds-b2b-table_cell nds-b2b-table_cell-full">
+                                    <div class="nds-b2b-table_cell-box nds-grid nds-grid_vertical-align-center">
+                                        <a data-index={groupIndex} onclick={toggleGroupedRow}
+                                            class="nds-text-link_reset nds-m-right_small">
+                                            <vlocity_cmt-icon theme={theme} data-index={groupIndex} baseurl={iconUrl}
+                                                icon-name="utility:chevrondown" size="x-small"></vlocity_cmt-icon>
+                                        </a>
+                                        <div if:false={groupNameEdit} class="nds-grid nds-grid_align-spread"
+                                            onclick={editGroupName}>
+                                            <span>{group.groupName} ({group.groupRecords.length})</span>
+                                            <vlocity_cmt-icon class="nds-col_bump-left nds-b2b-hover-icon nds-transition-hide"
+                                                icon-name="utility:edit" size="x-small" theme={theme}>
+                                            </vlocity_cmt-icon>
+                                        </div>
+                                        <vlocity_cmt-input if:true={groupNameEdit} data-group={group.groupName}
+                                            class="nds-b2b-field_edit" onblur={updateGroupName} theme={theme}
+                                            type="text" value={group.groupName}>
+                                        </vlocity_cmt-input>
+                                    </div>
+                                </td>
+                                <!--Show empty cols if group fields are missing and column array is empty-->
+                                <template if:false={group.columns.length} for:each={dataColumns} for:item="col">
+                                    <td class="nds-b2b-table_cell nds-b2b-table_cell-readonly nds-b2b-table_transition-hide"
+                                        key={col.cellId} if:true={col.visible}>
+                                        <div class="nds-b2b-table_cell-box"></div>
+                                    </td>
+                                </template>
+                                <template if:true={group.columns.length} for:each={group.columns} for:item="col">
+                                    <td class={col.class} key={col.cellId}>
+                                        <div class="nds-b2b-table_cell-box">
+                                            <label class="nds-b2b-table_cell-label">{col.fieldLabel}</label>
+                                            <div>{col.data.value}</div>
+                                        </div>
+                                    </td>
+                                </template>
+                                <td if:true={hasActions}
+                                    class="nds-b2b-table_cell nds-b2b-icon_cell nds-b2b-action_cell">
+                                    <span class="nds-b2b-dropdown_trigger" tabindex="-1" onclick={toggleList}>
+                                        <vlocity_cmt-icon theme="nds" icon-name="utility:threedots_vertical" size="xx-small">
+                                        </vlocity_cmt-icon>
+                                        <ul class="nds-b2b-dropdown nds-b2b-dropdown_right nds-m-top_xx-small">
+                                            <template for:each={groupActionList} for:item="action"
+                                                for:index="actionIndex">
+                                                <li key={action.label} class="nds-b2b-dropdown_item"
+                                                    data-method={action.method} data-operation={action.operation}
+                                                    data-index={groupIndex} onclick={executeAction}>
+                                                    {action.label}
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr for:each={group.groupItems} for:item="row" key={row.rowId} class={row.class}
+                                data-index={row.originalItemIndex}>
+                                <td class="nds-b2b-table_cell nds-b2b-icon_cell">
+                                    <div class="nds-b2b-table_cell-box nds-form-element">
+                                        <div class="nds-form-element__control nds-b2b-table_checkbox">
+                                            <label class="nds-checkbox">
+                                                <input type="checkbox" name="options" onchange={handleRowSelect}
+                                                    checked={row.isItemSelected} value={row.originalItemIndex}>
+                                                <span
+                                                    class="nds-checkbox_faux nds-transition-hide nds-b2b-row_hover-show"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td key={row.rowId}
+                                    class="nds-b2b-table_cell nds-b2b-table_cell-readonly nds-b2b-table_transition-hide">
+                                    <div class="nds-b2b-table_cell-box">&nbsp;</div>
+                                </td>
+                                <template for:each={row.columns} for:item="cell" for:index="colIndex">
+                                    <td key={cell.cellId} class={cell.class}>
+                                        <div class="nds-b2b-table_cell-box">
+                                            <label class="nds-b2b-table_cell-label">{cell.fieldLabel}</label>
+                                            <vlocity_cmt-b2b-data-table-cell if:false={readMode} data-field-name={cell.fieldName}
+                                                data-index={row.originalItemIndex} column-data={cell}
+                                                cell-data={cell.data} onedit={handleFieldEdit}
+                                                onclick={handleFieldClick} theme={theme}>
+                                            </vlocity_cmt-b2b-data-table-cell>
+                                            <vlocity_cmt-b2b-data-table-cell-list if:true={readMode} list-items={cell.data.value}
+                                                group-type={row.group.type} cell-data={cell} is-first={cell.isFirst}
+                                                oncpqitemcollapsed={collapseItems} onfieldclick={handleFieldClick}
+                                                onfieldedit={handleSummaryEdit}></vlocity_cmt-b2b-data-table-cell-list>
+                                            <div if:true={rowDetail}>
+                                                <div if:true={cell.isFirst}>
+                                                    <vlocity_cmt-b2b-data-row-detail></vlocity_cmt-b2b-data-row-detail>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </template>
+                                <td if:true={hasActions}
+                                    class="nds-b2b-table_cell nds-b2b-icon_cell nds-b2b-action_cell">
+                                    <span class="nds-b2b-dropdown_trigger" tabindex="-1" onclick={toggleList}>
+                                        <vlocity_cmt-icon theme="nds" icon-name="utility:threedots_vertical" size="xx-small">
+                                        </vlocity_cmt-icon>
+                                        <ul class="nds-b2b-dropdown nds-b2b-dropdown_right nds-m-top_xx-small">
+                                            <template if:true={readMode} for:each={summaryActionList} for:item="action"
+                                                for:index="actionIndex">
+                                                <li key={action.label} class="nds-b2b-dropdown_item"
+                                                    data-method={action.method} data-index={row.originalItemIndex}
+                                                    data-operation={action.operation} onclick={executeAction}>
+                                                    {action.label}
+                                                </li>
+                                            </template>
+                                            <template if:false={readMode} for:each={memberActionList} for:item="action"
+                                                for:index="actionIndex">
+                                                <li key={action.label} class="nds-b2b-dropdown_item"
+                                                    data-method={action.method} data-index={row.originalItemIndex}
+                                                    data-operation={action.operation} onclick={executeAction}>
+                                                    {action.label}
+                                                </li>
+                                            </template>
+                                            <template if:false={readMode} if:true={row.actions} for:each={row.actions} for:item="action"
+                                             for:index="actionIndex">
+                                              <li key={action.label} class="nds-b2b-dropdown_item"
+                                                data-method={action.method} data-index={row.originalItemIndex}
+                                                data-operation={action.operation} onclick={executeAction}>
+                                                {action.label}
+                                              </li>
+                                            </template>
+                                        </ul>
+                                    </span>
+                                </td>
+                            </tr>
+                        </template>
+                        <template if:true={isGrouped}>
+                            <tr if:false={tablePageGroupData.length}>
+                                <td class="nds-b2b-table_cell" colspan="2"></td>
+                                <td class="nds-b2b-table_cell" colspan={dataColumns.length}>{groupBy.groupFieldName}
+                                    {labels.CMEXNoRecordsInGroup}
+                                    <a onclick={removeEmptyGroup} data-id={groupBy.groupId}>{labels.CMEXClick}</a>
+                                    {labels.CMEXToRemoveGroup}
+                                </td>
+                                <td class="nds-b2b-table_cell"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <div if:true={pagesize} class="nds-grid nds-m-around_x-small nds-grid_align-end">
+                <vlocity_cmt-button if:true={showPaginationOption} theme={theme} icon-name="utility:chevronleft" icon-size="small"
+                    disabled={prevDisabled} data-index="prev" onclick={goToPage}>
+                </vlocity_cmt-button>
+                <template for:each={range} for:item="page">
+                    <button key={page.counter} class={page.status} data-index={page.counter} onclick={goToPage}>
+                        {page.counter}
+                    </button>
+                </template>
+                <vlocity_cmt-button if:true={showPaginationOption} theme={theme} icon-name="utility:chevronright"
+                    icon-size="small" disabled={nextDisabled} data-index="next" onclick={goToPage}>
+                </vlocity_cmt-button>
+            </div>
+        </div>
+        <vlocity_cmt-b2b-status-bar if:true={showStatusBar}>
+            <div class="nds-b2b-btn-container">
+                <vlocity_cmt-b2b-button if:true={selectedGroupsId.length} theme="nds" variant="brand"
+                    label={labels.CMEXRemoveGroup} extraclass="nds-m-right_small" onclick={removeGroup}></vlocity_cmt-b2b-button>
+                <vlocity_cmt-b2b-button if:true={hasCustomGroup} theme="nds" variant="brand" label={labels.CMEXRemoveFromGroup}
+                    extraclass="nds-m-right_small" onclick={removeFromGroup}></vlocity_cmt-b2b-button>
+                <vlocity_cmt-b2b-button theme="nds" variant="brand" label={labels.CMEXAddtoGroup} data-mode="add"
+                    extraclass="nds-m-right_small" onclick={showCGModal}></vlocity_cmt-b2b-button>
+                <vlocity_cmt-b2b-button theme="nds" variant="brand" label={labels.CMEXAddProducts} onclick={addProducts}>
+                </vlocity_cmt-b2b-button>
+            </div>
+        </vlocity_cmt-b2b-status-bar>
+        <vlocity_cmt-modal class="nds-b2b-file-mapper" theme="nds" size="medium">
+            <div slot="header" class="nds-b2b-title">{labels.CMEXAddtoGroup}</div>
+            <div slot="content" class="nds-p-vertical_medium" style="min-height: 200px;">
+                <div class="nds-grid nds-wrap">
+                    <div class="nds-size_1-of-1 nds-medium-size_5-of-12">
+                        <label>{labels.CMEXSelectGroup}</label>
+                        <vlocity_cmt-combobox class="nds-b2b-input" theme={theme} value={selectGroup.value}
+                            options={customGroupList} onchange={setGroup}>
+                        </vlocity_cmt-combobox>
+                    </div>
+                    <div
+                        class="nds-size_1-of-1 nds-medium-size_2-of-12 nds-p_horizontal-small nds-p-top_large nds-text-align_center">
+                        {labels.CMEXOr}</div>
+                    <div class="nds-size_1-of-1 nds-medium-size_5-of-12">
+                        <div if:false={showCreate} class="nds-text-align_center nds-p-top_large"
+                            onclick={setShowCreate}>{labels.CMEXCreateANewGroup}</div>
+                        <div if:true={showCreate}>
+                            <label>{labels.CMEXNewGroup}</label>
+                            <vlocity_cmt-input data-catg="nGrp" value={nGrpName} class="nds-b2b-input" theme={theme}
+                                onchange={createNewGroup}></vlocity_cmt-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer" class="nds-is-relative">
+                <div if:true={showWait}>
+                    <vlocity_cmt-spinner variant="brand" size="medium"></vlocity_cmt-spinner>
+                </div>
+                <vlocity_cmt-button variant="neutral" label={labels.CMEXCancel} onclick={cancelGrpName} theme={theme}
+                    class="nds-p-right_x-small slds-p-right_x-small">
+                </vlocity_cmt-button>
+                <vlocity_cmt-button variant="brand" label={labels.CMEXSave} onclick={updateGroup} theme={theme}>
+                </vlocity_cmt-button>
+            </div>
+        </vlocity_cmt-modal>
+        <div class="slds-spinner_container" if:true={loading}>
+            <lightning-spinner alternative-text={labels.CMEXLoading} size="small" variant="brand">
+            </lightning-spinner>
+        </div>
+        <vlocity_cmt-modal size="medium" theme="nds"  class="nds-b2b-addressvalidation-modal">
+            <div slot="header">
+                <h1 class="nds-b2b-modal-header">Fix Location Issue</h1>    
+            </div>
+            <div slot="content" class="nds-is-relative nds-grid">
+                <div class="nds-size_6-of-12">
+                    <div>
+                         <h1> Old location</h1>   
+                    </div>
+                    <div if:true={invalidMember}>
+                        <del>{invalidMember.Name}</del>
+                    </div>
+                </div>                 
+                <div if:true={addressValidationModal} class="nds-b2b-adjustment-type-combobox nds-size_6-of-12">
+                    <vlocity_cmt-combobox theme="nds" options={addressMemberComboList} value=""
+                      placeholder={labels.CMEXSelect} class="nds-b2b-input" onchange={onChangeAddresSelected}>
+                    </vlocity_cmt-combobox>
+                </div>
+            </div>
+            <div slot="footer">
+                    <vlocity_cmt-button
+                        label="Cancel"
+                        onclick={closeModal}
+                        extraclass="slds-p-horizontal_x-large slds-p-vertical_xxx-small"
+                        variant="neutral"
+                        class="slds-float_right">
+                    </vlocity_cmt-button>
+                    <vlocity_cmt-button disabled = {disableSaveMember}
+                        label="Save"
+                        onclick={saveMember}
+                        extraclass="slds-p-horizontal_x-large slds-p-vertical_xxx-small"
+                        variant="brand"
+                        class="slds-float_right slds-p-right_small">
+                    </vlocity_cmt-button>
+            </div>           
+        </vlocity_cmt-modal>
+    </div>
+</template>

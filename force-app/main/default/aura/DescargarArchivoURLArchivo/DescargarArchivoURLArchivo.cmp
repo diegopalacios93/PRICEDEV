@@ -1,0 +1,48 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickAction" controller="AccesoLightningComToWSMethods">
+    
+    <aura:html tag="style">
+  	  .slds-modal__container{
+    	height: auto;
+        width: 30%;
+        max-width: 70rem;
+        }
+
+	  .modal-body{
+      		height: auto;
+        	max-height: 100px !important;
+        }
+        
+      .forceChatterLightningComponent .bodyWrapper{
+        	height: 100%;
+        	width: 100%;	
+        	padding: 0;
+        	box-sizing: border-box
+        }
+    </aura:html>
+    
+   <aura:attribute name="record" type="Campaign" />
+   <aura:attribute name="action" type="String" default="" />
+   <aura:attribute name="idA" type="String" default="" />
+   <aura:attribute name="idS" type="String" default="" />
+   <aura:attribute name="tS" type="String" default="" />
+   <aura:attribute name="t_1" type="String" default="" />
+   <aura:attribute name="MapDataCMP" type="Map" />
+   <force:recordData recordId="{!v.recordId}" targetFields="{!v.record}" fields="['Name']"/>
+   <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   <div class="c-container">
+   	    
+        <lightning:layout verticalAlign="center" horizontalAlign="center" pullToBoundary="medium" class="x-large">
+            <lightning:layoutItem flexibility="auto">
+                <lightning:button class="slds-button slds-button--neutral .slds-modal__close" label="¿Descargar Archivo?" onclick="{!c.handleClick}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+           
+        <form name="GetFileForm" aura:id="GetFileForm" action="{!v.action}" method="POST">
+            <input type="hidden" name="idA" value="{!v.idA}" />
+            <input type="hidden" name="idS" value="{!v.idS}" />
+            <input type="hidden" name="tS" value="{!v.tS}" />
+            <input type="hidden" name="t" value="{!v.t_1}" />
+        </form>
+   </div>
+    
+</aura:component>

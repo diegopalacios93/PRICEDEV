@@ -1,0 +1,86 @@
+<template>
+    <div if:true={showspinner}>
+        <div class="slds-spinner_container">
+            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                <span class="slds-assistive-text" style="font-family: 'Salesforce Sans';">Espere un momento por
+                    favor</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </div>
+    <lightning-tabset active-tab-value="0" variant="scoped">
+        <lightning-tab label={totalElementos}  value="0" onactive={handleActive}>
+            <template if:true={familyTodos}>
+                <div class="slds-text-align_center">
+                    <img src={emptyStateImg} alt="Empty State" class="space-img-text space-img-top" />
+                    <p class="font space-text-bottom">No cuenta con ningún producto</p>
+                </div>
+            </template>
+            <template if:false={familyTodos}>
+                <c-etb_-asset-details-child records={pagedData} show-table={showTable} no-hay-datos={noHayDatos}
+                    max-data={maxData}></c-etb_-asset-details-child>
+            </template>
+        </lightning-tab>
+        <lightning-tab label={totalDatos} value="1" onactive={handleActive}>
+            <template if:true={familyDatos}>
+                <div class="slds-text-align_center">
+                    <img src={emptyStateImg} alt="Empty State" class="space-img-text space-img-top" />
+                    <p class="font space-text-bottom">No cuenta con ningún producto de esta familia</p>
+                </div>
+            </template>
+            <template if:false={familyDatos}>
+                <c-etb_-asset-details-child records={pagedData} show-table={showTable} no-hay-datos={noHayDatos}
+                    max-data={maxData}></c-etb_-asset-details-child>
+            </template>
+        </lightning-tab>
+        <lightning-tab label={totalInternet} value="2" onactive={handleActive}>
+            <template if:true={familyInter}>
+                <div class="slds-text-align_center">
+                    <img src={emptyStateImg} alt="Empty State" class="space-img-text space-img-top" />
+                    <p class="font space-text-bottom">No cuenta con ningún producto de esta familia</p>
+                </div>
+            </template>
+            <template if:false={familyInter}>
+                <c-etb_-asset-details-child records={pagedData} show-table={showTable} no-hay-datos={noHayDatos}
+                    max-data={maxData}></c-etb_-asset-details-child>
+            </template>
+        </lightning-tab>
+        <lightning-tab label={totalLargaDistancia} value="3" onactive={handleActive}>
+            <template if:true={familyLDistancia}>
+                <div class="slds-text-align_center">
+                    <img src={emptyStateImg} alt="Empty State" class="space-img-text space-img-top" />
+                    <p class="font space-text-bottom">No cuenta con ningún producto de esta familia</p>
+                </div>
+            </template>
+            <template if:false={familyLDistancia}>
+                <c-etb_-asset-details-child records={pagedData} show-table={showTable} no-hay-datos={noHayDatos}
+                    max-data={maxData}></c-etb_-asset-details-child>
+            </template>
+        </lightning-tab>
+        <lightning-tab label={totalLocal} value="4" onactive={handleActive}>
+            <template if:true={familyLocal}>
+                <div class="slds-text-align_center">
+                    <img src={emptyStateImg} alt="Empty State" class="space-img-text space-img-top" />
+                    <p class="font space-text-bottom">No cuenta con ningún producto de esta familia</p>
+                </div>
+            </template>
+            <template if:false={familyLocal}>
+                <c-etb_-asset-details-child records={pagedData} show-table={showTable} no-hay-datos={noHayDatos}
+                    max-data={maxData}></c-etb_-asset-details-child>
+            </template>
+        </lightning-tab>
+        <lightning-tab label={totalRedesMoviles} value="5" onactive={handleActive}>
+            <template if:true={familyRMoviles}>
+                <div class="slds-text-align_center">
+                    <img src={emptyStateImg} alt="Empty State" class="space-img-text space-img-top" />
+                    <p class="font space-text-bottom">No cuenta con ningún producto de esta familia</p>
+                </div>
+            </template>
+            <template if:false={familyRMoviles}>
+                <c-etb_-asset-details-child records={pagedData} show-table={showTable} no-hay-datos={noHayDatos}
+                    max-data={maxData}></c-etb_-asset-details-child>
+            </template>
+        </lightning-tab>
+    </lightning-tabset>
+</template>

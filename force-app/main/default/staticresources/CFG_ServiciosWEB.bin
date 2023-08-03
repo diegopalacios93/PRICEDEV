@@ -1,0 +1,8 @@
+NAME,ENDPOINT__C,CONTRASENA__C,USUARIO__C,ACTION__C
+NormalizacionDireccion,http://soaqa04:7070/Service/SisExt.1.1.serviceagent/soapEndpoint1,,,/Service.Core/NorGeoCov/ConsultaNormalizacionEmpresa/Interface/ConsultaNormalizacionEmpresa
+RevChain,http://201.245.171.239:7082/Service/SalesForce.serviceagent/Endpoint,,,/Service/SalesForce.serviceagent/soapEndpoint1/SFRevChainOP
+CreacionCuentasFact,http://201.245.171.239:7084/Service/intSiebelSrvs.serviceagent/soapEndpoint,,,/Service/intSiebelSrvs.serviceagent//CreacionCuenta
+LDConsultaAccountId,http://201.245.171.239:7082/Service/SalesForce.serviceagent/Endpoint,,,/Service/SalesForce.serviceagent//AccountIdOp
+LDConsultaConexionNumber,http://201.245.171.239:7082/Service/SalesForce.serviceagent/Endpoint,,,/Service/SalesForce.serviceagent//ConnectionNumberOp
+CodigoCun,http://201.245.171.243:9795/Service/SisExt/Endpoint,s4l4c0m.2014,SALESFORCE,
+DataCredito,http://201.245.171.162:7072/Service/Consultas/EndPoint,,,/WebserviceConsultas.Core/Service/Consultas.serviceagent/ConsultasEndpoint/

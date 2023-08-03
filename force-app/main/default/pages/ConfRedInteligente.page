@@ -1,0 +1,359 @@
+<apex:page controller="ConfRedInteligente_ctr" >
+<apex:form id="formConfRI">
+<style>
+body {background-color:black}
+.tb01{width: 100%;}
+.fuente{
+    color:black;
+    font-family:verdana;
+    font-size:110%;
+}
+.titulos{
+    color:black;
+    font-family:verdana;
+    font-size:250%;
+}
+.bloque{
+    display:inline;
+    padding:10px;
+}
+.tablas{
+	display:inline;
+	padding:
+}
+hr{color: #000;
+background-color: #000;
+height: 4px;}
+
+</style>
+
+<div id="grande">
+
+
+</div> <!-- div grande -->
+
+
+
+<table id="infocuenta" class="tb01">
+<tr>
+
+</tr>
+<tr>
+<td class="fuente">Solicitud #</td><td class="fuente"><apex:inputField value="{!conf.Name}"/></td><td class="fuente"> Fecha #</td><td class="fuente"><apex:inputField value="{!conf.Fecha__c}"/></td>
+</tr>
+<tr>
+<td class="fuente">
+Datos del cliente
+</td></tr>
+<tr><td class="fuente">Nombre de la cuenta</td><td class="fuente">{!cuenta.Name}</td><td class="fuente">Persona Natural</td><td class="fuente"><apex:inputCheckbox value="{!personaNat}"/></td><td class="fuente">Persona Juridica</td><td class="fuente"><apex:inputCheckbox value="{!personaJur}"/></td></tr>
+<tr class="fuente"><td class="fuente">Documento de Identificacion: </td><td class="fuente"> NIT </td><td class="fuente"><apex:inputCheckbox value="{!tipodocNIT}"/></td><td class="fuente">C.C.</td><td class="fuente"><apex:inputCheckbox value="{!tipodocCC}"/></td><td class="fuente">Otro</td><td class="fuente"><apex:inputCheckbox value="{!tipodocOtro}"/></td><td class="fuente">Cual?</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!cuenta.Tipodedocumento__c}" rendered="{!tipodocOtro}"/></td></tr>
+<tr class="fuente"><td class="fuente">No.</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!cuenta.AccountNumber}"/></td></tr>
+<tr><td class="fuente">Nombre de Representante Legal </td><td class="fuente"><apex:inputField value="{!conf.RepresentanteLegal__c}"/></td><td class="fuente">C.C.</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!conf.RepresentanteLegal__r.NumerodeIdentificacion__c}"/></td></tr>
+<tr><td class="fuente">Direccion de la empresa</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!cuenta.Direccion__c}"/></td><td class="fuente">Telefono</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!cuenta.Lineadecontacto__c}"/></td><td class="fuente">Fax</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!conf.RepresentanteLegal__r.fax}"/></td></tr>
+<tr><td class="fuente">Contacto </td><td class="fuente"><apex:inputField value="{!conf.Contacto__c}"/></td><td class="fuente">Cargo</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!conf.contacto__r.Cargo__c}"/></td></tr>
+<tr><td class="fuente">Telefono </td><td class="fuente"><apex:outputText style="font-style:italic" value="{!conf.contacto__r.Phone}"/></td><td class="fuente">Email</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!conf.contacto__r.email}"/></td></tr>
+</table>
+<hr></hr>
+<div>
+<strong>servicios a solicitar</strong></div>
+<hr></hr>
+<table>
+<tr><td class="fuente">Activacion</td><td class="fuente"><apex:inputCheckbox value="{!Conf.Activacion__c}"/></td><td class="fuente">Modificacion</td><td class="fuente"><apex:inputCheckbox value="{!Conf.Modificacion__c}"/></td><td class="fuente">Cancelacion</td><td class="fuente"><apex:inputCheckbox value="{!Conf.Cancelacion__c}"/></td></tr>
+<tr><td class="fuente">Numeracion 3077:</td><td class="fuente">xxxxxx</td></tr>
+<tr><td class="fuente">Linea sobre la cual facturar? el servicio </td><td class="fuente"><apex:inputField value="{!conf.ServicioETB__c}"/></td><td class="fuente">Direccion</td><td class="fuente"><apex:outputText style="font-style:italic" value="{!conf.ServicioETB__r.SucursalDestino__c}"/></td></tr>
+<tr><td class="fuente">Usuario</td><td class="fuente">xxxxxx</td><td class="fuente">Suscriptor</td><td class="fuente">x</td><td class="fuente">Finaciacion a 3 meses</td><td class="fuente"><apex:inputField value="{!conf.Financiacion3Meses__c}"/></td></tr>
+</table>
+<hr></hr>
+<div><strong>{!$Label.opcionesRI}</strong></div>
+<table>
+<tr><td class="fuente"></td><td class="fuente">N.U.L</td><td class="fuente"></td><td class="fuente">N.U.L</td></tr>
+<tr><td class="fuente">1. Enrutamientos</td><td class="fuente"></td><td class="fuente">3. Locuciones</td><td class="fuente"></td></tr>
+<tr><td class="fuente">1.1 Por Origen</td><td class="fuente"><apex:inputField value="{!conf.PorOrigen__c}"/></td><td class="fuente">3.1 Anuncios personalizados</td><td class="fuente"><apex:inputField value="{!conf.AnunciosPersonalizados__c}"/></td></tr>
+<tr><td class="fuente">1.2 Por Tipo de dia</td><td class="fuente"><apex:inputField value="{!conf.PorTipoDia__c}"/></td><td class="fuente">3.2 Locucion sobre costo de llamada</td><td class="fuente"><apex:inputField value="{!conf.LocucionCostoLLamada__c}"/></td></tr>
+<tr><td class="fuente">1.3 Por Hora del dia</td><td class="fuente"><apex:inputField value="{!conf.PorHoraDia__c}"/></td><td class="fuente"></td><td class="fuente">N.U</td></tr>
+<tr><td class="fuente">1.4 Menus Interactivos</td><td class="fuente"><apex:inputField value="{!conf.MenusInteractivos__c}"/></td><td class="fuente">4. Limites</td><td class="fuente"></td></tr>
+<tr><td class="fuente">1.5 Por Porcentaje</td><td class="fuente"><apex:inputField value="{!conf.PorPorcentaje__c}"/></td><td class="fuente">4.1 de Llamadas</td><td class="fuente"><apex:inputField value="{!conf.DeLlamadas__c}"/></td></tr>
+<tr><td class="fuente">1.6 Reenrutamientos</td><td class="fuente"><apex:inputField value="{!conf.Reenrutamientos__c}"/></td><td class="fuente">4.2 de Credito</td><td class="fuente"><apex:inputField value="{!conf.DeCreditos__c}"/></td></tr>
+<tr><td class="fuente">1.7 Cola de Llamadas</td><td class="fuente"><apex:inputField value="{!conf.ColaLlamadas__c}"/></td><td class="fuente">4.3 de Tiempo de Llamada</td><td class="fuente"><apex:inputField value="{!conf.DeTiempoLlamada__c}"/></td></tr>
+<tr><td class="fuente"></td><td class="fuente"></td><td class="fuente"></td><td class="fuente"></td></tr>
+<tr><td class="fuente"></td><td class="fuente">N.U.L</td><td class="fuente"></td><td class="fuente">N.U.L</td></tr>
+<tr><td class="fuente">2. Restricciones</td><td class="fuente"></td><td class="fuente"></td><td class="fuente"></td></tr>
+<tr><td class="fuente">2.1 Por Origen</td><td class="fuente"><apex:inputField value="{!conf.PorOrigen2__c}"/></td><td class="fuente">5 Centros de Respuesta</td><td class="fuente"><apex:inputField value="{!conf.CentroRespuesta__c}"/></td></tr>
+<tr><td class="fuente">2.2 Codigos de Autenticacion (PIN)</td><td class="fuente"><apex:inputField value="{!conf.CodigosAutenticacion__c}"/></td><td class="fuente">5.1 Centros de Respuesta</td><td class="fuente"><apex:inputField value="{!conf.CentroRespuesta__c}"/></td></tr>
+<tr><td class="fuente">2.3 Por Fecha</td><td class="fuente"><apex:inputField value="{!conf.PorFecha__c}"/></td><td class="fuente"></td><td class="fuente"></td></tr>
+</table>
+<hr></hr>
+
+<div>
+<apex:outputLabel id="idobs" value="Observaciones">
+</apex:outputLabel>
+<apex:inputField value="{!conf.Observaciones__c}"/>
+</div>
+<div class="fuente">
+<strong>Declaro, conozco y acepto las condiciones tecnicas, juridicas y financieras que rigen para este servicio.</strong></div>
+<hr></hr>
+<div>lineas sobre las cuales funcionara el servicio</div>
+<table>
+<tr> <td class="fuente">1: <apex:inputField value="{!conf.linea1__c}"/></td><td class="fuente">5:<apex:inputField value="{!conf.linea5__c}"/></td><td class="fuente">9:<apex:inputField value="{!conf.linea9__c}"/></td><td class="fuente">13:<apex:inputField value="{!conf.linea13__c}"/></td><td class="fuente">17:<apex:inputField value="{!conf.linea17__c}"/></td></tr>
+<tr> <td class="fuente">2: <apex:inputField value="{!conf.linea2__c}"/></td><td class="fuente">6:<apex:inputField value="{!conf.linea6__c}"/></td><td class="fuente">10:<apex:inputField value="{!conf.linea10__c}"/></td><td class="fuente">14:<apex:inputField value="{!conf.linea14__c}"/></td><td class="fuente">18:<apex:inputField value="{!conf.linea18__c}"/></td></tr>
+<tr> <td class="fuente">3: <apex:inputField value="{!conf.linea3__c}"/></td><td class="fuente">7:<apex:inputField value="{!conf.linea7__c}"/></td><td class="fuente">11:<apex:inputField value="{!conf.linea11__c}"/></td><td class="fuente">15:<apex:inputField value="{!conf.linea15__c}"/></td><td class="fuente">19:<apex:inputField value="{!conf.linea19__c}"/></td></tr>
+<tr> <td class="fuente">4: <apex:inputField value="{!conf.linea4__c}"/></td><td class="fuente">8:<apex:inputField value="{!conf.linea8__c}"/></td><td class="fuente">12:<apex:inputField value="{!conf.linea12__c}"/></td><td class="fuente">16:<apex:inputField value="{!conf.linea16__c}"/></td><td class="fuente">20:<apex:inputField value="{!conf.linea20__c}"/></td></tr>
+</table>
+<div class="fuente">{!$Label.tipoConexion}
+</div>
+<hr></hr>
+<div class="fuente">{!$Label.totallineas}</div>
+<hr></hr>
+<div class="fuente">1.Enrutamiento</div>
+<hr></hr>
+<div class="fuente">{!$Label.origen}
+</div>
+<hr></hr>
+<div class="fuente">{!$Label.AreasEnr}</div>
+<hr></hr>
+<div><apex:inputField value="{!conf.AreaEnrutamiento__c}"/></div>
+<hr></hr>
+<div>
+<div class="tablas"> <strong>Origen </strong> </div> 
+<div class="tablas"> <strong>Destino</strong> </div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Numero telefonico </th><th class="fuente">Anuncio </th><th class="fuente">Centro de RTA </th><th class="fuente"> Otra facilidad</th></tr>
+	</thead>
+	<apex:repeat value="{!origen}" var="ori" id="origen">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!ori.Origen__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!ori.NumeroTelefonico__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!ori.Anuncio__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!ori.CentroRTA__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!ori.OtraFacilidad__c}"/></td>
+	</tr>
+	</apex:repeat>
+</table>
+<div class="fuente">{!$Label.tipodia}</div>
+</div>
+<div>
+<div class="fuente"> <strong>Tipo de dia </strong> </div> 
+<div class="fuente"> <strong>Destino</strong> </div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Numero telefonico </th><th class="fuente">Anuncio </th><th class="fuente">Centro de RTA </th><th class="fuente"> Otra facilidad</th></tr>
+	</thead>
+	<apex:repeat value="{!tipodia}" var="tipo" id="tipo">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!tipo.TipoDia__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!tipo.NumeroTelefonico__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!tipo.Anuncio__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!tipo.CentroRTA__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!tipo.OtraFacilidad__c}"/></td>
+	</tr>
+	</apex:repeat>
+</table>
+<div class="fuente">{!$Label.horadia}</div>
+</div>
+<div>
+<div class="fuente"> <strong>Hora del dia </strong> </div> 
+<div class="fuente"> <strong>Destino</strong> </div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Numero telefonico </th><th class="fuente">Anuncio </th><th class="fuente">Centro de RTA </th><th class="fuente"> Otra facilidad</th></tr>
+	</thead>
+	<apex:repeat value="{!horadia}" var="hora" id="horas">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!hora.HoraDia__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!hora.NumeroTelefonico__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!hora.Anuncio__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!hora.CentroRTA__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!hora.OtraFacilidad__c}"/></td>
+	</tr>
+	</apex:repeat>
+</table>
+<div class="fuente">{!$Label.menusInteractivos}</div>
+</div>
+<div>
+<div class="fuente"> <strong>Menus Interactivos </strong> </div> 
+<div class="fuente"> <strong>Destino</strong> </div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Numero telefonico </th><th class="fuente">Anuncio </th><th class="fuente">Centro de RTA </th><th class="fuente"> Otra facilidad</th></tr>
+	</thead>
+	<apex:repeat value="{!menu}" var="men" id="meusn">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!men.HoraDia__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!men.NumeroTelefonico__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!men.Anuncio__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!men.CentroRTA__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!men.OtraFacilidad__c}"/></td>
+	</tr>
+	</apex:repeat>
+</table>
+
+</div>
+
+<div>
+<div class="fuente"> <strong>1.5 Por Porcentaje </strong> </div> 
+<div class="fuente"> <strong>Destino</strong> </div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Numero telefonico </th><th class="fuente">Anuncio </th><th class="fuente">Centro de RTA </th><th class="fuente"> Otra facilidad</th></tr>
+	</thead>
+	<apex:repeat value="{!porcentaje}" var="porc" id="porc">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!porc.porcentaje__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!porc.NumeroTelefonico__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!porc.Anuncio__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!porc.CentroRTA__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!porc.OtraFacilidad__c}"/></td>
+	</tr>
+	</apex:repeat>
+</table>
+
+</div>
+<div>
+<div class="fuente"> <strong>1.6 Por Enrutamiento </strong> </div> 
+
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Destino</th><th class="fuente">Cola </th><th class="fuente">No Telefonico </th><th class="fuente"> Nombre del Anuncio</th></tr>
+	</thead>
+	<apex:repeat value="{!reenturamiento}" var="enr" id="enr">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!enr.Destino__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!enr.Cola__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!enr.NumeroTelefonico__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!enr.Anuncio__c}"/></td>
+
+
+	</tr>
+	</apex:repeat>
+</table>
+
+</div>
+
+<div>
+<div class="fuente">{!$label.colallamadas}</div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Cantidad(Max 20)</th><th class="fuente">Tiempo Maximo</th><th class="fuente">Nombre del Anuncio </th></tr>
+	</thead>
+	
+	<tr>
+	<td class="fuente"><apex:inputField value="{!conf.Cantidad__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!conf.TiempoMaximo__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!conf.NombreAnuncio__c}"/></td>
+
+
+	</tr>
+
+</table>
+
+</div>
+<hr></hr>
+<div class="fuente">2. Restricciones</div>
+<hr></hr>
+<div class="fuente">{!$Label.origen21}</div>
+<hr></hr>
+<div class="fuente"><apex:inputField value="{!conf.AreaRestriccion__c}"/></div>
+<hr></hr>
+<div class="fuente">Restricciones por centrales o prefijos</div>
+<table>
+
+
+	<apex:repeat value="{!prefijos}" var="pre" id="pre">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!pre.restriccion1__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!pre.Restriccion2__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!pre.Restriccion3__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!pre.Restriccion4__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!pre.Restriccion5__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!pre.Restriccion6__c}"/></td>
+	
+
+
+	</tr>
+		</apex:repeat>
+</table>
+<div class="fuente">Lista negra (numeros telefonicos a restringir)   </div>
+<div>
+<div>
+<table>
+
+
+	<apex:repeat value="{!listanegra}" var="negra" id="negra">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!negra.ListaNegra1__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!negra.ListaNegra2__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!negra.ListaNegra3__c}"/></td>
+	
+
+
+	</tr>
+		</apex:repeat>
+</table>
+</div>
+<div class="fuente">L 2.3 Por fecha del servicio:</div>
+<div class="fuente">
+	Fecha de Inicio: <apex:inputField value="{!conf.FechaInicio__c}"/>
+</div>
+<div class="fuente">
+	Fecha de Finalizacion: <apex:inputField value="{!conf.FechaFinalizacion__c}"/>
+</div>
+</div>
+
+<div class="fuente">2.2 Codigo de Autorizacion para el servicio (PIN): <apex:inputField value="{!conf.CodigosAutenticacion__c}"/></div>
+
+
+
+<div>
+<div class="fuente">{!$label.locuciones}</div>
+<table>
+	<thead>
+	<tr><th></th><th class="fuente">Anuncio</th><th class="fuente">Tipo </th><th class="fuente">Contenido de Locucion </th><th class="fuente"> T</th><th class="fuente"> NT</th></tr>
+	</thead>
+	<apex:repeat value="{!locuciones}" var="loc" id="loc">
+	<tr>
+	<td class="fuente"><apex:inputField value="{!loc.Anuncio__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!loc.Tipo__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!loc.ContenidoLocucion__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!Loc.Tarificable__c}"/></td>
+	<td class="fuente"><apex:inputField value="{!Loc.NoTarificable__c}"/></td>
+
+	</tr>
+	</apex:repeat>
+</table>
+
+</div>
+<div class="fuente">{!$Label.centrosrespuesta}</div>
+<div>
+<apex:panelGrid columns="2" id="theGrid">
+
+	<apex:repeat value="{!centrorespuesta}" var="cen" id="cen">
+	<table>
+	<tr>
+	<td class="fuente">Ciclico: <apex:inputField value="{!cen.Ciclico__c}"/></td></tr>
+	<tr>
+	<td class="fuente">Prioritario: <apex:inputField value="{!cen.Prioritario__c}"/></td></tr>
+	<tr><td class="fuente">Numero telefonico</td><td class="fuente"> Limite de llamadas</td><td class="fuente"></td></tr>
+	<tr><td class="fuente">1.<apex:inputField value="{!cen.NumeroTelefonicoCRta__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta__c}"/></td> <td class="fuente">Cola:<apex:inputField value="{!cen.ColaCrta__c}"/></td></tr>
+	<tr><td class="fuente">2.<apex:inputField value="{!cen.NumeroTelefonicoCRta2__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta2__c}"/></td> <td class="fuente"></td></tr>
+	<tr><td class="fuente">3.<apex:inputField value="{!cen.NumeroTelefonicoCRta3__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta3__c}"/></td> <td class="fuente">PIN:<apex:inputField value="{!cen.Pin__c}"/></td></tr>
+	<tr><td class="fuente">4.<apex:inputField value="{!cen.NumeroTelefonicoCRta4__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta4__c}"/></td> <td class="fuente"></td></tr>
+	<tr><td class="fuente">5.<apex:inputField value="{!cen.NumeroTelefonicoCRta5__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta5__c}"/></td> <td class="fuente">Nombre Locucion Cola:<apex:inputField value="{!cen.LocucionCola__c}"/></td></tr>
+	<tr><td class="fuente">6.<apex:inputField value="{!cen.NumeroTelefonicoCRta6__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta6__c}"/></td> <td class="fuente"></td></tr>
+	<tr><td class="fuente">7.<apex:inputField value="{!cen.NumeroTelefonicoCRta7__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta7__c}"/></td><td class="fuente"></td></tr>
+	<tr><td class="fuente">8.<apex:inputField value="{!cen.NumeroTelefonicoCRta8__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta8__c}"/></td> <td class="fuente"></td></tr>
+	<tr><td class="fuente">9.<apex:inputField value="{!cen.NumeroTelefonicoCRta9__c}"/></td><td class="fuente"><apex:inputField value="{!cen.LimiteLLamadasCrta9__c}"/></td> <td class="fuente"></td></tr>
+	
+
+	
+	</table>
+	</apex:repeat>
+ <apex:commandButton action="{!AgregarCentro}" value="Agregar Centro de Respuesta" id="AgC" rerender="theGrid"/>
+</apex:panelGrid>
+</div>
+<apex:OutputPanel > 
+<apex:commandButton action="{!Guardar}" value="Guardar" id="GuardarButton" disabled="{!mostrarboton}"/>
+ <apex:commandButton action="{!Cancelar}" value="Cancelar" id="CancelarButton"/>
+</apex:OutputPanel>
+</apex:form>
+</apex:page>

@@ -1,0 +1,38 @@
+<!--
+  @description       : 
+  @author            : Miguel R. Gómez  miguel.rafael.gomez@accenture.com
+  @group             : 
+  @last modified on  : 01-25-2022
+  @last modified by  : Miguel R. Gómez  miguel.rafael.gomez@accenture.com
+-->
+<template>
+    <lightning-accordion active-section-name="A" allow-multiple-sections-open>
+        <lightning-accordion-section name="A" label="Potencial - Ingresos Operacionales" class="slds-accordion__section">
+          <template if:true={datos}>
+            <div class="slds-grid slds-wrap">
+              <div class="slds-col slds-large-size_2-of-12 slds-medium-size_2-of-12 slds-size_2-of-12">
+                <span>Potencial:  </span>
+              </div>
+              <!-- <div class="slds-col slds-large-size_1-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">                
+              </div> -->
+              <div class="slds-col slds-large-size_2-of-12 slds-medium-size_2-of-12 slds-size_2-of-12">
+                  <!-- <span>$datos[0]</span> -->
+                  <lightning-formatted-text value={potencial} ></lightning-formatted-text>
+                </div>
+              </div>
+              <br>
+              <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-large-size_2-of-12 slds-medium-size_2-of-12 slds-size_2-of-12">
+                  <span>Ingresos Operacionales:  </span>
+                </div>
+                <!-- <div class="slds-col slds-large-size_1-of-12 slds-medium-size_1-of-12 slds-size_1-of-12">                
+                </div> -->
+                <div class="slds-col slds-large-size_2-of-12 slds-medium-size_2-of-12 slds-size_2-of-12">
+                  <!-- <span>$ datos[1]</span> -->
+                  <lightning-formatted-number value={ingresosOperacionales} format-style="currency"></lightning-formatted-number></p>
+                </div>
+              </div>
+            </template>
+        </lightning-accordion-section>
+    </lightning-accordion>
+</template>

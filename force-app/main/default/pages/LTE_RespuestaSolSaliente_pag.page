@@ -1,0 +1,10 @@
+<apex:page id="idPage" standardController="LTE_Lote__c" extensions="LTE_RespuestaSolSaliente_cls" sidebar="false" action="{!enviarPortabilidadSaliente}" >
+	<apex:form id="idForm" >
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="Cargando..."/>
+			</apex:facet>
+		</apex:actionStatus>
+		<apex:pageMessages id="msg"/>
+	</apex:form>
+</apex:page>

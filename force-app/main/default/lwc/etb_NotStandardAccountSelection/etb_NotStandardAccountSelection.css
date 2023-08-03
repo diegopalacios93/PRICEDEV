@@ -1,0 +1,45 @@
+.slds-visual-picker input:checked ~ label .slds-visual-picker__icon {
+    background-color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 1px 8px 0 #1689ee !important;
+  }
+  .slds-visual-picker
+    input:not(:disabled)
+    ~ label:hover
+    .slds-visual-picker__figure {
+    cursor: pointer;
+    outline: 0;
+    border: 1px solid #1689ee !important;
+    box-shadow: none;
+  }
+  .slds-scope .slds-visual-picker__figure .slds-icon-action-check {
+    background-color: white !important;
+  }
+  .slds-scope .slds-icon-action-check {
+    background-color: white !important;
+  }
+  .icon {
+    fill: rgb(93, 3, 135);
+  }
+  .iconContainer {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+  }
+  .notSelected {
+    background-color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 1px 8px 0 red !important;
+  }
+  .imgSpace {
+    width: 100% !important;
+  }
+  .slds-text-color_error {
+    color: #e03e2d;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .slds-p-around_xx-large-custom{
+    padding: 5rem;
+  }

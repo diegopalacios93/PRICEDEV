@@ -1,0 +1,3 @@
+let styleDefinition =
+      {"state0element0block_element2":[{"conditions":"default","styleObject":{"class":"slds-col  condition-element slds-p-around_x-small slds-m-top_xx-small  slds-size_2-of-12  ","style":"     : #ccc 1px solid; \n         ","styleProperties":{}}}],"state0element0block_element3":[{"conditions":"default","styleObject":{"class":"slds-col  condition-element slds-p-top_x-small slds-p-right_x-small slds-p-bottom_x-small slds-m-top_xx-small  slds-size_2-of-12  ","style":"     : #ccc 1px solid; \n         width: 14.5833333%;","styleProperties":{}}}]};
+  export default styleDefinition

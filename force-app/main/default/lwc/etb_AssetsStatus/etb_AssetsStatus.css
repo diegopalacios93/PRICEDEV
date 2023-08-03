@@ -1,0 +1,25 @@
+.status-container{
+    text-align: end;
+    padding-top: 0.5rem;
+}
+.status-icon{
+    padding-bottom: 0.25rem;
+}
+.status-name-activo{
+    color: #027e46;
+    padding-left: 0.25rem;
+    font-size: 10pt;
+    font-weight: 600;
+}
+.status-name-suspendido{
+    color: #fe9339;
+    padding-left: 0.25rem;
+    font-size: 10pt;
+    font-weight: 600;
+}
+.status-name-cancelado{
+    color: red;
+    padding-left: 0.25rem;
+    font-size: 10pt;
+    font-weight: 600;
+}

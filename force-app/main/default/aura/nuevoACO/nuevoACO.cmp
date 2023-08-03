@@ -1,0 +1,45 @@
+<aura:component controller="NuevoACO_ctr">
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute access="private" name="error" type="String" default=""/>
+    <aura:attribute name="idoferta" type="string"/>
+    <aura:attribute name="nameoferta" type="string"/>
+    <aura:attribute name="accId" type="string"/>
+
+    <div class="slds-var-p-bottom_large slds-align_absolute-center" style="width:500px">      
+        
+        <lightning:recordEditForm aura:id ="createForm" 
+                                objectApiName="ACO__c"
+                                onsubmit="{!c.handleSubmit}" 
+                                onsuccess="{!c.handleSuccess}" >
+
+            <aura:if isTrue="{! !empty(v.error)}">
+            <ui:message title="Recuerde" severity="error" closable="true">{!v.error}</ui:message>
+            </aura:if>
+            
+            <lightning:inputField aura:id="cli" fieldName="Nombre_del_Cliente__c" value="{!v.accId}" />
+            <lightning:inputField aura:id="opp" fieldName="Nombre_de_la_Oportunidad__c" value="{!v.recordId}" />
+            <div class="slds-p-left_xx-small slds-p-bottom_x-small slds-size_full" style="width:500px">
+                <c:ControllerForLookups aura:id="recordId"
+                                    fieldLabel="Identificador Oferta OP"
+                                    objectAPIName="Oferta_Op__c"
+                                    selectedRecordLabel="{!v.nameoferta}"
+                                    subHeadingFieldsAPI=""
+                                    placeholder="Buscar oferta"
+                                    required="true"
+                                    field=""
+                                    filter="{!'Oportunidad__c='+'\''+v.recordId+'\' AND RecordType.Name=\'Gestionado\''}"
+                                    selectedRecordId="{!v.idoferta}"/>
+            </div>
+
+            <br/>
+            <br/>
+            <div class="slds-align_absolute-center">
+                <lightning:button variant="brand" aura:id="submit" type="submit" label="Crear ACO" />
+                <lightning:button variant="brand" aura:id="cancel" onclick="{!c.handleCancel}" label="Cancelar" />
+            </div>
+        </lightning:recordEditForm>
+    </div>  
+</aura:component>

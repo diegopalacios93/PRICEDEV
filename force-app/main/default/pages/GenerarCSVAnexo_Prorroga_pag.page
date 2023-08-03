@@ -1,0 +1,42 @@
+<apex:page controller="GenerarCSVAnexo_prorroga" action="{!exportToExcel}" readOnly="true" contentType="{!fileName}">
+     <apex:pageBlock >
+        <apex:pageBlockTable value="{!lstwrapper}" var="x">            
+           	<apex:column headerValue="Nombre">
+                {!x.Name}
+            </apex:column>  
+            <apex:column headerValue="Valor antes de IVA">
+                {!x.Valor_antes_de_IVA_c}
+            </apex:column> 
+            <apex:column headerValue="Porcentaje de IVA">
+                {!x.Porcentaje_IVA_c}
+            </apex:column> 
+            <apex:column headerValue="IVA">
+                {!x.IVA_c}
+            </apex:column> 
+            <apex:column headerValue="Valor total">
+                {!x.Valor_total_c}
+            </apex:column> 
+            <apex:column headerValue="Prorroga o adicion">
+                {!x.Prorroga_o_adicion_c}
+            </apex:column> 
+            <apex:column headerValue="Objeto">
+                {!x.Objeto_c}
+            </apex:column>           
+            <apex:column headerValue="Fecha de inicio">
+                {!x.Fecha_de_inicio_c}
+            </apex:column>             
+            <apex:column headerValue="Fecha de fin">
+                {!x.Fecha_de_fin_c}
+            </apex:column> 
+            <apex:column headerValue="Valor sin IVA(en dolares)">
+                {!x.Valor_sin_IVA_en_dolares_c}
+            </apex:column> 
+            <apex:column headerValue="IVA (en dólares)">
+                {!x.IVA_en_dolares_c}
+            </apex:column> 
+            <apex:column headerValue="Valor total incluido IVA (en dólares)">
+                {!x.Valor_total_incluido_IVA_en_dolares_c}
+            </apex:column>             
+        </apex:pageBlockTable>
+    </apex:pageBlock> 
+</apex:page>

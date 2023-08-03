@@ -1,0 +1,193 @@
+<apex:page id="direcciones" standardController="Account" extensions="CrearCuenta_ctr">
+	<apex:pageMessages id="msg" />
+	<style type="text/css">
+	.custPopup{
+		background-color: white;
+		border-width: 2px;
+		border-style: solid;
+		z-index: 9999;
+		padding:10px;
+		position: absolute;
+		width: 96%;
+		left: 2%;
+		top: 0%;
+		height: 70%;
+	}
+	.popupBackground{
+		background-color:black;
+		opacity: 0.20;
+		filter: alpha(opacity = 20);
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 9998;
+	}
+	</style>     
+	<apex:form id="form1">
+		<!-- [CG] - Popup Estandarización de Direcciones -->
+		<apex:outputPanel id="tstpopup">
+			<apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!blnDisplayPopUp}" />
+			<apex:outputPanel styleClass="custPopup" layout="block" rendered="{!blnDisplayPopUp}" >
+				<apex:iframe id="iframe1" scrolling="true" src="{SitePrefix}/apex/EstandarizarDireccion_pag?sinBotones=true" frameborder="true" height="85%" />
+				
+				<!-- BEGIN - Manuel Medina - Ajuste de los botones Guardar y Cerrar - 22082016 -->
+				<!--<apex:image onclick="pegar();" url="{!$Resource.IconoCopiar}" style="width: 3%; heigth: 3%;"/>-->
+				<!--<apex:commandButton value="Salir" action="{!closePopup}" rerender="tstpopup" immediate="true"/>-->
+				<input type="button" value="Guardar" onclick="pegar();closePopup()" class="btn" style="margin-left: 40%;"/>
+				<apex:commandButton value="Cancelar" action="{!closePopup}" rerender="tstpopup" immediate="true"/>
+				<apex:actionFunction name="closePopup" action="{!closePopup}" reRender="tstpopup" immediate="true"/>
+				<!-- END - Manuel Medina - Ajuste de los botones Guardar y Cerrar - 22082016 -->
+				
+			</apex:outputPanel>
+		</apex:outputPanel>
+		<!-- [CG] - Fin Popup Estandarización de Direcciones -->
+		<apex:pageBlock id="block1">
+			<apex:pageBlockButtons >
+				<apex:commandButton value="Continuar" action="{!Guardar}" rendered="{!registro==null}"/>
+				<apex:commandButton value="Continuar" action="{!crearRegistro}" rendered="{!registro!=null}"/> 
+				<apex:commandButton value="Estandarizar {!$ObjectType.Account.fields.Direccion__c.Label}" action="{!showPopup}" rendered="{!registro!=null}" immediate="true" rerender="tstpopup" />           
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection title="Seleccionar tipo de registro" columns="1">
+				<apex:selectList value="{!registro}" size="1" id="sel" disabled="{!IF(registro!=null,true,false)}">
+					<apex:selectOptions value="{!TiposDeRegistro}" />
+				</apex:selectList>
+				<p/>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection title="Datos del Cliente" columns="2" rendered="{!registro=='Cliente Principal' && false}">
+				<apex:inputField value="{!cuenta.name}"/>
+				<apex:inputField value="{!cuenta.AccountNumber}" required="true"/>
+				<apex:inputField value="{!cuenta.Tipodedocumento__c}" required="true"/>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="pbsFields" title="Datos del Cliente" columns="2" rendered="{!registro=='Sucursales'}" >
+				<apex:inputField value="{!cuenta.name}"/>
+				<apex:outputField value="{!cuenta.Cuenta__c}"/>
+				
+				<!-- BEGIN - Manuel Medina - Ajuste para garantizar campo obligatorio - 13092016 -->
+				<apex:inputField id="inputDireccion" value="{!cuenta.Direccion__c}" required="true"/>
+				<script>document.getElementById( '{!$Component.inputDireccion}' ).disabled = true</script>
+				<!-- END - Manuel Medina - Ajuste para garantizar campo obligatorio - 13092016 -->
+				
+				<apex:outputPanel >
+					<apex:actionFunction name="definirDireccion" immediate="true">
+						<apex:param name="valor" assignTo="{!cuenta.Direccion__c}" value="" />
+					</apex:actionFunction>
+					
+					<!-- BEGIN - Manuel Medina - Cambio por inputField - 13092016 -->
+					<!--<apex:outputLabel value="{!$ObjectType.Account.fields.Direccion__c.Label}" style="color:#4a4a56;font-weight:bold;font-size:90%; position:relative; left:63px; top:11px;"/>-->
+					<!-- END - Manuel Medina - Cambio por inputField - 13092016 -->
+					
+					<div align="right" class="requiredInput" style="width:10px; position:relative; left: 190px; bottom:5px;" >
+						<div class="requiredBlock"/>
+
+						<!-- BEGIN - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 -->
+						<!--<input id='inputDireccion' value="{!cuenta.Direccion__c}" disabled="true"  />-->
+						<!--<input id='inputDireccion' value="{!cuenta.Direccion__c}"/>-->
+						<!-- END - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 -->
+						
+						<apex:inputHidden value="{!cuenta.Direccion__c}" id="inputDireccionH"/>
+						
+						<!-- BEGIN - Manuel Medina - Campo que se activa cuando se ingresa la direccion por el campo de observaciones - 25082016 -->
+						<apex:inputHidden value="{!cuenta.AVX_ObservacionesIngresadas__c}" id="observacionesH"/>
+						<!-- END - Manuel Medina - Campo que se activa cuando se ingresa la direccion por el campo de observaciones - 25082016 -->
+						
+					</div>
+				</apex:outputPanel>
+				<!--<apex:inputField value="{!cuenta.Direccion__c}" required="true"/>-->
+				<apex:inputField value="{!cuenta.Ciudad__c}" required="true"/>
+				<apex:inputField value="{!cuenta.Tipo_Sucursal__c}" required="true"/>
+				<apex:inputField value="{!cuenta.Phone}" required="true"/>
+				<apex:inputField value="{!cuenta.Description}" required="true"/>
+
+				<!-- Carlos Rodriguez [CA] 26/08/2015 Logica para mostrar solo los contactos relacionados al cliente. -->
+				<apex:outputPanel >
+					<apex:outputLabel style="color:#4a4a56;font-weight:bold;font-size:90%; position:relative; left:63px; top:11px;" value="Contacto de entrega" />
+					<div align="right" class="requiredInput" style="width:196px; position:relative; left: 190px; bottom:5px;" >
+						<div class="requiredBlock"/>
+						<input type="text" Class="textol Name{!cuenta.id}" value="{!cuenta.LTE_ContactoEntrega__r.Name}"/>
+						<img src="/s.gif" class="lookupIcon ImgLupa enlinea" rel="{!cuenta.id}"/>
+						<apex:inputHidden value="{!cuenta.LTE_ContactoEntrega__c}" html-class="id{!cuenta.Id}"/>
+					</div>
+				</apex:outputPanel>
+				<!-- <apex:inputField value="{!cuenta.LTE_ContactoEntrega__c}" /> -->
+				<!-- FIN [CA] -->
+				<apex:inputField value="{!cuenta.OtroTelefonodecontacto2__c}" />
+				<apex:inputField value="{!cuenta.OtroTelefonodecontacto4__c}" />
+				<apex:inputField value="{!cuenta.Telefonodecontacto1__c}" />
+				<apex:inputField value="{!cuenta.OtroTelefonodecontacto3__c}" />
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+
+	<!-- [CA] Logica para mostrar solo los contactos relacionados al cliente. -->
+	<apex:outputPanel rendered="true">
+		<apex:includeScript value="{!URLFOR($Resource.jQueryUI, 'jquery-ui-1.10.4/js/jquery-1.10.2.js')}" />
+		<script type="text/javascript">
+		$j = jQuery.noConflict();
+
+		var url='{!Contacto}';
+		var oculto;
+		var texto;
+
+		/* BEGIN - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 */
+		/*window.onLoad				= new function() { activar(); };
+		function activar(){
+			if( "{!$Setup.AVX_EstandarizarDirecciones__c.AVX_HabilitarCampoDireccion__c}" == 'false' ){
+				$j('[id$=inputDireccion]').prop('disabled', true);
+			}
+		}*/
+		/* END - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 */
+
+		function idSalesforce(field){
+			texto=$j(".Name"+field).first();
+			oculto=$j(".id"+field).first();
+		} 
+
+		function asignar(rel,title,info){
+			oculto.val(rel);
+			texto.val(title);
+		}
+
+		// Estandarización de Direcciones
+		function pegar()
+		{
+			var inside = iframeRef( document.getElementById('iframe1') )
+			var txt = inside.getElementsByClassName('dirAbreviada')[0].value;
+			txt = txt + ' ' + inside.getElementsByClassName('observacion')[0].value;
+			
+			/* BEGIN - Manuel Medina - Cambio de asignacion para campo inputfield - 13092016 */ 
+			//document.getElementById('inputDireccion').value = txt;
+			document.getElementById('{!$Component.direcciones:form1:block1:pbsFields:inputDireccion}').value = txt;
+			/* END - Manuel Medina - Cambio de asignacion para campo inputfield - 13092016 */
+			
+			$j('[id$=inputDireccionH]').val(txt);
+			//alert('{!$Label.DireccionEstandarizadaED}'+' : '+txt);
+			
+			/* BEGIN - Manuel Medina - Validacion para registrar el campo observaciones - 25082016 */
+			if( inside.getElementsByClassName('observacion')[0].value != '' ){
+				$j('[id$=observacionesH]').val(true);
+			}
+			/* END - Manuel Medina - Validacion para registrar el campo observaciones - 25082016 */
+		}        
+		function iframeRef( frameRef ) {
+			return frameRef.contentWindow
+			? frameRef.contentWindow.document
+			: frameRef.contentDocument
+		} 
+		// Fin Estandarización de Direcciones
+
+		$j( document ).ready(function( $ ) {
+
+			$j( ".ImgLupa" ).click(function() {
+				var campo=$j( this ).attr( "rel" );
+				idSalesforce(campo);
+				ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1');
+			});
+		}); 
+		</script>
+	</apex:outputPanel>
+	<!-- FIN [CA] -->
+</apex:page>

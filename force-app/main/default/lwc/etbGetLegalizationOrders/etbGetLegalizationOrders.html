@@ -1,0 +1,98 @@
+<template>
+							
+    
+       
+    
+
+		
+    <div class="inlinecss">
+        <div if:true={showspinner}>
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Espere un momento por favor</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+        <div if:false={showspinner}>
+            <div class="slds-card__body slds-card__body_inner slds-grid slds-wrap">
+                <!-- Input 
+                <div
+                    class="slds-m-bottom_medium slds-p-around_xx-small slds-col slds-size_12-of-12 slds-medium-size_3-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element__control responsive_class">
+                        <lightning-combobox placeholder="Seleccione una línea" id="comboValue" name="progress"
+                            label="Líneas" value={comboboxValue} options={opcionesCombo} onchange={handleLine} required>
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div
+                    class="slds-p-around_xx-small slds-col slds-size_12-of-12 slds-medium-size_3-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element__control responsive_class">
+                        <lightning-combobox placeholder="Seleccione una Mes" id="comboMes" name="progress" label="Mes"
+                            value={mesValue} options={mesOption} onchange={onchangeMes} required>
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div
+                    class="slds-p-around_xx-small slds-col slds-size_12-of-12 slds-medium-size_3-of-12 slds-large-size_3-of-12">
+                    <div class="slds-form-element__control responsive_class">
+                        <lightning-input type="text" label="Año" onchange={onchangeAnio} required value={anioValue}
+                            pattern="[0-9]{4}" message-when-pattern-mismatch="No cumple con el formato.">
+                        </lightning-input>
+                        
+                    </div>
+                </div>
+                 <div class="slds-m-top_large  slds-p-around_xx-small slds-col slds-size_12-of-12 slds-medium-size_1-of-12 slds-large-size_1-of-12"></div> 
+                <div
+                    class="slds-m-top_large slds-m-left_medium slds-p-around_xx-small slds-col slds-size_12-of-12 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+                    <div class="slds-form-element__control responsive_class">
+                        <button style="width: 100%;" type="button" class="slds-button slds-button_brand"
+                            onclick={getData}>Buscar</button>
+                    </div>
+                </div>-->
+		
+                <!-- Tabla -->
+                <template if:true={mostrarTabla}>
+                    <div class="slds-col slds-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_12-of-12">
+                        <template if:true={showspinner}>
+                            <div class="demo-only" style="height:6rem">
+                                <div class="slds-spinner_container">
+                                    <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                        <span class="slds-assistive-text">Espere un momento por favor</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <template if:false={showspinner}>
+                             <lightning-datatable
+        data={pagedData}
+        columns={columnas}
+        key-field="OrderId"
+        onrowselection={getSelectedName}
+    >
+    </lightning-datatable>
+                        </template>
+                    </div>
+                </template>
+                <div class="slds-align_absolute-center">
+                    <p class="incorrectyear"> {mensajeValidator} </p>
+                </div>
+                <!-- Boton Descargar CSV 
+                <div if:true={mostrarTabla}
+                    class="slds-col slds-size_12-of-12 slds-medium-size_3-of-12 slds-large-size_3-of-12">
+                    <lightning-button icon-name="utility:download" variant="neutral"
+                        label="Descargar Historial de consumo" title="Click aqui para descargar la tabla en CSV"
+                        onclick={downloadCSV} class="slds-m-left_x-small">
+                    </lightning-button>
+                </div>-->
+            </div>
+            <!--<template if:true={mostrarGrafico}>
+                <c-cf-mvnochart parent-data=true records={lineaseleccionada}></c-cf-mvnochart>
+            </template>-->
+        </div>
+    </div>
+				
+</template>

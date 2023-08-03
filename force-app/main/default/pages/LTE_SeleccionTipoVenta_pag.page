@@ -1,0 +1,23 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Opportunity" extensions="LTE_SeleccionTipoVenta_cls" lightningStylesheets="true">
+	<apex:pagemessages id="TheMessages"/> 
+    <apex:form id="idForm">
+    	<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+		
+		<apex:sectionHeader title="" subtitle="{!$Label.LTE_Titulo_Venta}" />
+		<apex:pageBlock title="" id="pbId">
+			<apex:pageBlockSection title="" columns="3" id="pbsId" collapsible="false">
+				<label for="sel" style="font: bold 11px Verdana;">{!$Label.LTE_Tipo_Venta}</label>
+				<apex:selectList value="{!tipoVenta}" size="1" id="sel">
+					<apex:selectOptions value="{!items}"/>
+				</apex:selectList>
+			</apex:pageBlockSection>	        
+	        <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" rendered="{!blnBotonContinuar}" status="loading" reRender="idForm, TheMessages"/>
+			</apex:pageBlockButtons> 
+	    </apex:pageBlock>		
+    </apex:form>
+</apex:page>

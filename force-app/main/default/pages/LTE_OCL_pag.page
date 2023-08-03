@@ -1,0 +1,143 @@
+<apex:page Controller="LTE_OCL_ctr" id="OCL" action="{!Main}" tabStyle="Legalizacion__c" docType="html-5.0" lightningStylesheets="true">
+    <head>
+    
+    <!-- <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" /> -->
+    <apex:includeScript value="{!URLFOR($Resource.jQueryUI, 'jquery-ui-1.10.4/js/jquery-1.10.2.js')}" />
+    <script type="text/javascript">
+        $j = jQuery.noConflict();
+        
+        var tieneCuenta=false;
+        
+        $j( document ).ready(function() {
+            $j( "#CuentaFactImg" ).click(function() {
+                abrirVentana('{!CuentaFact}','');
+            });
+        });
+        
+        function asignar(a,b,c){
+            console.log($j("input[id$='"+c+"Id']"));
+            console.log(a,b,c);
+            $j("input[id$='"+c+"Id']").val(a);
+            $j("input[id$='"+c+"Name']").val(b);
+            tieneCuenta=true;
+        }
+        
+        
+        function abrirVentana(url){
+            ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1');
+        };
+        
+        function EncontrarInputs(e) {
+            var tabla = $j(e).parentsUntil(".pbSubsection").last();
+            $j(tabla).find(":checkbox").prop("checked", e.checked);
+            ModificarCheckAll();
+        }
+
+        function SeleccionarTodo(e) {
+            $j(":checkbox").prop("checked", e.checked);
+        }
+
+        function ModificarCheckOpp(e) {
+            var tabla = $j(e).parentsUntil(".pbSubsection").last();
+            var hermanos = $j(tabla).find(":checkbox.checkOC");
+            var checkOpp = true;
+            $j(hermanos).each( function(i){
+                if (!this.checked)
+                    checkOpp = false;
+            });
+            $j(tabla).find(":checkbox.checkOpp").prop("checked",checkOpp);
+            ModificarCheckAll();
+        }
+
+        function ModificarCheckAll() {
+            var primos = $j(":checkbox.checkOC,:checkbox.checkOpp");
+            var checkAll = true;            
+            $j(primos).each( function(i) {
+                if (!this.checked)
+                    checkAll = false;
+            });
+            $j(":checkbox.checkAll").prop("checked",checkAll);
+        }
+
+        function CrearLegalizacion(e) {
+            $j(e).toggleClass('btnDisabled', true).attr('disabled', 'disabled');
+            var lista = $j(":checkbox.checkOC");
+            var checks = false;
+            for (i = 0; i < lista.length ; i++) {
+                if (lista[i].checked) {
+                    checks = true;
+                    break;
+                }
+            }
+            if (checks === false || tieneCuenta==false) {
+                alert("{!$Label.LTE_OpComLegalizar_DebeSelec}");
+                $j(e).toggleClass('btnDisabled', false).attr('disabled',null);
+                return false;               
+            }
+            jsCrearLegalizacion();
+        }
+
+    </script>
+    </head>
+    <body>
+    <apex:sectionHeader title="{!Titulo}" subtitle="{!Subtitulo}" />
+    <apex:form id="Forma">
+        <apex:actionFunction name="jsCrearLegalizacion" action="{!CrearLegalizacion}" />
+        <apex:pageMessages escape="false" />
+        <apex:pageMessage summary="Por favor seleccione una cuenta de facturacion por defecto, recuerde que podra asignar diferentes cuentas desde el boton Asignar Cuenta de Facturacion de la legalizacion." severity="Info" strength="3" />
+        
+        
+        <apex:pageBlock id="BloquePrincipal">
+            <apex:pageBlockSection rendered="{!RenderBotonCrear}">
+                <apex:pageBlockSectionItem >
+                <apex:outputPanel id="seleccion">
+                    <apex:outputLabel value="Seleccionar todas las Operaciones Comerciales: "/>
+                    <apex:inputCheckbox value="{!blnCheckSeleccionarTodo}" styleClass="checkAll" onclick="SeleccionarTodo(this);"/>                    
+                </apex:outputPanel>
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem >
+                <apex:outputPanel >                    
+                    <apex:outputLabel value="Seleccione una cuenta de facturación:"/>
+                    <div class="requiredInput">
+                        <div class="requiredBlock"></div>
+                        <input type="text" class="textol" id="CuentaFactName" readonly="readonly"/>
+                        <img src="/servlet/servlet.FileDownload?file={!idImgLupa}" class="lookupIcon" id="CuentaFactImg"/>
+                        <apex:inputHidden value="{!CuentaFactId}" id="CuentaFactId"/>
+                    </div>
+                </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Numero total de registros: {!total_size}" columns="1" collapsible="false">
+            <apex:outputPanel id="myPanel">
+            <apex:repeat value="{!LstWrapper}" var="Opp">
+                <apex:pageBlockSection title="{!Opp.Name}" columns="1" collapsible="false">
+                    <apex:pageBlockTable value="{!Opp.lstOc}" var="OC">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:inputCheckbox styleClass="checkOpp" value="{!Opp.check}"  onclick="EncontrarInputs(this);"/>
+                            </apex:facet>
+                            <apex:inputCheckbox styleClass="checkOC" value="{!OC.check}" onclick="ModificarCheckOpp(this)"/>
+                        </apex:column>
+                        <apex:column value="{!OC.OC.Name}"/>
+                        <apex:column value="{!OC.OC.Oportunidad__c}"/>
+                        <apex:column value="{!OC.OC.Activo__r.NombredelProducto__c}"/>
+                        <apex:column value="{!OC.OC.Plan__c}"/>
+                        <apex:column value="{!OC.OC.TOPP__c}"/>
+                        <apex:column value="{!OC.OC.Portacion__c}"/>
+                        <apex:column value="{!OC.OC.Portado_con_Cedula__c}"/>
+                        <apex:column value="{!OC.OC.Demo__c}"/>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:repeat>
+            </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Crear" rendered="{!RenderBotonCrear}" onclick="CrearLegalizacion(this); return false" />
+                <input class="btn" type="button" value="Volver" onclick="window.history.back()" /> 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    </body>
+</apex:page>

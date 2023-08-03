@@ -1,0 +1,16 @@
+<template>
+    <div class="status-container">
+        <div if:true={activo}>
+            <lightning-icon icon-name="utility:record" variant="success" size="x-small" class="status-icon"></lightning-icon>
+            <span class="status-name-activo">ACTIVO</span>
+        </div>        
+        <div if:true={suspendido}>
+            <lightning-icon icon-name="utility:record" variant="warning" size="x-small" class="status-icon"></lightning-icon>
+            <span class="status-name-suspendido">SUSPENDIDO</span>
+        </div>        
+        <div if:true={cancelado}>
+            <lightning-icon icon-name="utility:record" variant="error" size="x-small" class="status-icon"></lightning-icon>
+            <span class="status-name-cancelado">CANCELADO</span>
+        </div>        
+    </div>
+</template>

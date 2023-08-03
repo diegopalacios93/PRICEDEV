@@ -1,0 +1,84 @@
+.c-container {
+  background-color: white;
+}
+.chatbot-pratech-aside-tagline {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: center;
+}
+.chatbot-pratech-alertRed {
+  color: #a94442;
+  font-size: 12px;
+  margin: 3px 0 0;
+  line-height: normal;
+  width: 100%;
+  text-align: left;
+}
+.chatbot-pratech-aside-tagline {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: center;
+}
+.chatbot-pratech-aside-sendButton {
+  width: 100%;
+  border: none;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  background-color: #eb6625;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.chatbot-pratech-aside-cancelButton {
+  width: 100%;
+  border: none;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: #0a5689;
+  cursor: pointer;
+}
+.chatbot-pratech-aside-tagline {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: center;
+}
+.chatbot-pratech-aside-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.chatbot-pratech-aside-input {
+  width: 100%;
+  color: #555;
+  height: 50px;
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.ETBmodal {
+  top: -200px;
+  background-color: #fff;
+}

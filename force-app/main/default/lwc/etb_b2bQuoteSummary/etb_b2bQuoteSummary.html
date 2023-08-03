@@ -1,0 +1,15 @@
+<template>
+	<slot name="memberTableQuoteSlot">
+		<c-etb_b2b-datatable if:true={showTable} member-type={memberType} quote-id={quoteId} read-mode="true" pagelimit="3" pagesize="10" group-by={gpy}
+		columns={tableColumns} records={tableData} oncpqlineitemupdate={handleItemUpdate}
+		onemptytable={handleEmptyTable} summary-data-to-cell={responseSummary}
+		ontabupdatefromtbl={handleTabUpdatefromTbl} oncpqtableupdated={handleTableUpdate}>
+		</c-etb_b2b-datatable>
+	</slot>
+	<div if:false={tableData} class="nds-align_absolute-center">
+		{labels.CMEXNoItemsCart}
+	</div>
+	<div class="slds-spinner_container" if:true={loading}>
+		<lightning-spinner alternative-text={labels.CMEXLoading} size="large" variant="brand"></lightning-spinner>
+	</div>
+</template>

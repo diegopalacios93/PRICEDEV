@@ -1,0 +1,107 @@
+<template>
+    <div class="slds-card_boundary slds-var-p-around_medium">
+        <lightning-card title="Agenda" icon-name="standard:service_appointment">
+            <!--Mensaje de advertencia si el caso no tiene un id sistema legado asociado-->
+            <template if:false={sistemaLegado}>
+                <lightning-icon icon-name="utility:warning" class="slds-m-left_medium" size="small"></lightning-icon>
+                <lightning-formatted-text class="slds-var-m-left_medium" value={label.ALERTA_AGENDAMIENTO}>
+                </lightning-formatted-text>
+            </template>
+            <!--Se muestra el formulario si el caso tiene un id sistema legado asociado-->
+            <template if:true={sistemaLegado}>
+                <!--Lógica spinner de carga cuando se presiona el botón del formulario-->
+                <template if:true={isRendering}>
+                    <div class="slds-spinner_container slds-is-relative slds-is-fixed">
+                        <lightning-spinner size="large" variant="brand"></lightning-spinner>
+                    </div>
+                </template>
+                <lightning-card>
+                    <div class="slds-card_boundary">
+                        <!--Formulario para la creación de los registros de agendamiento confirmados desde ETA-->
+                        <lightning-record-edit-form object-api-name={objectApiName} onsubmit={handleSchedule}
+                            onerror={handleError} onsuccess={handleSuccess}>
+                            <div class="slds-var-p-around_xx-large">
+                                <!--Campos diligenciados en Salesforce-->
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning-input-field field-name={caseField} value={recordId} disabled="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={zoneField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={visitInputField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={workSkillField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning-input-field field-name={typeInputField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={groupInputField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={timeField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={actionTypeField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                    </div>
+                                </div>
+                                <lightning-input-field field-name={requestObservationField}
+                                    class="ResetField slds-form-element_1-col" required="true">
+                                </lightning-input-field>
+                                <!--Campos ocultos de Salesforce o diligenciados con la respuesta de ETA-->
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2" hidden>
+                                        <lightning-input-field field-name={idScheduleField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={statusField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={subStatusField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={visitOutputField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={groupLabelField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={technicianIdsField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={timeFormatField} class="ResetField"
+                                            required="true">
+                                        </lightning-input-field>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2" hidden>
+                                        <lightning-input-field field-name={typeOutputField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={processStatusField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={groupOutputField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={idTaskField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={incomeSupportsField} class="ResetField">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name={technicianNamesField} class="ResetField">
+                                        </lightning-input-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-docked-composer__footer slds-align_absolute-center">
+                                <lightning-button variant="neutral" onclick={handleReset} label="Cancelar"
+                                    disabled={disabledButton}>
+                                </lightning-button>
+                                <lightning-button variant="brand" type="submit" label="Agendar"
+                                    disabled={disabledButton} class="slds-m-left_xx-small">
+                                </lightning-button>
+                            </div>
+                        </lightning-record-edit-form>
+                    </div>
+                </lightning-card>
+            </template>
+        </lightning-card>
+    </div>
+</template>

@@ -1,0 +1,9 @@
+/*Altura automática en caso de que hayan pocos registros*/
+.autoHeight{
+    height: auto
+}
+
+/*Altura máxima establecida en caso de que hayan varios registros*/
+.maxHeight{
+    height: 300px
+}

@@ -1,0 +1,21 @@
+<apex:page standardController="Viabilidad__c" extensions="DetallesTecnicosViabilidad_ctr" showHeader="false" showChat="false" sidebar="false">
+	<apex:pageBlock mode="maindetail" rendered="{!NOT(existenDetalles)}">
+		<apex:facet name="header">
+			<apex:outputLabel value="{!$Label.No_detalles_tecnicos_viabilidad}" style="font-size: 91%;font-weight: bold;color: #4a4a56;"/>
+		</apex:facet>
+	</apex:pageBlock>
+	<apex:pageBlock mode="maindetail" rendered="{!existenDetalles}">
+		<apex:pageBlockSection >
+			<apex:outputField label="{!$Label.Activo_Viabilidad}" value="{!activo.name}"/>
+			<apex:outputField label="{!$Label.Sucursal_Origen_Viabilidad}" value="{!activo.SucursalOrigen__r.Name}"/>
+			<apex:outputField label="{!$Label.Sucursal_Destino_Viabilidad}" value="{!activo.SucursalDestino__r.Name}"/>
+			<apex:outputField value="{!activo.NumeroConexion__c}"/>
+			<apex:outputField value="{!activo.IDservicio__c}"/>
+			<apex:outputField value="{!activo.AnchoBanda__r.Name}"/>
+			<apex:outputField value="{!activo.ProveedorUM__c}"/>
+			<apex:outputField value="{!activo.CodigoUniversal__c}"/>
+			<apex:outputField value="{!activo.MedioUM__c}"/>
+			<apex:outputField value="{!activo.Equipo__c}"/>
+		</apex:pageBlockSection>
+	</apex:pageBlock>
+</apex:page>

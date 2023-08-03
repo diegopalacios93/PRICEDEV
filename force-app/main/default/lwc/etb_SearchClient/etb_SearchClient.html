@@ -1,0 +1,123 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 02-18-2022
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={showSpinner}>
+        <div class="slds-spinner_container">
+            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                <span class="slds-assistive-text">Espere un momento por
+                    favor</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </template>
+    <!-- TEXTO BUSCADOR -->
+    <div class="slds-grid slds-gutters slds-form-element slds-form-container slds-text-block slds-p-left_x-small">
+        <div class="slds-m-horizontal_xx-small slds-size_2-of-12 slds-m-bottom_xx-small">
+            <span style="color:#ff0000;">* </span> Buscar por
+        </div>
+        <div class="slds-m-horizontal_xx-small slds-size_2-of-12 slds-m-bottom_xx-small">
+            <template if:true={nit}>
+                <span style="color:#ff0000;">* </span> Número de NIT
+            </template>
+            <template if:true={cedula}>
+                <span style="color:#ff0000;">* </span> Número de Cédula
+            </template>
+            <template if:true={razon}>
+                <span style="color:#ff0000;">* </span> Razón Social
+            </template>
+        </div>
+    </div>
+    <!-- BUSCADOR -->
+    <div class="slds-grid slds-gutters slds-p-left_x-small">
+        <div class="slds-m-horizontal_xx-small slds-size_2-of-12">
+            <lightning-combobox variant="label-hidden" name="progress" value={optionValue} placeholder="Seleccione..."
+                options={options} onchange={comboChange}>
+            </lightning-combobox>
+        </div>
+        <div class="slds-m-horizontal_xx-small slds-size_2-of-12" if:true={showInputSearch}>
+            <lightning-input variant="label-hidden" type="text" value={inputValue} onchange={inputChange}
+                if:true={razon}>
+            </lightning-input>
+            <lightning-input class="validacionInputNit" variant="label-hidden" type="text" value={nitInput}
+                onchange={handleNitChange} message-when-pattern-mismatch="* Coloque un Nit Válido: 0000000000"
+                message-when-value-missing="* Coloque un Nit Válido: 0000000000" pattern="[0-9]{1,10}" if:true={nit}
+                maxlength="9">
+            </lightning-input>
+            <lightning-input class="validacionInputCedula" variant="label-hidden" type="text" value={cedulaInput}
+                onchange={handleCedulaChange} message-when-pattern-mismatch="* Coloque una Cédula Válida"
+                message-when-value-missing="* Coloque una Cédula Válida" if:true={cedula} maxlength="10">
+            </lightning-input>
+        </div>
+        <div class="slds-m-horizontal_xx-small" if:true={showInputSearch}>
+            <lightning-button class="slds-size_small searchButton" icon-name="utility:search" variant="brand-outline"
+                label="Buscar" onclick={search}>
+            </lightning-button>
+        </div>
+    </div>
+    <div class="slds-p-top_small">
+        <!-- REGISTROS -->
+        <b if:true={getValidacion}>Resultados encontrados:&nbsp;{maxData}</b>
+        <div class="slds-p-top_x-small">
+            <template for:each={pagedData} for:item="account">
+                <c-cf-etb_-account-record-search key={account.Id} if:true={account.isAccount} parent-data=true
+                    records={account}>
+                </c-cf-etb_-account-record-search>
+            </template>
+            <!-- <c-cf-etb_-candidate-message-found if:true={leadFound}></c-cf-etb_-candidate-message-found> -->
+            <template for:each={pagedData} for:item="lead">
+                <c-cf-etb_-lead-record-search key={lead.Id} if:false={lead.isAccount} parent-data=true records={lead}>
+                </c-cf-etb_-lead-record-search>
+            </template>
+        </div>
+        <!-- PAGINADO -->
+        <div class="slds-clearfix slds-m-top_small slds-m-bottom_large" if:true={getValidacion}>
+            <div class="slds-float_left" if:true={isMoreDataThanDataShow}>
+                <span class="slds-m-top_xx-small slds-m-right_small">{getDatosMostrados} -
+                    {getDataShow} / {maxData}
+                </span>
+                <lightning-button-icon variant="border-filled" icon-name="utility:left" onclick={handleButtonFirstPage}
+                    disabled={disabledPreviousButton}>
+                </lightning-button-icon>
+                <lightning-button-icon variant="border-filled" icon-name="utility:chevronleft"
+                    onclick={handleButtonPrevious} disabled={disabledPreviousButton}>
+                </lightning-button-icon>
+                <lightning-button-icon variant="border-filled" icon-name="utility:chevronright"
+                    onclick={handleButtonNext} disabled={disabledNextButton}>
+                </lightning-button-icon>
+                <lightning-button-icon variant="border-filled" icon-name="utility:right" onclick={handleButtonLastPage}
+                    disabled={disabledNextButton} class="slds-m-bottom_large">
+                </lightning-button-icon>
+            </div>
+            <!-- Ajustar Tamanio  -->
+            <div class="slds-float_right slds-grid slds-wrap slds-size--2-of-12">
+                <div class="slds-clearfix">
+                    <p class="slds-float_left slds-size--8-of-12 slds-p-top_xx-small slds-p-left_large">
+                        Items por página
+                    </p>
+                    <lightning-combobox class="slds-float_right slds-size--4-of-12" variant="label-hidden"
+                        placeholder={pageSize} value={pageSize} options={optionsPage} onchange={elegirMaxMostrados}>
+                    </lightning-combobox>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    <c-cf-etb_-no-data-card-search parent-data=true if:true={nodataV} records></c-cf-etb_-no-data-card-search>
+    <c-cf-etb_-empty-card-search parent-data=true if:true={emptyV} records></c-cf-etb_-empty-card-search>
+    <template if:true={getValidacion}>
+        <p>¿No encontró el cliente que necesitaba?</p>
+        <c-cf-etb_-button-new-clients></c-cf-etb_-button-new-clients>
+    </template>
+    <div if:true={validationSpaceBottom}>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+</template>

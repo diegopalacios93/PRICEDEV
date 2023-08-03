@@ -1,0 +1,52 @@
+<apex:page controller="VistaClienteController" id="idPage">    
+    <apex:form >
+        <apex:pageMessages ></apex:pageMessages>
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+            	<apex:commandButton action="{!AceptarVC3}" value="Aceptar"/>
+                <apex:commandButton action="{!VolverVC3}" value="Volver"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlock title="Políticas:">
+                <span style="font-weight: bold;">
+                    <apex:outputLabel value="{!$Label.PoliticasVCTitulo1}"/>
+                </span>
+                <br/><br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC1}"/>
+                <br/>
+                <ul>
+                    <li>
+                        <apex:outputLabel value="{!$Label.PoliticasVC2}"/>
+                    </li>
+                    <li>
+                        <apex:outputLabel value="{!$Label.PoliticasVC3}"/>
+                    </li>
+                </ul>
+                <apex:outputLabel value="{!$Label.PoliticasVC4}"/>
+                <br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC5}"/>
+                <br/><br/><br/>
+                <span style="font-weight: bold;">
+                    <apex:outputLabel value="{!$Label.PoliticasVCTitulo2}"/>
+                </span>
+                <br/><br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC6}"/>
+                <br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC7}"/>
+                <br/><br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC8}"/>
+                <br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC9}"/>
+                <br/>
+                <apex:outputLabel value="{!$Label.PoliticasVC10}"/>
+                <br/>
+            </apex:pageBlock>
+            
+            <apex:pageBlock title="Fuentes:" id="font">
+                <span style="font-weight: bold;">   
+                   <apex:outputLabel value="{!$Label.PoliticasVCFuentesPoliticas}"/>
+                </span>
+                <apex:outputLabel value="{!$Label.PoliticasVCFuentes}"/>
+            </apex:pageBlock>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

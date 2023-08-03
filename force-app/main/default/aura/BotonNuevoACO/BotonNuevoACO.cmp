@@ -1,0 +1,7 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:actionOverride,force:hasRecordId,force:hasSObjectName">
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <div class="slds-box slds-theme_default slds-align_absolute-center">
+        <lightning:button variant="brand" name="modal" label="Nuevo ACO" onclick="{!c.handleShowModal}"/>
+    </div>
+</aura:component>

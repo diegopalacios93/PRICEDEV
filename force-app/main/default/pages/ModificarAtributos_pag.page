@@ -1,0 +1,49 @@
+<apex:page Controller="SeleccionProductoCatalogo_ctr" action="{!IniciaModificarAtributos}" id="idPage" lightningStylesheets="true">
+
+<script>             
+            $Lightning.use(
+                "c:ModificarAtributos_Aura", 
+                function() { 
+                    
+                    $Lightning.createComponent(
+                        "c:modificarAtributos", 
+                        {
+                        recordId: "{!idObjeto}",
+                        isClassic: true
+                    },
+                        "LightningAppDivId" ,
+                        function(cmp){
+                            document.getElementById('spinner').className += ' slds-hide';
+                        }
+                    );
+                }
+            );
+            
+    document.addEventListener("redirect", function(event){
+
+    window.location ='/'+event.detail.data;
+
+});
+    
+</script>
+ <apex:slds />
+ <div class="slds-scope">
+     <!-- SPINNER -->
+<div id="spinner" class="slds-spinner_container slds-is-fixed" >
+    <div role="status" class="slds-spinner slds-spinner--large slds-spinner--brand">
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+    </div>
+</div>
+     <!-- / SPINNER -->
+     <apex:includeLightning />
+                    
+<div id="LightningAppDivId">
+    
+</div>
+
+ </div>
+
+
+
+</apex:page>

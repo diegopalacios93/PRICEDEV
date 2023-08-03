@@ -1,0 +1,6 @@
+<apex:page StandardController="Case">
+    <br/> <br/> <br/> <br/> <br/> <br/>
+    <div align='center'>
+    <h2>Sin Autorización para Eliminar registros</h2>
+    </div>
+</apex:page>

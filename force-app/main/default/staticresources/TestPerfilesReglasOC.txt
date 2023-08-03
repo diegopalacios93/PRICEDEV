@@ -1,0 +1,9 @@
+Desactivar__c,Detalles__c,esCreador__c,esPropietario__c,Name,Perfiles__c
+true,si la operación comercial no aplica para preventa y no tiene  legalización,true,true,Escenario02,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00e400000013zweAAA,00e40000001FZVvAAO"
+true,si la operación comercial aplica para preventa y tiene viabilidad con estado diferente a cerrada,false,false,Escenario03,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00e400000013zweAAA,00e40000001FZVvAAO"
+true,si la operación comercial aplica para preventa y tiene viabilidad con estado cerrada y respuesta viable,true,true,Escenario04,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00e400000013zweAAA,00e40000001FZVvAAO"
+true,si la operación comercial aplica para preventa y tiene viabilidad con estado cerrada y respuesta NO viable,true,true,Escenario05,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00e400000013zweAAA,00e40000001FZVvAAO"
+true,si la OC tiene legalización y diligenciado el campo enviado Soporte a la venta,false,false,Escenario06,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00ef0000000HjW8AAK,00e400000013zweAAA,00e40000001FZVvAAO"
+true,si la OC tiene legalización y diligenciado el campo enviado Soporte a la venta y diligenciado el campo Enviado a Gte de proyecto,false,true,Escenario07,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00e400000013zweAAA,00e40000001FZVvAAO"
+true,en estado activa o declinada,false,false,Escenario08,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00e400000013zweAAA,00e40000001FZVvAAO"
+true,si la operación comercial aplica para preventa y no tiene viabilidad,true,true,Escenario01,"00ef0000000Hp1SAAS,00e400000013ynYAAQ,00ef0000000Hq5BAAS,00e400000013zweAAA,00e40000001FZVvAAO"

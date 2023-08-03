@@ -1,0 +1,10 @@
+<apex:page standardController="Acta_de_liquidaci_n__c" extensions="Acta_liquidacion_colaborador_PDF_ctr" showHeader="false" lightningStylesheets="true">
+	<apex:pageBlock >
+        <apex:form id="idForm" >
+            <apex:commandButton value="Regresar" action="{!regresar}"/>              
+        </apex:form>
+    </apex:pageBlock>
+    <apex:pageBlock >
+        <apex:iframe src="{!pageUrlExport}" scrolling="true" id="theIframe" frameborder="true" title="Acta de liquidación"/>
+    </apex:pageBlock>  
+</apex:page>

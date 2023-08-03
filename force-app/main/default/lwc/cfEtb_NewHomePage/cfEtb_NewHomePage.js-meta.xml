@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>51.0</apiVersion>
+  <runtimeNamespace>vlocity_cmt</runtimeNamespace>
+  <isExposed>true</isExposed>
+  <masterLabel>etb_NewHomePage</masterLabel>
+  <description xmlns="">ETB-529-layout-home-page / ETB-1227 cambiar estilos en la sección de inicio de Illuminate</description>
+  <targets xmlns=""><target>lightning__RecordPage</target><target>lightning__AppPage</target><target>lightning__HomePage</target></targets>
+  <targetConfigs xmlns=""><targetConfig targets="lightning__AppPage"><property name="debug" type="Boolean"/><property name="recordId" type="String"/></targetConfig><targetConfig targets="lightning__RecordPage"><property name="debug" type="Boolean"/></targetConfig></targetConfigs>
+</LightningComponentBundle>

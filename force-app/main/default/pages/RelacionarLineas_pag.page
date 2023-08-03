@@ -1,0 +1,68 @@
+<apex:page Controller="RelacionarLineas_ctr" action="{!AnalizaAccion}" id="idPage" lightningStylesheets="true">
+    <apex:sectionHeader title="Lineas relacionadas producto de voz"/>
+    <apex:form id="idForm">
+		<apex:pageBlock id="idPageBlock1">
+            <apex:pageMessages escape="false" />
+            
+            <apex:actionFunction name="seleccionarTodos" reRender="idPageBlock1" action="{!SelTodos}"/>
+            <apex:actionFunction name="guardarjs" status="Status2" reRender="idPageBlock1" action="{!guardar}"/>
+            <apex:actionFunction name="updateTipo" rerender="lstOperador,lstTipoServicio"/>
+    	
+			<apex:pageBlockSection title="{!$Label.LTE_Cambio_Plan_Lineas}" id="_bloqueBuscar" columns="2" >
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput">
+						<label for="numConexiones" style="font: bold 11px Verdana;">{!$Label.LTE_Cambio_Plan_Num_Conexion}: </label>
+						<apex:inputText value="{!strNumeros}" id="numConexiones" />
+						<apex:commandButton value="{!$Label.Buscar}" action="{!BuscarLineas}" rendered="{!blnBuscarLineas}" status="loading" reRender="idForm"/>
+					</apex:outputPanel>
+					
+					<apex:outputPanel id="_panelNumCaso" styleClass="lookupInput">
+						<label for="numCaso" style="font: bold 11px Verdana;">Operación comercial: </label>
+						<apex:outputText value="{!strOcName}" id="idOcName"/>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+			
+			<apex:pageBlockSection columns="1" id="_bloqueServicios" rendered="{!blnPanelLineas}">
+					<apex:pageBlockTable value="{!lstResult}" var="aw">
+						<apex:column width="25px">
+							<apex:inputCheckbox value="{!aw.blnSel}" />
+						</apex:column>
+                        <apex:column headerValue="Linea" width="15%">
+                            <apex:outputText value="{!aw.OpComeLinea.Name}"></apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Accion">
+                            <apex:outputText value="{!aw.sAccion}"></apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Tipo de línea" width="15%">
+                            <apex:selectList multiselect="false" size="1"  value="{!aw.strTipoLinea}" id="lstTipoLinea" onchange="updateTipo();">
+                                <apex:selectOptions value="{!aw.lstTipoLinea}" />
+                            </apex:selectList>
+                        </apex:column>
+                        <apex:column headerValue="Tipo de servicio">
+                            <apex:selectList multiselect="false" size="1"  value="{!aw.strTipoServicio}" id="lstTipoServicio">
+                                <apex:selectOptions value="{!aw.lstTipoServicio}" />
+                            </apex:selectList>
+                        </apex:column>
+                        <apex:column headerValue="Operador" width="45%">
+                            <apex:selectList multiselect="false" size="1"  value="{!aw.strOperador}" id="lstOperador">
+                                <apex:selectOptions value="{!aw.lstOperador}" />
+                            </apex:selectList>
+                        </apex:column>
+                        <apex:column headerValue="Portacion con cédula">
+							<apex:inputCheckbox value="{!aw.blnPorCedLTE}" />
+                        </apex:column>
+                        <apex:column headerValue="Contacto de portacion">
+                            <apex:inputField value="{!aw.OpComeLinea.Contacto_Relacionado__c}"/>
+                        </apex:column>
+					</apex:pageBlockTable>
+					
+	        </apex:pageBlockSection>
+			
+	        <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.LTE_Guardar}" action="{!guardar}" rendered="{!blnBotonGuardar}" status="loading" reRender="idForm"/>
+				<apex:commandButton value="{!$Label.Regresar}" action="{!Cancelar}" status="loading" reRender="idForm"/>
+			</apex:pageBlockButtons> 
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

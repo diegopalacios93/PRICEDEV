@@ -1,0 +1,76 @@
+<apex:page standardController="Case" extensions="CrearTipificacionCierre_ctr" id="idPage">
+    <apex:sectionHeader title="{!$Label.MatrizTip_Title}" subtitle="{!$Label.MatrizTip_SubTitle}" />
+    <apex:form id="idForm">
+        <apex:actionFunction action="{!Guardar}" name="JSGuardar" status="Status2" reRender="idPage:idForm"/>
+        <apex:pageMessages id="TheMessages" />
+        <apex:pageBlock title="Información del caso" id="blkCaso">
+            <apex:actionFunction action="{!Nivel02}" name="JSNivel02" reRender="idPage:idForm:blkCaso" />
+            <apex:actionFunction action="{!Nivel03}" name="JSNivel03" reRender="idPage:idForm:blkCaso" />
+            <apex:actionFunction action="{!Nivel04}" name="JSNivel04" reRender="idPage:idForm:blkCaso" />
+            <apex:actionFunction action="{!Nivel05}" name="JSNivel05" reRender="idPage:idForm:blkCaso" />
+            <apex:actionFunction action="{!Nivel06}" name="JSNivel06" reRender="idPage:idForm:blkCaso" />
+            <apex:actionFunction action="{!CargarSubResponsable}" name="JSCargarSubResponsable" reRender="idPage:idForm:blkCaso" />
+            
+            <apex:pageBlockSection columns="2" title="Información del caso">
+                <apex:outputField value="{!CaseInfo.CaseNumber}"/>
+                <apex:outputField value="{!CaseInfo.CodigouniconumericoCUN__c}"/>
+                <apex:selectList Label="{!$ObjectType.Case.Fields.Status.Label}" value="{!strEstado}" multiselect="false" size="1">
+                    <apex:selectOptions value="{!lstEstado}" />
+                </apex:selectList>
+                <apex:inputField value="{!CaseInfo.Valorreclamadoporelcliente__c}"/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" title="Observaciones Cierre">
+                <apex:inputField value="{!CaseInfo.FechaFinAfectacion__c}" required="true"/>
+                <apex:inputField value="{!CaseInfo.DescripcionSolucion__c}"/>
+                <apex:inputField value="{!CaseInfo.Arearesponsable__c}"/>
+                <apex:inputField value="{!CaseInfo.CausaImputabilidad__c}"/>
+                <apex:inputField value="{!CaseInfo.Ajuste__c}"/>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" title="Tipificacion del cierre" id="blkTipCierre">
+                <apex:outputField value="{!CaseInfo.Recordtype.Name}"/>
+                <apex:selectList Label="{!$ObjectType.MatrizTipificacion__c.Fields.Nivel_1__c.Label}" value="{!nivel01}" multiselect="false" size="1" onchange="JSNivel02()">
+                    <apex:selectOptions value="{!lstNivel01}" />
+                </apex:selectList>
+                <apex:selectList Label="{!$ObjectType.MatrizTipificacion__c.Fields.Nivel_2__c.Label}" value="{!nivel02}" multiselect="false" size="1" onchange="JSNivel03()">
+                    <apex:selectOptions value="{!lstNivel02}" />
+                </apex:selectList>
+                <apex:selectList Label="{!$ObjectType.MatrizTipificacion__c.Fields.Nivel_3__c.Label}" value="{!nivel03}" multiselect="false" size="1" onchange="JSNivel04()">
+                    <apex:selectOptions value="{!lstNivel03}" />
+                </apex:selectList>
+                <apex:selectList Label="{!$ObjectType.MatrizTipificacion__c.Fields.Nivel_4__c.Label}" value="{!nivel04}" multiselect="false" size="1" onchange="JSNivel05()">
+                    <apex:selectOptions value="{!lstNivel04}" />
+                </apex:selectList>
+                <apex:selectList Label="{!$ObjectType.MatrizTipificacion__c.Fields.Nivel_5__c.Label}" value="{!nivel05}" multiselect="false" size="1" onchange="JSNivel06()">
+                    <apex:selectOptions value="{!lstNivel05}" />
+                </apex:selectList>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$Label.MatrizTip_Descripcion}" for="idDescriptionTipificacion"/>
+                    <apex:inputText value="{!strDescripcion}" id="idDescriptionTipificacion" disabled="true" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" title="Observaciones Remedy">
+                <apex:selectList Label="Codigo de cierre" value="{!strCodigoCierre}" multiselect="false" size="1" required="true">
+                    <apex:selectOptions value="{!lstCodigoCierre}" />
+                </apex:selectList>
+                <apex:selectList Label="Responsable"  value="{!strResponsable}" multiselect="false" size="1" id="liResponsable" onchange="JSCargarSubResponsable()">
+                    <apex:selectOptions value="{!lstResponsable}"/>
+                </apex:selectList>
+                <apex:selectList Label="SubResponsable"  value="{!strSubResponsable}" multiselect="false" size="1" id="liSubResponsable">
+                    <apex:selectOptions value="{!lstSubResponsable}"/>
+                </apex:selectList>
+                <apex:inputField value="{!CaseInfo.Pertinencia_Horas__c}"/>
+                <apex:inputField value="{!CaseInfo.Pertinencia_Minutos__c}"/>
+                <apex:inputField value="{!CaseInfo.Pertinencia_Segundos__c}"/>
+                <apex:inputField value="{!CaseInfo.SolucionSistemaLegado__c}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock id="idPageBlockButton">
+            <input name="Guardar" class="btn" type="button" value="Guardar" onclick="this.disabled=true;JSGuardar();return false;"/>
+            <apex:commandButton value="Volver" action="{!Cancelar}" />
+        </apex:pageBlock>
+        <apex:pageMessages id="TheMessagesBottom" />
+    </apex:form>
+</apex:page>

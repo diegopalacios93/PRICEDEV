@@ -1,0 +1,13 @@
+<apex:page controller="LTE_Disponibilidad_Bolsa_ctr" action="{!consultar}" lightningStylesheets="true">
+<apex:sectionHeader title="Disponibilidad Bolsa Troncal SIP"/>    
+    <apex:form id="idForm" >      
+        <apex:pageBlock id="idPageBlock1">
+            <apex:outputPanel id="msg">
+            	<apex:pageMessages />                
+            </apex:outputPanel>                        
+        </apex:pageBlock>        
+        <apex:pageBlock id="idPageBlock2">
+            <apex:commandButton value="Volver" action="{!Cancelar}"/>                      
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

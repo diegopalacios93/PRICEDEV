@@ -1,0 +1,51 @@
+<!--/*******************************************************************************
+Develope by:            ETB
+Author:                 Javier Acero
+Project:                ETB-LTE   
+Description:            Pagina de visualizacion de respuesta para el proceso de liberación de recursos
+Sprint                  1
+Release                 1
+
+Cambios (Versiones)
+-------------------------------------
+No.     Fecha       Autor                           Descripción
+------  ----------  --------------------            ---------------
+1.0     01/08/2018  Javier Acero.                  Page creation.
+*******************************************************************************/--> 
+<apex:page controller="LTE_Release_Resources_ctr" action="{!consultar}" lightningStylesheets="true">
+    <!-- Estilos --> 
+	<style>
+		.bPageBlock .pbBody .header1 .pbSubheader{
+             background-color:lightblue;
+         }
+		.bPageBlock .pbBody .header1 .pbSubheader h3{
+             color:black;
+         }
+	</style>
+    
+	<apex:form id="FormaPrincipal"> 
+		<apex:pageBlock title="Resultado Liberación de Recursos">
+        	<apex:outputPanel layout="block" styleClass="header1" >
+          		<div>   
+            		<apex:pageBlockSection title="{!oc.Name}" collapsible="false" columns="3">
+                        <apex:outputField title="Estado Operación Comercial:" value="{!oc.Estado__c}"/>
+                        <apex:outputField label="Numero de Conexión:" value="{!oc.NumeroConexion__c}"/> 
+                        <apex:outputField label="IMSI:" value="{!oc.LTE_IMSI__c}"/> 
+            		</apex:pageBlockSection>
+            	</div>
+            </apex:outputPanel>
+            <apex:outputPanel id="guardarOpcion">
+         	 	<apex:actionstatus id="status" startText="Regresando a la OC..."> 
+            		<apex:facet name="stop"> 
+                         <apex:outputPanel layout="block" styleClass="header1" > 
+            	     	 <p><apex:outputText value="{!ResultadoOperacion}"/></p> 
+            			</apex:outputPanel> 
+            		</apex:facet> 
+         	 	</apex:actionstatus> 
+             </apex:outputPanel> 
+            <apex:pageBlockButtons id="editButtons" location="bottom" rendered="true" >
+           	<apex:commandButton value="Regresar" action="{!regresar}" rerender="guardarOpcion" status="status"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

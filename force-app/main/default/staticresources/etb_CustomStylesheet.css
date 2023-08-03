@@ -1,0 +1,85 @@
+//// Utilizado en OS etb_CreateNewCustomer ///////////
+.slds-scope .slds-accordion__summary-action {
+  background: #F3F2F2;
+  padding: 0px;
+  margin-bottom: calc(var(--sds-c-accordion-section-spacing-block-end, 0.25rem) * -1);
+}
+.slds-scope .slds-truncate {
+  color: #080707;
+}
+
+.slds-accordion__summary-heading{
+	  background: #F3F2F2;
+	  height: 2rem !important;
+}
+
+.slds-scope .slds-button_brand, .slds-button_brand{
+  background-color: #034589;
+  border-color: #034589;
+  color: white;
+}
+
+.slds-scope .slds-button_brand:hover, .slds-button_brand:hover{
+  background-color: rgb(7, 47, 87);
+  border-color: rgb(7, 47, 87);
+  color: white;
+}
+
+.os-step-label[vlocity_cmt-omniscriptStep_omniscriptStep] {
+    /* font-weight: var(--lwc-fontWeightLight, 900); */
+    font-weight: 700;
+}
+
+.vlc-separator[vlocity_cmt-omniscriptStep_omniscriptStep] {
+    border-width: 0.2rem;
+    width: 3.5rem;
+    border-color: #285DAC;
+    margin-top: 1rem;
+}
+
+h3{
+    font-weight: 500;
+    line-height: 20px;
+    font-size: 1rem;
+    color: #080707;
+    letter-spacing: 0;
+}
+
+.omni-block_content[vlocity_cmt-omniscriptBlock_omniscriptBlock]{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  justify-content: space-between;
+}
+
+.slds-medium-size_6-of-12{
+  width: 49.1%;
+}
+
+.slds-p-right_small{
+  padding-right: 0;
+}
+
+.slds-grid_align-end{
+  justify-content: left;
+}
+
+.slds-wrap{
+  justify-content: space-between;
+}
+
+.slds-gutters{
+  max-width: 67.57%;
+}
+
+.omniscript-button-position {
+    justify-content: flex-end;
+}
+
+.slds-p-horizontal_medium{
+  padding-right: 0;
+}
+
+.slds-gutters .slds-col{
+  padding-right: 0;
+}
+

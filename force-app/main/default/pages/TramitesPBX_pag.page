@@ -1,0 +1,93 @@
+<apex:page standardController="ActivoETB__c" extensions="Tramites_ctr" action="{!inicioPBX}">
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+<style type="text/css">
+        .centrar{width:100%;text-align: center;}
+    </style>
+	<apex:form id="formulario">
+		<apex:pageMessages escape="false" />
+		<apex:pageBlock id="pbx" title="PBX">
+			<div class="centrar">
+			<input class="btn" type="button" id="AsociarQuitarPbx" value="Programación/ Desprogramación Lineas Pbx" />
+			<apex:commandButton action="{!linkSuspender}" value="Suspender"/>
+			<apex:commandButton action="{!linkRetiro}" value="Retiro"/>
+			<apex:commandButton action="{!linkCambioArranque}" value="Cambio de Arranque"/>
+			<apex:commandButton action="{!linkCuentaFacturacion}" value="Cambio cuenta de facturacion"/>
+			</div>
+			<apex:actionFunction name="AsociarQuitarPbxJS" action="{!asignarQuitarTroncales}" rerender="formulario"/>
+
+
+			<apex:pageBlockTable value="{!w}" var="item">
+
+				<apex:column headerValue="">
+					<apex:inputCheckbox value="{!item.opcion}" styleClass="lineas {!item.serv.Tipodeprogramacion__c} {!item.IlimitadoS} {!item.serv.Tipodeprogramacion__c}"
+                        html-data-idac="{!item.serv.id}"
+                        html-data-tipo="{!item.serv.Tipodeprogramacion__c}"
+                        html-data-ilimitado="{!item.IlimitadoS}"/>
+				</apex:column>
+
+				<apex:column value="{!item.serv.name}" />
+				<apex:column value="{!item.serv.Activo_Relacionado__r.Name}">
+					<apex:facet name="header">Arranque</apex:facet>
+				</apex:column>
+				<apex:column value="{!item.serv.Estado__c}" />
+                <apex:column value="{!item.serv.Tipodeprogramacion__c}" />
+
+                <apex:column >
+                	{!item.IlimitadoS}
+					<apex:facet name="header">Ilimitado</apex:facet>
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+		</apex:pageBlock>
+	</apex:form>
+<script type="text/javascript">
+
+
+$( document ).ready(function() {
+  	$( "#AsociarQuitarPbx" ).click(function() {
+		validar();
+	});
+
+	var ilim;
+	var tron;
+	var opt;
+
+	function validar(){
+			opt=0;
+			arran=0;
+			ilim=0;
+			tron=0;
+			validarServicios();
+	}
+
+	function validarServicios(){
+		$( ".lineas" ).each(function( index ) {
+		  if($( this ).attr('checked')=='checked'){
+			  if($(this).data('tipo')=='Troncal'){tron++}
+			  if($(this).data('ilimitado')=='Ilimitado'){ilim++}
+			  opt++;
+			}
+		});
+
+		if(opt<=0){
+			alert('Seleccione una opcion');
+			return false;
+		}
+		console.debug(ilim+'-'+tron);
+
+		if(ilim<=0){
+			alert('No se puede realizar la operacion al menos debe existir un arranque y un plan debe ser ilimitado');
+			return false;
+		}
+
+		AsociarQuitarPbxJS();
+		return true;
+
+	}
+
+});
+
+</script>
+
+</apex:page>

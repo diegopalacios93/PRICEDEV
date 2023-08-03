@@ -1,0 +1,360 @@
+<apex:page Controller="LTE_CreacionOperacionesComerciales_ctr" id="pag1" docType="html-5.0" action="{!validaEstado}">
+    <script>
+        function soloNumeros( e, limitField )
+        {
+            var unicode = e.charCode ? e.charCode : e.keyCode;
+            if(unicode != 8)
+            {
+                if( ( unicode < 48 || unicode > 57 ) && unicode != 46 )
+                {
+                    return false;
+                }
+            } 
+            if(limitField.value  > 100) 
+            {
+                return false;
+            } else 
+            {
+                return true;
+            }
+        }
+                
+    </script>
+    <apex:sectionHeader title="Operación Comercial" subtitle="Creación"/>
+    <apex:form id="form1">
+        <!-- Imagen de Cargando (waitStatus)....-->
+         <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <c:Loading Titulo="Cargando..."/>
+            </apex:facet>
+        </apex:actionStatus>
+        
+        <apex:actionFunction action="{!cargarSecciones}" name="JSCargarSeccion1" reRender="pag1:form1:idPanel1, pag1:form1" status="loading"/>
+        <apex:actionFunction action="{!mostrarImei}" name="JSMostrarCampo" reRender="pag1:form1:idPanel1" status="loading"/>
+        <apex:actionFunction action="{!mostrarEquipo}" name="JSMostrarCampo2" reRender="pag1:form1:idPanel1" status="loading"/>
+        <apex:actionFunction action="{!habilitarListaNegra}" name="JSHabilitarCampo" reRender="pag1:form1:idPanel1" status="loading"/>
+        <apex:actionFunction action="{!validarDiasCalendario}" name="JSValidaDias" status="loading"/>
+        <apex:actionFunction action="{!obtenerValorEquipo}" name="JSMostrarValor" reRender="pag1:form1:idPanel1" status="loading"/>
+        <apex:pageMessages />
+        <apex:pageBlock id="pB1" title="Operación" rendered="{!blnFormularioPrincipal}">
+            <table border="0" id="idTable1">
+                <tr>
+                    <td>
+                        <B>{!$Label.SelProdCat_Operacion}</B>
+                    </td>
+                    <td>
+                        <apex:selectList value="{!strIdOperacion}" multiselect="false" size="1" onchange="JSCargarSeccion1()">
+                            <apex:selectOptions value="{!lstOperaciones}" />
+                        </apex:selectList>
+                    </td>
+                </tr>    
+            </table>
+        </apex:pageBlock>
+        <apex:outputPanel id="idPanel1" style="{!IF(blnSeccionPrincipal,'','Display:none')}">
+            <apex:pageBlock id="pB2" title="{!strNombreSeccion}" >
+                <apex:pageBlockSection id="pBSSuspen" rendered="{!blnSuspension}" >
+                    <table border="0" id="idTable2">
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.TipoSuspension__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strTipoSuspension}" multiselect="false" size="1" onchange="JSCargarSeccion1()">
+                                    <apex:selectOptions value="{!lstTipoSuspension}" />
+                                </apex:selectList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.Departamento_del_Evento__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:inputField value="{!objOpCom.Departamento_del_Evento__c}" label="" rendered="true"/>                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.Ciudad__c.Label}</B>
+                            </td>
+                            <td><!-- JR: No funciona el disable en inputfield y html-disable no toma refresh, se agrega rendered -->
+                                <apex:inputField value="{!objOpCom.Ciudad__c}" label="" rendered="true"/>
+                                <!--apex:outputField value="{!objOpCom.Ciudad__c}" label="" rendered="{!NOT(blnHabilitarCampo)}"/-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.NuevaDireccionReparto__c.Label}</B>
+                            </td>
+                            <td><!-- JR: No funciona el disable en inputfield y html-disable no toma refresh, se agrega rendered -->
+                                <apex:inputField value="{!objOpCom.NuevaDireccionReparto__c}" label="" rendered="true"/>
+                                <!--<apex:outputField value="{!objOpCom.NuevaDireccionReparto__c}" label="" rendered="{!NOT(blnHabilitarCampo)}"/> -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.E_mail__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:inputField value="{!objOpCom.E_mail__c}" label="" rendered="true"/>                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.LTE_EmpleoViolencia__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strEmpleoViolencia}" multiselect="false" size="1" disabled="{!NOT(blnHabilitarCampo)}" onchange="JSHabilitarCampo()">
+                                    <apex:selectOptions value="{!lstEmpleoViolencia}" />
+                                </apex:selectList>
+                            </td>
+                         </tr>
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.LTE_UtilizacionArmas__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strUtilizacionArmas}" multiselect="false" size="1" disabled="{!NOT(blnUtilizacionArmas)}">
+                                    <apex:selectOptions value="{!lstUtilizacionArmas}" />
+                                </apex:selectList>
+                            </td>
+                         </tr>
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.LTE_VictimaMenorEdad__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strVictimaMenorEdad}" multiselect="false" size="1" disabled="{!NOT(blnHabilitarCampo)}">
+                                    <apex:selectOptions value="{!lstVictimaMenorEdad}" />
+                                </apex:selectList>
+                            </td>
+                        </tr>                                            	
+                        </tr>                                                                  
+                         <tr>                             
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.Caso__c.Label}</B>
+                            </td>
+                            <td><!-- JR: No funciona el disable en inputfield y html-disable no toma refresh, se agrega rendered -->
+                                <apex:inputField value="{!objOpCom.Caso__c}" label="" rendered="true"/>
+                                <!--apex:outputField value="{!objOpCom.Caso__c}" label="" rendered="{!NOT(blnHabilitarCampo)}"/-->
+                            </td>                        
+                        </tr> 
+                    	<!-- 
+                         <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.LTE_AutorizacionReporteHurto__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:inputCheckbox value="{!blnAutorizacionReporteHurto}" disabled="{!NOT(blnHabilitarCampo)}"/>
+                            </td>
+                        </tr>  -->         
+                    </table>
+                    <apex:outputPanel id="idPanel2" style="{!IF(blnMostrarIMEI,'','Display:none')}">
+                        <table border="0" id="idTable3">
+                            <tr>
+                                <td>
+                                    <B>{!$ObjectType.OperacionComercial__c.Fields.IMEI_del_Equipo__c.Label}</B>
+                                </td>
+                                <td>
+                                    <apex:inputText value="{!strImei}" id="idInpTeImei" disabled="true"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </apex:outputPanel>
+                	<apex:outputPanel id="idPanel3" rendered="{!NOT(blnHabilitarCampo)}">
+                    <table border="0" id="idTable4">
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.Registro_en_lista_negra_robo_o_perdida__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strRegLstNegra}" multiselect="false" size="1" onchange="JSMostrarCampo()">
+                                    <apex:selectOptions value="{!lstRegLstNegra}" />
+                                </apex:selectList>
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="pBSReconexion" rendered="{!blnReconex}" >
+                    <table border="0" id="idTableR">
+                        <tr>
+                            <td>
+                                <B>{!$ObjectType.OperacionComercial__c.Fields.TipoSuspension__c.Label}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strTipoSuspension}" multiselect="false" size="1">
+                                    <apex:selectOptions value="{!lstTipoSuspension}" />
+                                </apex:selectList>
+                            </td>
+                        </tr>                           
+                    </table>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="pBSRenovaRepo" rendered="{!blnRenovaRepo}">
+                    <table border="0" id="idTable4">
+                        <tr>
+                            <td>
+                                <B>{!$Label.LTE_TipoRenovRepo}</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strTipoRenovRepo}" multiselect="false" size="1" onchange="JSMostrarCampo2()">
+                                    <apex:selectOptions value="{!lstTipoRenovRepo}" />
+                                </apex:selectList>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td>
+                                <B>Sucursal</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strSucursales}" multiselect="false" size="1">
+                                    <apex:selectOptions value="{!lstSucursales}" />
+                                </apex:selectList>
+                            </td>
+                        </tr>
+                    </table>
+                    <apex:outputPanel id="idPanel3" style="{!IF(blnMostrarEquipo,'','Display:none')}">
+                        <table border="0" id="idTable5">
+                            <tr>
+                                <td>
+                                    <B>{!$ObjectType.Reserva__c.Fields.Equipo__c.Label}</B>
+                                </td>
+                                <td>
+                                    <apex:pageBlockSectionItem >
+                                        <apex:inputField value="{!objDetOferta.LTE_ReferenciaEquipo__c}" onchange="JSMostrarValor()"/>
+                                    </apex:pageBlockSectionItem>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <B>{!$Label.LTE_PorcentajeDescuento}</B>
+                                </td>
+                                <td>
+                                    <apex:inputText value="{!dcPorcentajeDescuento}" id="idPorcenDesc" onkeypress="return soloNumeros(event, this);" rendered="{!NOT(blnHabilitarTipoPago)}"/>% 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <B>Tipo de Pago</B>
+                                </td>
+                                <td>
+                                    <apex:selectList value="{!strTipoPago}" multiselect="false" size="1" disabled="{!blnHabilitarTipoPago}">
+                                        <apex:selectOptions value="{!lstTipoPago}" />
+                                    </apex:selectList>
+                                </td>
+                            </tr>
+                            <tr>
+                            </tr>
+                                                    
+                            <tr>
+                                <td>
+                                    <B>Precio de lista</B>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!decPrecioEquipoIVA}" id="idPrecio2"/>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <apex:outputpanel rendered="{!blnMostrarSeguro}">
+                            <table>
+                            <tr>
+                                <td>
+                                    <B>{!$Label.LTE_CreacionOCEtiquetaSeguro}</B>
+                                </td>
+                                <td>
+                                    <B><apex:outputText value="{!strNombreSeguro}" id="idNomSeguro"/></B>
+                                </td>
+                            </tr>
+                            </table>
+                        </apex:outputpanel>
+                    </apex:outputPanel>
+                    <th>
+                    </th>
+                    <apex:outputPanel id="idPanel4" style="{!IF(blnMostrarEquipo,'Display:none','')}">
+                        <table border="0" id="idTable6">
+                            <tr>
+                                <td>
+                                    <B>{!$Label.LTE_PorcentajeDescuento}</B>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!dcPorcentajeDescuentoFijo}" id="idPorcenDesc2"/> %
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <B>Tipo de Pago</B>
+                                </td>
+                                <td>
+                                    <apex:selectList value="{!strTipoPagoSim}" multiselect="false" size="1">
+                                        <apex:selectOptions value="{!lstTipoPago}" />
+                                    </apex:selectList>
+                                </td>
+                            </tr>
+                        </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="pBSRetiro" rendered="{!blnRetiro}">
+                    <table border="0" id="idTable7">
+                        <tr>
+                            <td>
+                                <B>Fecha Efectiva de Retiro</B>
+                            </td>
+                            <td>
+                                <apex:input type="date" value="{!datFechaRetiro}" onchange="JSValidaDias()"/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td>
+                                <B>Tipo de Baja</B>
+                            </td>
+                            <td>
+                                <apex:selectList value="{!strTipoBaja}" multiselect="false" size="1">
+                                    <apex:selectOptions value="{!lstTipoBaja}" />
+                                </apex:selectList>
+                            </td>
+                        </tr> 
+                    </table>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="pBOCVuelo" rendered="{!blnOCVuelo}" title="OC's en Vuelo">
+                    <apex:pageBlockTable value="{!lstOCsVuelo}" var="ocs" id="idTablaOCVuelo" border="2">
+                        <apex:column headerValue="Número OC">
+                            <apex:outputText value="{!ocs.Name}"/>
+                        </apex:column>
+                        <apex:column headerValue="Estado">
+                            <apex:outputText value="{!ocs.Estado__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Tipo de Operación">
+                            <apex:outputText value="{!ocs.TOPP__r.TipodeOperacionporplan__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection id="pBSHistorico" rendered="{!blnHistorico}" title="Histórico Suspenda">
+                    <apex:pageBlockTable value="{!lstTramites}" var="tramites" id="idTablaTramites" border="2">
+                        <apex:column headerValue="Tramite">
+                            <apex:outputText value="{!tramites.tramite}"/>
+                        </apex:column>
+                        <apex:column headerValue="Fecha">
+                            <apex:outputText value="{!tramites.fecha}"/>
+                        </apex:column>
+                        <apex:column headerValue="Pedido">
+                            <apex:outputText value="{!tramites.pedido}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockButtons location="bottom" id="idPBB1">
+                    <apex:commandButton value="{!$Label.LTE_Crear}" action="{!guardarOperacionComercial}" rendered="{!blnOcultaBoton}">
+                        <apex:param name="paramIdCasoRobo" value="{!objOpCom.Caso__c}" assignTo="{!strIdCasoRobo}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="{!$Label.LTE_Volver}" action="{!volverAccion}" rendered="{!blnOcultaBotonVolver}"/> 
+                </apex:pageBlockButtons>
+            </apex:pageBlock>            
+        </apex:outputPanel>
+			<apex:pageBlock id="pB3" rendered="{!blnPreguntarReporteHurto}">
+        	<apex:commandButton value="Acepto" action="{!confirmarMensajeNotificacionSuspension}" rendered="{!blnPreguntarReporteHurto}">          
+       		</apex:commandButton>        
+            <apex:commandButton value="Cancelar" action="{!volverAccion}" rendered="{!blnPreguntarReporteHurto}"/>  					
+            </apex:pageBlock>
+    </apex:form>              
+</apex:page>

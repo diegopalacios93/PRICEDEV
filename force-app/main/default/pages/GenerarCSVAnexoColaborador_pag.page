@@ -1,0 +1,204 @@
+<apex:page controller="GenerarCSVAnexoColaborador" action="{!exportToExcel}" readOnly="true" contentType="{!fileName}">
+        <apex:pageBlock >
+        <apex:pageBlockTable value="{!lstwrapper}" var="x">
+           <apex:column headerValue="No Anexo o contrato">
+                {!x.Anexo_c}
+            </apex:column>
+                        <apex:column headerValue="Nombre de la cuenta">
+                {!x.Account}
+            </apex:column>
+                <apex:column headerValue="Aliado">
+                {!x.Aliado_r}
+            </apex:column>
+                        <apex:column headerValue="NIT Aliado">
+                {!x.NIT_Aliado_c}
+            </apex:column>
+                        <apex:column headerValue="ID">
+                {!x.ID_Registro_c}
+            </apex:column>            
+                        <apex:column headerValue="Consecutivo">
+                {!x.Consecutivo_c}
+            </apex:column>            
+                        <apex:column headerValue="Consecutivo CAD">
+                {!x.Consecutivo_CAD_c}
+            </apex:column>            
+                        <apex:column headerValue="Supervisor Administrativo">
+                {!x.Supervisor_Administrativo_r}
+            </apex:column>            
+                        <apex:column headerValue="Fecha de suscripcion">
+                {!x.Fecha_de_suscripcion_c}
+            </apex:column>            
+                        <apex:column headerValue="Fecha de inicio">
+                {!x.Fecha_de_inicio_c}
+            </apex:column>            
+                        <apex:column headerValue="Fecha de terminacion">
+                {!x.Fecha_de_terminacion_c}
+            </apex:column>            
+                        <apex:column headerValue="Tipo de contrato">
+                {!x.Tipo_de_contrato_c}
+            </apex:column>            
+                        <apex:column headerValue="Plazo de ejecucion">
+                {!x.Plazo_de_ejecucion_c}
+            </apex:column>            
+                        <apex:column headerValue="Tiempo de liquidacion">
+                {!x.Tiempo_de_liquidacion_c}
+            </apex:column>            
+                        <apex:column headerValue="Fecha maxima de liquidacion">
+                {!x.Fecha_maxima_de_liquidacion_c}
+            </apex:column>            
+                        <apex:column headerValue="Estado">
+                {!x.Status}
+            </apex:column>            
+                        <apex:column headerValue="Objeto">
+                {!x.Objeto_c}
+            </apex:column>            
+                        <apex:column headerValue="Valor sin IVA">
+                {!x.Valor_sin_IVA_c}
+            </apex:column>            
+                        <apex:column headerValue="Porcentaje IVA">
+                {!x.Porcentaje_IVA_c}
+            </apex:column>            
+                        <apex:column headerValue="IVA">
+                {!x.IVA_Contrato_Colaborador_c}
+            </apex:column>            
+                        <apex:column headerValue="Valor total">
+                {!x.Valor_total_c}
+            </apex:column>              
+            <apex:column headerValue="Valor sin IVA(en dolares)">
+                {!x.Valor_sin_IVA_en_dolares_c}
+            </apex:column>   
+            <apex:column headerValue="IVA (en dólares)">
+                {!x.IVA_en_dolares_c}
+            </apex:column>   
+            <apex:column headerValue="Valor total incluido IVA (en dólares)">
+                {!x.Valor_total_incluido_IVA_en_dolares_c}
+            </apex:column>                        
+            <apex:column headerValue="Valor adiciones">
+                {!x.Valor_adiciones_c}
+            </apex:column>            
+            <apex:column headerValue="Valor adiciones en dolares">
+                {!x.Valor_adiciones_en_dolares_c}
+            </apex:column>            
+            <apex:column headerValue="Número de adiciones">
+                {!x.Numero_de_adiciones_c}
+            </apex:column>            
+            <apex:column headerValue="Ejecutado">
+                {!x.Ejecutado_c}
+            </apex:column>            
+            <apex:column headerValue="Facturado">
+                {!x.Facturado_c}
+            </apex:column>            
+            <apex:column headerValue="Conciliado">
+                {!x.Conciliado_c}
+            </apex:column>            
+            <apex:column headerValue="Saldo">
+                {!x.Saldo_c}
+            </apex:column>            
+            <apex:column headerValue="Valor mes">
+                {!x.Valor_mes_c}
+            </apex:column>            
+            <apex:column headerValue="Valor de la deuda">
+                {!x.Valor_de_la_deuda_c}
+            </apex:column>            
+            <apex:column headerValue="Meses en mora">
+                {!x.Meses_en_mora_c}
+            </apex:column>            
+            <apex:column headerValue="Meses ejecutados">
+                {!x.Meses_ejecutados_c}
+            </apex:column>            
+            <apex:column headerValue="Valor fijo o variable">
+                {!x.Valor_fijo_o_variable_c}
+            </apex:column>            
+            <apex:column headerValue="Escalamiento">
+                {!x.Escalamiento_c}
+            </apex:column>            
+            <apex:column headerValue="Cuenta revchain">
+                {!x.Cuenta_revchain_c}
+            </apex:column>            
+            <apex:column headerValue="Observaciones">
+                {!x.Observaciones_c}
+            </apex:column>            
+            <apex:column headerValue="Categoria">
+                {!x.Categoria_c}
+            </apex:column>            
+            <apex:column headerValue="Multas o ANS">
+                {!x.Multas_o_ANS_c}
+            </apex:column>            
+            <apex:column headerValue="Facultado">
+                {!x.Facultado_c}
+            </apex:column>            
+            <apex:column headerValue="Supervisor tecnico">
+                {!x.Supervisor_tecnico_r}
+            </apex:column>            
+            <apex:column headerValue="Ultima facturacion aprobada">
+                {!x.Ultima_facturacion_aprobada_c}
+            </apex:column>            
+            <apex:column headerValue="Ultima conciliacion">
+                {!x.Ultima_conciliacion_c}
+            </apex:column>            
+            <apex:column headerValue="Ultimo informe de supervision">
+                {!x.Ultimo_informe_de_supervision_c}
+            </apex:column>            
+            <apex:column headerValue="Impuestos">
+                {!x.Impuestos_c}
+            </apex:column>            
+            <apex:column headerValue="Vigencias de polizas">
+                {!x.Vigencias_de_polizas_c}
+            </apex:column>            
+            <apex:column headerValue="Causal de no pago">
+                {!x.Causal_de_no_pago_c}
+            </apex:column>            
+            <apex:column headerValue="Estado documentacion">
+                {!x.Estado_documentacion_c}
+            </apex:column> 
+            <apex:column headerValue="Modalidad de contratacion">
+                {!x.Modalidad_de_contratacion_c}
+            </apex:column>             
+           	<apex:column headerValue="Vicepresidencia">
+                {!x.Vicepresidencia_c}
+            </apex:column> 
+            <apex:column headerValue="Contrato compartido con vicepresidencia">
+                {!x.Contrato_compartido_con_vicepresidencia_c}
+            </apex:column> 
+            <apex:column headerValue="Observaciones o novedades">
+                {!x.Observaciones_o_novedades_c}
+            </apex:column> 
+            <apex:column headerValue="Composición del contrato">
+                {!x.Composicion_del_contrato_c}
+            </apex:column> 
+            <apex:column headerValue="Nombre del facultado actual de ETB">
+                {!x.Nombre_del_facultado_actual_de_ETB_c}
+            </apex:column> 
+            <apex:column headerValue="Representante área usuaria">
+                {!x.Representante_area_usuaria_c}
+            </apex:column> 
+            <apex:column headerValue="Código ETB representante área usuaria">
+                {!x.Codigo_ETB_representante_area_usuaria_c}
+            </apex:column> 
+            <apex:column headerValue="Fecha de última orden de servicio">
+                {!x.Fecha_de_ultima_orden_de_servicio_c}
+            </apex:column> 
+            <apex:column headerValue="Fecha de suspensión">
+                {!x.Fecha_de_suspension_c}
+            </apex:column> 
+            <apex:column headerValue="Fecha de finalización de la suspensión">
+                {!x.Fecha_finalizacion_de_suspension_c}
+            </apex:column> 
+            <apex:column headerValue="Fecha vencimiento de homologación">
+                {!x.Fecha_vencimiento_de_homologacion_c}
+            </apex:column> 
+            <apex:column headerValue="Plazo de la renovación">
+                {!x.Plazo_de_la_renovacion_c}
+            </apex:column> 
+            <apex:column headerValue="Renovación automática contrato">
+                {!x.Renovacion_automatica_contrato_c}
+            </apex:column> 
+            <apex:column headerValue="Contratista con homologación vigente">
+                {!x.Contratista_con_homologacion_vigente_c}
+            </apex:column> 
+            <apex:column headerValue="Asignación de recursos presupuestales">
+                {!x.Asignacion_recursos_presupuestales_c}
+            </apex:column> 
+        </apex:pageBlockTable>
+    </apex:pageBlock> 
+</apex:page>

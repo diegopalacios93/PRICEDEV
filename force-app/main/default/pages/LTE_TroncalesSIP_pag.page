@@ -1,0 +1,75 @@
+<apex:page id="_LTE_TroncalesSIP_pag" showHeader="false" sidebar="false" standardController="Opportunity" extensions="LTE_TroncalesSIP_ctr" lightningStylesheets="true">
+	<apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">
+    	<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+		<apex:inputField value="{!objOfertaEconomica.LTE_TipodePlan__c}" id="LTE_TipodePlan__c" style="display:none"/>
+		
+		<apex:actionFunction name="CambioPlan" reRender="idForm, TheMessages" action="{!cambioPlan}"/>
+		
+		<apex:pageBlock id="_bloquePrincilal" title="{!$Label.LTE_Titulo_Troncales_SIP}" >
+			<apex:pageBlockSection id="_bloquePlan" columns="2" >
+				<apex:inputField value="{!objOfertaEconomica.LTE_Plan__c}" onchange="CambioPlan()" label="{!$ObjectType.Reserva__c.fields.LTE_Plan__c.label}" />
+				
+				<apex:inputField value="{!objOfertaEconomica.LTE_DatosNavegacion__c}" onchange="CambioPlan()" label="{!$Label.LTE_SubPlan}"/>
+		
+				<apex:selectList size="1" 
+					value="{!objOfertaEconomica.Tarifa_minuto_adicional__c}" 
+					onchange="CambioPlan()" 
+					rendered="{!planSeleccionadoAbierto}" 
+					label="{!$ObjectType.Reserva__c.fields.Tarifa_minuto_adicional__c.label}"
+				>
+					<apex:selectOptions value="{!tarifasMinutosAdicionales}" />
+				</apex:selectList>
+
+				<apex:inputCheckbox value="{!requiereSva}" label="Requiere SVA" rendered="{!planSeleccionadoTroncalSIPUnif}" >
+					<apex:actionSupport event="onchange" action="{!CambioRequiereSVA}" />
+				</apex:inputCheckbox>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="_bloqueSVAs" columns="1" rendered="{!requiereSva}">
+				<apex:repeat value="{!cantidadSVAs}" var="i" >
+					<apex:selectList size="1" 
+						value="{!svasSeleccionados[i]}" 
+						multiselect="false" 
+						label="SVA {! i + 1 }"
+					>
+						<apex:selectOptions value="{!svasTroncalSIPUnif}"/>
+					</apex:selectList>
+				</apex:repeat>
+			</apex:pageBlockSection> 
+
+			<apex:pageBlockSection id="_bloqueSVAsBotones" columns="2" rendered="{!requiereSva}">
+				<apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <div style="text-align: center">
+							<apex:commandButton action="{!reducirCantidadSVAs}" value="Quitar linea para SVA" disabled="{! cantidadSVAsSize == 1 }" />
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+					
+				<apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <div style="text-align: center">
+							<apex:commandButton action="{!incrementarCantidadSVAs}" value="Agregar nueva linea para SVA" disabled="{! cantidadSVAsSize == cantidadSVAsTroncalSIPUnifSize }" />	
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockSection id="_bloqueConjuntoCampos" columns="2" >
+				<apex:repeat value="{!$ObjectType.OperacionComercial__c.FieldSets.LTE_SIP}" var="R">
+		        		<apex:inputField value="{!objOC[R]}" />
+				</apex:repeat>
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" rendered="{!blnBotonContinuar}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.Cerrar}" rendered="{!blnBotonCerrar}" action="{!cerrarPagina}"/>
+			</apex:pageBlockButtons> 
+		</apex:pageBlock>
+    </apex:form>
+</apex:page>

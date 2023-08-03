@@ -1,0 +1,105 @@
+<template>
+  <!--
+    <div class="c-container">
+       <input type="text" lwc:dom="manual" class="chatbot-pratech-aside-input" /> 
+    </div>
+    -->
+  <template if:true={showModal}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="ETBmodal slds-modal slds-fade-in-open"
+    >
+      <div class="slds-modal__container">
+        <div class="chatbot-pratech-aside-tagline">
+          <template if:true={isDateRangePicker}>
+            Por favor seleccione el rango de fechas para la suspensión
+            voluntaria
+          </template>
+          <template if:false={isDateRangePicker}>
+            Seleccione una fecha
+          </template>
+        </div>
+        <div class="chatbot-pratech-aside-form">
+          <input
+            data-id="dataRange"
+            type="text"
+            name="daterange"
+            class="chatbot-pratech-aside-input"
+            onchange={cancelDate}
+          />
+          <div
+            class="chatbot-pratech-alertRed"
+            id="alertempty"
+            style="display: none"
+          >
+            Complete el campo.
+          </div>
+        </div>
+        <div class="chatbot-pratech-aside-form">
+          <template if:true={showSaveDate}>
+            <div
+              onclick={validateDate}
+              class="chatbot-pratech-aside-sendButton"
+            >
+              Guardar
+            </div>
+          </template>
+          <div onclick={cancelDate} class="chatbot-pratech-aside-cancelButton">
+            Cancelar
+          </div>
+        </div>
+        <div
+          class="chatbot-pratech-aside-loader"
+          id="loadingDataRanger"
+          style="display: none"
+        ></div>
+      </div>
+    </section>
+    <!--<div class="slds-backdrop slds-backdrop_open"></div>-->
+  </template>
+
+  <!--
+        <div id="formDateRangeAside"> 
+            <div class="chatbot-pratech-aside-tagline"> 
+                Por favor seleccione el rango de fechas para la suspensión voluntaria 
+            </div> 
+            <div class="chatbot-pratech-aside-form"> 
+                 <input  data-id='dataRange' type="text" name="daterange" class="chatbot-pratech-aside-input" onchange={cancelDate} /> 
+                <div class="chatbot-pratech-alertRed" id="alertempty" style="display: none">Complete el campo.</div> 
+            </div> 
+            <div class="chatbot-pratech-aside-form"> 
+                <template if:true={showSaveDate}>
+                    <div onclick={validateDateRange} class="chatbot-pratech-aside-sendButton">Guardar</div> 
+                </template>
+                <div onclick={cancelDate} class="chatbot-pratech-aside-cancelButton">Cancelar</div>
+            </div> 
+            <div class="chatbot-pratech-aside-loader" id="loadingDataRanger" style="display: none"> 
+            </div>
+        </div>
+    -->
+</template>
+
+<!--
+
+        return (
+        '<div class="chatbot-pratech-aside" id="cardChatbotAsideIframe">' +
+        '<div class="chatbot-pratech-aside-tagline">' +
+        'Seleccione una fecha' +
+        '</div>' +
+        '<div class="chatbot-pratech-aside-form">' +
+        '<input id="datepicker" type="text" name="daterange" readonly class="chatbot-pratech-aside-input" />' +
+        '<div class="chatbot-pratech-alertRed" id="alertempty" style="display: none">Complete el campo.</div>' +
+        '</div>' +
+        '<div class="chatbot-pratech-aside-form">' +
+        '<div style="display: none" id="savedatapicker" onclick="pratech.parly._validateDatePicker(event)" class="chatbot-pratech-aside-sendButton">Guardar</div>' +
+        '<div onclick="pratech.parly._cancelDatePicker(event)" class="chatbot-pratech-aside-cancelButton">Cancelar</div>' +
+        '</div>' +
+        '<div class="chatbot-pratech-aside-loader" id="loadingDataPicker" style="display: none">' +
+        '</div>'
+    );
+-->

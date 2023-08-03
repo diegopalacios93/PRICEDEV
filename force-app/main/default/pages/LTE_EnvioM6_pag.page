@@ -1,0 +1,27 @@
+<apex:page controller="LTE_envioM6_ctr" action="{!consultar}" lightningStylesheets="true">
+    <apex:form id="idForm">
+        <apex:pageBlock title="{!oc.Name}">
+        <apex:pageMessages />
+            <apex:pageBlockSection title="{!oc.Name}" columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputField value="{!oc.Estado__c}"/> 
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputField value="{!oc.NumeroConexion__c}"/> 
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputField value="{!oc.LTE_IMSI__c}"/> 
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputField value="{!log.CodigoRespuesta__c}"/> 
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>            
+            <apex:pageBlockButtons location="bottom" style="align:center">                                   
+            	<apex:commandButton value="Cerrar" action="{!cerrarPagina}" style="padding: 4px 3px;"/>                
+            </apex:pageBlockButtons>            
+        </apex:pageBlock>    	
+    </apex:form>
+</apex:page>

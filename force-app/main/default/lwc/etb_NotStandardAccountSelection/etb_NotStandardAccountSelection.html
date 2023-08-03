@@ -1,0 +1,44 @@
+<template>
+    <div if:true={showMessageErrorRadioOption} class="slds-text-color_error">* Debe seleccionar una opción para poder continuar</div>
+    <fieldset class="slds-form-element">
+        <legend class="slds-form-element__legend slds-form-element__label"></legend>
+        <span style="color:black">Seleccione el tipo de cuenta que desea gestionar</span>
+        <div class="slds-form-element__control slds-theme_default slds-grid_vertical-align-center slds-m-top_small">
+            <template if:true={imgs} for:each={imgs} for:item="imgstt" for:index="index">
+                <div class={getStyleForRadioOption} key={imgstt.url}>
+                    <input type="radio" id={imgstt.title} value={imgstt.value} name="options"
+                        onclick={handleSelectedRadioOption} data-pos={index} />
+                    <label for={imgstt.title}>
+                       <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center slds-p-around_xx-large-custom">
+                            <span class="slds-is-selected">
+                                <span class="slds-icon_container">
+                                    <img src={imgstt.url} class="imgSpace" />
+                                </span>
+                            </span>
+                            <span class="slds-is-not-selected">
+                                <span class="slds-icon_container">
+                                    <img src={imgstt.url} class="imgSpace" />
+                                </span>
+                            </span>
+                        </span>
+                        <span class="slds-visual-picker__body">
+                            <span class="slds-text-title slds-text-title_bold">{imgstt.title}</span>
+                        </span>
+                        <span class="slds-icon_container slds-visual-picker__text-check">
+                            <svg class="slds-icon slds-icon-text-check slds-icon_x-small" aria-hidden="true">
+                              <use xlink:href="/resource/ETB_StaticResources/img/CheckIcon.svg#check"></use>
+                            </svg>
+                        </span>
+                    </label>
+                </div>
+            </template>
+        </div>
+    </fieldset>
+    <!-- <template if:true={isSelectionPickUp}>
+        <lightning-combobox class="slds-size_3-of-12 inputComboBoxSelectLocation"
+            label="Sucursal donde retirará los productos" placeholder="Seleccione una opción" value={valueOfCombobox}
+            options={options} onchange={handleSelectedLocation} message-when-value-missing="* Debe seleccionar una opción"
+            required>
+        </lightning-combobox>
+    </template> -->
+</template>

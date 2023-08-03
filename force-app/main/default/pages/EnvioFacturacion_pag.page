@@ -1,0 +1,47 @@
+<apex:page Controller="PS_EnvioFacturacion_ctr" action="{!AnalizaAccion}" id="idPage" lightningStylesheets="true">
+    <apex:sectionHeader title="Envio Facturacion" subtitle="{!ObjectName}"/>
+    <apex:form id="idForm">
+        <apex:pageBlock id="idPageBlock1">
+            <apex:pageMessages />
+            <apex:actionFunction action="{!GenerarIntegracion}" name="GenerarIntegracion" status="Status2" reRender="idPageBlock1"/>
+            <apex:outputPanel id="msg">
+                <table>
+                    <tr>
+                        <td><apex:outputText value="Seleccionar: " rendered="{!blnLista}"/></td>
+                        <td>&nbsp;&nbsp;</td>
+						<td><apex:commandLink action="{!SelTodos}" value="Todos" reRender="idPage:idForm" rendered="{!blnLista}"/></td>                        
+                        <td>&nbsp;&nbsp;</td>
+                        <td><apex:commandLink action="{!SelNada}" value="Ninguno" reRender="idPage:idForm" rendered="{!blnLista}"/></td>
+                    </tr>
+                </table>
+                <apex:pageBlockSection columns="1" id="idPBS1" rendered="{!blnLista}">                                       
+                    <apex:pageBlockTable value="{!lstResult}" var="i">
+                        <apex:column headerValue="Seleccione">
+                            <apex:inputCheckbox value="{!i.blnSel}"/>
+                        </apex:column>
+                        <apex:column value="{!i.OpCome.Name}"/>                      
+                        <apex:column value="{!i.OpCome.Activo__r.NombredelProducto__c}"/>
+                        <apex:column value="{!i.OpCome.Plan__c}"/>
+                        <apex:column value="{!i.OpCome.TOPP__c}"/>
+                        <apex:column value="{!i.OpCome.SucursalDestino__c}"/> 
+                        <apex:column value="{!i.OpCome.Integrar_con_gestor__c}"/>                         
+                    </apex:pageBlockTable>                    
+                </apex:pageBlockSection>                
+                <br/>                
+                <apex:pageBlock id="idPageBlock2" rendered="{!blnLista}">
+                    <input name="Solicitar" class="btn" type="button" value="Solicitar" onclick="this.disabled=true;GenerarIntegracion();return false;"/>
+                    <apex:commandButton value="Volver" action="{!Cancelar}" />
+                </apex:pageBlock>
+                <apex:pageBlock id="idPageBlock3" rendered="{!blnLista2}">                  
+                    <apex:commandButton value="Volver" action="{!Cancelar}" />
+                </apex:pageBlock>
+            </apex:outputPanel>
+            <apex:outputPanel id="statuses">
+                <div>                                    
+                <apex:actionStatus id="Status1" startText="Obteniendo información a integrar, por favor espere..." />                   
+                <apex:actionStatus id="Status2" startText="Generando integración con RevChain, por favor espere..." />                   
+                </div>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>    
+</apex:page>

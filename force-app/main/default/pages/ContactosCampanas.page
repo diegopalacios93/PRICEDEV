@@ -1,0 +1,61 @@
+<apex:page docType="html-5.0" showHeader="false" applyBodyTag="false" applyHtmlTag="false"
+standardStylesheets="true" standardController="contact">
+<html ng-app="objContact">
+<head>
+<title>Object Description</title>
+
+<script src="{!URLFOR($Resource.libraryjs,'jsforce.min.js')}"/>
+<script src="{!URLFOR($Resource.libraryjs,'angular.min.js')}"/>
+
+</head>
+    <body>
+
+    
+
+    <script type="text/javascript">
+    	var conn = new jsforce.Connection({accessToken: '{!$API.Session_Id}'});
+		var myApp = angular.module('objContact',[]);
+
+		myApp.controller('campaing', ['$scope', function($scope) {
+		  $scope.data = '';
+		  $scope.error = '';
+
+		  
+		  $scope.consulta=function(){
+			conn.query("SELECT Id, Campaign.Name, ContactId,CampaignId,Status from CampaignMember where contactId='{!contact.id}' ORDER BY CreatedDate DESC limit 5" , function(error, res) {
+				if (error) {
+					$scope.error=error;
+				} else {
+					$scope.data=res.records;
+					$scope.$apply();
+				}
+			});
+
+		  };
+
+		  $scope.consulta();
+
+
+
+		}]);
+    </script>
+
+<div ng-controller="campaing" class="pbBody">
+<table class="list" border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr class="headerRow">
+		<th>{!$ObjectType.Campaign.fields.Name.Label}</th>
+		<th>{!$ObjectType.Contact.fields.Name.Label}</th>
+		<th>{!$ObjectType.CampaignMember.fields.Status.Label}</th>
+	</tr>
+	<tr ng-repeat="d in data">
+		<td><a ng-href="/{{d.CampaignId}}" target="_blank">{{d.Campaign.Name}}</a></td>
+		<td><a ng-href="/{{d.Id}}" target="_blank">{!contact.Name}</a></td>
+		<td>{{d.Status}}</td>
+	</tr>
+</table>
+
+</div>
+
+    </body>
+</html>
+</apex:page>

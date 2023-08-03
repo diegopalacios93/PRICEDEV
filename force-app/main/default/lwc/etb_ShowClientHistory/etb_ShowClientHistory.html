@@ -1,0 +1,20 @@
+<template>
+    <div class="container-history slds-m-bottom_large slds-p-horizontal_medium">
+        <p class="title-history slds-m-top_x-small slds-p-left_x-small">{title}</p>
+        <div class="slds-float_right slds-m-top_x-small">
+            <lightning-button-menu alternative-text="Mostrar opciones" menu-alignment="right" onselect={handleChangeOption} icon-size="small">
+                <lightning-menu-item value="All" checked={isCheckedAll} label="Todos"></lightning-menu-item>
+                <lightning-menu-item value="Order" checked={isCheckedOrder} label="Ordenes"></lightning-menu-item>
+                <lightning-menu-item value="Case" checked={isCheckedCase} label="Casos"></lightning-menu-item>
+                <lightning-menu-item value="Opportunity" checked={isCheckedOpportunity} label="Oportunidades"></lightning-menu-item>
+            </lightning-button-menu>
+        </div>
+      </div>
+    <div class="slds-p-left_medium slds-p-bottom_medium">
+        <template for:each={history} for:item="h">
+            <c-cf-etb_-show-account-history-record key={h.Id} parent-data=true
+                records={h}>
+            </c-cf-etb_-show-account-history-record>
+        </template>
+    </div>
+</template>

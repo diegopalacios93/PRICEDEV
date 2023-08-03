@@ -1,0 +1,51 @@
+<!--/***********************************************************************************************************************
+Desarrollado por:   ETB
+Proyecto:           PORTAFOLIO SUPERIOR
+Descripción:        Pagina de visualización y selección de opciones de aprovisionamiento.
+
+Cambios (Versiones)
+-------------------------------------------------------------------
+No.     Fecha        Autor                    Descripción
+----    ----------   ----------------------   ---------------
+1.0     2018-04-15   Samuel Rodríguez (ETB)   Creación de la pagina.
+***********************************************************************************************************************/-->
+<apex:page controller="VisualizacionOpcAprovisionamiento_ctr" action="{!Inicializacion}" lightningStylesheets="true">
+<!-- Estilos --> 
+	<style>
+		.bPageBlock .pbBody .header1 .pbSubheader{
+             background-color:lightblue;
+         }
+		.bPageBlock .pbBody .header1 .pbSubheader h3{
+             color:black;
+         }
+	</style>
+<!-- Forma Principal -->
+    <apex:form id="FormaPrincipal"> 
+     <!-- pageBlock Selección -->
+ 		<apex:pageBlock title="Opciones Aprovisionamiento" id="pgBlkSeleccion" >	
+ 			<apex:selectRadio value="{!Opcion}" borderVisible="true" >
+            	<apex:selectOptions value="{!OpcionesDisponibles}"/>
+        	</apex:selectRadio><p/>
+            <apex:outputPanel id="guardarOpcion">
+         	 	<apex:actionstatus id="status" startText="Guardando..."> 
+            		<apex:facet name="stop"> 
+            			<apex:outputPanel > 
+            	     	 <p>Usted a seleccionado la opción: <apex:outputText value="{!opcion}"/></p> 
+            			</apex:outputPanel> 
+            		</apex:facet> 
+         	 	</apex:actionstatus> 
+             </apex:outputPanel> 
+            <apex:pageBlockButtons id="editButtons" location="both" rendered="true" >
+            	<apex:commandButton value="Seleccionar Opción" action="{!seleccionarOpcion}" rerender="guardarOpcion" status="status"/>
+            	<apex:commandButton value="Regresar" action="{!regresar}" rerender="guardarOpcion" status="status"/>
+            </apex:pageBlockButtons>
+            <apex:outputPanel layout="block" styleClass="header1" >
+          		<div>
+	 				<apex:pageBlock title="Detalle Opciones De Aprovisionamiento" id="pgBlk2" >	
+             	   		<apex:dynamicComponent componentValue="{!dynamicComp}" invokeAfterAction="true"/>
+     				</apex:pageBlock>
+           	 	</div>
+            </apex:outputPanel>
+        </apex:pageBlock>       
+	</apex:form>
+</apex:page>

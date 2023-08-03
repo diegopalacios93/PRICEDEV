@@ -1,0 +1,3 @@
+"Action__c","Contrasena__c","EndPoint__c","Name","Usuario__c"
+"","s4l4c0m.2014","http://201.245.171.243:9795/Service/SisExt/Endpoint","CodigoCun","SALESFORCE"
+"/WebserviceConsultas.Core/Service/Consultas.serviceagent/ConsultasEndpoint/","","http://201.245.171.162:7072/Service/Consultas/EndPoint","DataCredito",""

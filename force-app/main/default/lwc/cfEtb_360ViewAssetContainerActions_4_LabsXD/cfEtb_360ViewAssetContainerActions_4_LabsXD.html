@@ -1,0 +1,62 @@
+<template>
+            <div class="slds-grid slds-wrap slds-is-relative ">
+            <div if:false={cardLoaded} class="slds-is-absolute vloc-loader_override" style="height: 100%; width: 100%; min-height:50px; background: white; z-index: 99;">
+  <div>
+   <vlocity_cmt-spinner
+      variant="brand"
+      alternative-text="Loading content..."
+      size="medium"
+      theme="slds"
+      ></vlocity_cmt-spinner>
+  </div>
+</div>
+            <template if:false={hasPermission}>
+              You don't have required permissions to view this card.
+            </template>
+            <template if:true={hasPermission}>
+              <template if:true={hasRecords}>
+                        <template for:each={_records} for:item="record" for:index="rindex">
+                            <vlocity_cmt-flex-card-state if:true={record}  key={record._flex.uniqueKey} data-recordid={record.Id} record={record} data-statue="true"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card slds-m-around_none " style="     : #ccc 1px solid; 
+         ">
+          <div data-style-id="state0element0" class="" data-rindex={rindex} style=""><vlocity_cmt-action data-style-id="state0element0_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  context-id="\{Parent.AssetId}"  icon-color="#005FB2"  state-action='\{"displayName":"Venta de adicionales","extraParams":{"c__assetId":"{Parent.AssetId}"},"hasExtraParams":true,"id":"flex-action-1641576426087","isLwcOS":true,"layoutType":"lightning","omniType":{"Id":"a6c78000000CcuHAAS","Name":"etb/NuevaVentaAddons/English","isLwcOs":true},"openUrlIn":"Current Window","tabLabel":"Venta de adicionales","type":"OmniScript","vlocityIcon":"utility:add"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds" ></vlocity_cmt-action>
+      </div><div data-style-id="state0element1" class="" data-rindex={rindex} style="">
+    <vlocity_cmt-action data-style-id="state0element1_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  icon-color="#005FB2"  state-action='\{"cardName":"etb_ShowAccountHistory","displayName":"Cambio de plan","flyoutLwc":"etb_ShowAccountHistory","flyoutType":"childCard","id":"flex-action-1635800070836","openFlyoutIn":"Popover","openUrlIn":"Current Window","type":"Flyout","vlocityIcon":"utility:change_record_type"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds"><div slot="flyout">  <c-cf-etb_-show-account-history data-style-id="state0element1_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  parent-attribute='\{}'   ></c-cf-etb_-show-account-history></div></vlocity_cmt-action>
+    </div><div data-style-id="state0element2" class="" data-rindex={rindex} style="">
+    <vlocity_cmt-action data-style-id="state0element2_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  icon-color="#005FB2"  state-action='\{"cardName":"etb_ShowAccountHistory","displayName":"Alta de Servicios","flyoutLwc":"etb_ShowAccountHistory","flyoutType":"childCard","id":"flex-action-1635800025272","openFlyoutIn":"Popover","openUrlIn":"Current Window","type":"Flyout","vlocityIcon":"utility:clear"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds"><div slot="flyout">  <c-cf-etb_-show-account-history data-style-id="state0element2_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  parent-attribute='\{}'   ></c-cf-etb_-show-account-history></div></vlocity_cmt-action>
+    </div><div data-style-id="state0element3" class="" data-rindex={rindex} style="">
+    <vlocity_cmt-action data-style-id="state0element3_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  icon-color="#005FB2"  state-action='\{"cardName":"etb_ShowAccountHistory","displayName":"Cambiar número","flyoutLwc":"etb_ShowAccountHistory","flyoutType":"childCard","id":"flex-action-1635800073672","openFlyoutIn":"Popover","openUrlIn":"Current Window","type":"Flyout","vlocityIcon":"utility:change_record_type"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds"><div slot="flyout">  <c-cf-etb_-show-account-history data-style-id="state0element3_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  parent-attribute='\{}'   ></c-cf-etb_-show-account-history></div></vlocity_cmt-action>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                        </template>
+                      </template>
+                      <template if:false={hasRecords}>
+                            <vlocity_cmt-flex-card-state  record={record} data-statue="false"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card slds-m-around_none " style="     : #ccc 1px solid; 
+         ">
+          <div data-style-id="state0element0" class="" data-rindex={rindex} style=""><vlocity_cmt-action data-style-id="state0element0_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  context-id="\{Parent.AssetId}"  icon-color="#005FB2"  state-action='\{"displayName":"Venta de adicionales","extraParams":{"c__assetId":"{Parent.AssetId}"},"hasExtraParams":true,"id":"flex-action-1641576426087","isLwcOS":true,"layoutType":"lightning","omniType":{"Id":"a6c78000000CcuHAAS","Name":"etb/NuevaVentaAddons/English","isLwcOs":true},"openUrlIn":"Current Window","tabLabel":"Venta de adicionales","type":"OmniScript","vlocityIcon":"utility:add"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds" ></vlocity_cmt-action>
+      </div><div data-style-id="state0element1" class="" data-rindex={rindex} style="">
+    <vlocity_cmt-action data-style-id="state0element1_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  icon-color="#005FB2"  state-action='\{"cardName":"etb_ShowAccountHistory","displayName":"Cambio de plan","flyoutLwc":"etb_ShowAccountHistory","flyoutType":"childCard","id":"flex-action-1635800070836","openFlyoutIn":"Popover","openUrlIn":"Current Window","type":"Flyout","vlocityIcon":"utility:change_record_type"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds"><div slot="flyout">  <c-cf-etb_-show-account-history data-style-id="state0element1_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  parent-attribute='\{}'   ></c-cf-etb_-show-account-history></div></vlocity_cmt-action>
+    </div><div data-style-id="state0element2" class="" data-rindex={rindex} style="">
+    <vlocity_cmt-action data-style-id="state0element2_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  icon-color="#005FB2"  state-action='\{"cardName":"etb_ShowAccountHistory","displayName":"Alta de Servicios","flyoutLwc":"etb_ShowAccountHistory","flyoutType":"childCard","id":"flex-action-1635800025272","openFlyoutIn":"Popover","openUrlIn":"Current Window","type":"Flyout","vlocityIcon":"utility:clear"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds"><div slot="flyout">  <c-cf-etb_-show-account-history data-style-id="state0element2_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  parent-attribute='\{}'   ></c-cf-etb_-show-account-history></div></vlocity_cmt-action>
+    </div><div data-style-id="state0element3" class="" data-rindex={rindex} style="">
+    <vlocity_cmt-action data-style-id="state0element3_child"  tracking-obj={_childCardTrackingObj}   state-obj={record}  record={record}  card={card}  icon-color="#005FB2"  state-action='\{"cardName":"etb_ShowAccountHistory","displayName":"Cambiar número","flyoutLwc":"etb_ShowAccountHistory","flyoutType":"childCard","id":"flex-action-1635800073672","openFlyoutIn":"Popover","openUrlIn":"Current Window","type":"Flyout","vlocityIcon":"utility:change_record_type"}'  styles='\{"label":{"color":"#034589","fontFamily":"","fontSize":"13px","textAlign":"left"}}'  theme="slds"><div slot="flyout">  <c-cf-etb_-show-account-history data-style-id="state0element3_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  parent-attribute='\{}'   ></c-cf-etb_-show-account-history></div></vlocity_cmt-action>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                      </template>
+            </template>
+            <template if:true={hasError}>
+            {error}
+            </template>
+            
+      <vlocity_cmt-action action-wrapperclass="slds-hide" re-render-flyout class="action-trigger slds-col" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction}>
+      
+      </vlocity_cmt-action>
+  
+            <vlocity_cmt-action class="execute-action" re-render-flyout action-wrapperclass="slds-hide" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction}>
+            
+            </vlocity_cmt-action>
+            </div>
+          </template>

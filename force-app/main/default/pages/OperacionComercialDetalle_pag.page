@@ -1,0 +1,27 @@
+<!--
+  @description       : 
+  @author            : Miguel R. Gómez  miguel.rafael.gomez@accenture.com
+  @group             : 
+  @last modified on  : 02-25-2022
+  @last modified by  : Miguel R. Gómez  miguel.rafael.gomez@accenture.com
+-->
+<apex:page standardController="OperacionComercial__c" extensions="OperacionComercial_ctr" docType="html-5.0" showheader="false"
+ sidebar="false" lightningStylesheets="true">
+	<apex:form id="idForm">
+		<apex:pageBlock mode="edit" id="idPageBlockMain">
+			<apex:pageBlockSection columns="1" id="idFechaPortacion">
+				<apex:pageBlockSectionItem >
+					<apex:panelGrid columns="2">
+						<!-- styleClass="test-id__field-label-container slds-form-element__label" -->
+
+						<apex:outputLabel value="Fecha Asignación Ingeniero: " />
+						<apex:input type="text" value="{!fechaAsignacionIngeniero}" disabled="true" />
+
+
+
+					</apex:panelGrid>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,24 @@
+<apex:page Controller="PS_EnvioAPVS_Individual_ctr" action="{!AnalizaAccion}" id="idPage" lightningStylesheets="true">
+    <apex:sectionHeader title="Envio Aprovisionamiento" subtitle="{!NameOC}"/>
+    	<apex:form id="idForm" >
+            <apex:pageBlock id="idPageBlock1">
+                <apex:outputPanel id="msg">
+                    <apex:pageMessages />
+                    <apex:pageBlock id="idPageBlock2" rendered="{!blnLista}">                        
+                        <apex:actionFunction action="{!GenerarIntegracion}" name="GenerarIntegracion" status="Status2" reRender="statuses, msg"/>
+                        <input name="Solicitar" class="btn" type="button" value="Solicitar" onclick="this.disabled=true;GenerarIntegracion()"/>
+                        <apex:commandButton value="Volver" action="{!Cancelar}"/>                                                
+                    </apex:pageBlock>
+                    <apex:pageBlock id="idPageBlock3" rendered="{!blnLista2}">  	                                                       
+                    	<apex:commandButton value="Volver" action="{!Cancelar}"/>                      
+                	</apex:pageBlock>                    
+                </apex:outputPanel>
+                <apex:outputPanel id="statuses">            
+                    <div>
+                        <apex:actionStatus id="Status1" startText="Creando viabilidad, por favor espere..." />
+                        <apex:actionStatus id="Status2" startText="Generando integración con gestor, por favor espere..." />                   
+                    </div>
+                </apex:outputPanel>
+            </apex:pageBlock>    
+        </apex:form>    
+</apex:page>

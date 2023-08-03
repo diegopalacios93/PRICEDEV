@@ -1,0 +1,141 @@
+<template>
+  <div class={cardHeaderClass}>
+    <div class="nds-b2b-card_container">
+      <div class="nds-b2b-card_tabs">
+        <div class="nds-b2b-card_tab">
+          <input type="checkbox" id={title} data-id={title} class="nds-b2b-card_checkbox" onchange={handleToggle} checked={expand} />
+          <label class={configCardLabelClass} for={title}>
+            <div class="nds-grid nds-b2b-label-container">
+              <vlocity_cmt-icon if:true={grandChild} icon-name="utility:level_down" size="xx-small" color="#1589EE"
+                extraclass="nds-icon-text-default" class="nds-b2b-child-indicator"></vlocity_cmt-icon>
+              <span class="nds-b2b-card_title">
+                <span class={actionClass} if:true={showAction}>{offer.action}</span>
+                <span if:true={messages.length}>
+                  <vlocity_cmt-icon icon-name="utility:warning" size="small" color="#FFD58A" extraclass="nds-icon-text-default"
+                    class="nds-m-right_xx-small"></vlocity_cmt-icon>
+                </span>
+                <span class="nds-b2b-each-card_title">{title}
+                  <span class="nds-m-left_xx-small nds-b2b-bundle-title" if:true={isRootBundle}> [{labels.CMEXBundle}]
+                  </span>
+                </span>
+                <div if:true={attributes.length} class="nds-b2b-attributes_info slds-wrap">
+                  <span class="nds-b2b-each-attribute" for:each={attributes} for:item="attribute" key={attribute.label}>
+                    <span class="nds-b2b-attribute_label">{attribute.label}</span>
+                    <span class="nds-b2b-attribute_value">{attribute.value}</span>
+                  </span>
+                </div>
+              </span>
+              <div class="nds-grid nds-b2b-label-details">
+                <div class="nds-b2b-quantity">
+                  <template if:true={offer.quantity}>
+                    <p class="nds-b2b-configure_label">{labels.CMEXQuantity}</p>
+                    <p>
+                      <input class="nds-b2b-quantity_value" type="number" value={offer.quantity}
+                        onchange={updateQuantity} min={offer.minQuantity} max={offer.maxQuantity}
+                        disabled={canDisableQuantity} />
+                      <span if:true={canRemoveOffer}>
+                        <vlocity_cmt-icon icon-name="utility:delete" size="xx-small" color="#000000"
+                          extraclass="nds-icon-text-default" class="nds-m-left_xx-small" onclick={deleteLineItem}>
+                        </vlocity_cmt-icon>
+                      </span>
+                    </p>
+                  </template>
+                </div>
+                <div class="nds-b2b-price_info">
+                  <div if:true={spinnerActive} class="customSpinner">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                  </div>
+                  <div if:false={spinnerActive} class="nds-b2b-each-attribute" for:each={offer.columns} for:item="column" key={column.valueMap}>
+                    <!-- label del producto -->
+                    <p class="nds-b2b-attribute_label nds-text-align_right">{column.label}</p>
+                    <!-- precio sin ajuste, sin descuento  -->
+                    <p if:false={column.value.actions.applyadjustment}
+                      class="nds-b2b-attribute_value nds-text-align_right nds-b2b-no-border">{column.value.value}</p>
+                      <!-- precio con ajuste, con descuento  -->
+                    <p if:true={column.value.actions.applyadjustment} contenteditable={isEditable}
+                      onclick={handleAdjustPriceClick} data-type={column.valueMap} onblur={adjustPrices}
+                      class={customCssIsEditable}>{column.value.value}</p>
+                      <!-- si tiene descuento, sale el precio original tachado  -->
+                    <p if:true={column.value.originalValue}
+                      class="nds-b2b-attribute_value nds-b2b-adjustment-price nds-text-align_right">
+                      <strike>{column.value.originalValue}</strike>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="nds-b2b-menu nds-m-left_xx-small">
+              <vlocity_cmt-menu theme="nds" icon-name="utility:threedots_vertical" position="right" class="nds-b2b-extra-menu">
+                <template for:each={menuList} for:item="item">
+                  <vlocity_cmt-menu-item theme="slds" name={item.label} key={item.id} record={item} onclick={handleMenu}
+                    class="nds-b2b-extra-menu-details"></vlocity_cmt-menu-item>
+                </template>
+                <template for:each={extraActions} for:item="item">
+                  <vlocity_cmt-menu-item theme="slds" name={item.label} key={item.id} record={item} onclick={handleExtraActions}
+                    class="nds-b2b-extra-menu-details"></vlocity_cmt-menu-item>
+                </template>
+              </vlocity_cmt-menu>
+            </div>
+            <div class="slds-spinner_container" if:true={loading}>
+              <lightning-spinner alternative-text={labels.CMEXLoading} size="medium" variant="brand">
+              </lightning-spinner>
+            </div>
+          </label>
+          <div class={cardContentClass}>
+            <slot name="content">
+              <template if:true={messages.length}>
+                <div for:each={messages} for:item="message" key={message.messageId} class={getErrorMessageClass}>
+                  {message.message}
+                </div>
+              </template>
+              <template if:true={attributesAvailable}>
+                <div class={getParentAttributeClass}>
+                  <template if:false={isProductDisconnected}>
+                    <vlocity_cmt-b2b-attribute-config-offer offer={offer}></vlocity_cmt-b2b-attribute-config-offer>
+                  </template>
+                </div>
+              </template>
+              <template if:true={addons}>
+                <vlocity_cmt-b2b-offer-addons extra-actions={extraActions} offer={offer} child-addons={children} expand={expand} macd={macd}>
+                </vlocity_cmt-b2b-offer-addons>
+              </template>
+            </slot>
+          </div>
+          <template if:true={offer.quantity}>
+            <vlocity_cmt-b2b-adjust-price-modal offer={offer}></vlocity_cmt-b2b-adjust-price-modal>
+          </template>
+          <vlocity_cmt-modal size="small" theme="nds" class="nds-b2b-delete-offer" data-delete-modal-id={offer.id}>
+            <div slot="header">
+              <h1 class="nds-b2b-modal-header">{labels.CMEXDeleteItem}</h1>
+            </div>
+            <div slot="content">
+              <h4>{labels.CMEXDeleteItemMsg}</h4>
+              <h4>{title}</h4>
+            </div>
+            <div slot="footer">
+              <vlocity_cmt-button class="nds-b2b-modal-cancel" variant="neutral" theme="slds" onclick={cancelDeleteOfferModal}
+                label={labels.CMEXCancel} extraclass="nds-b2b-modal-button"></vlocity_cmt-button>
+              <vlocity_cmt-button variant="destructive" extraclass="nds-m-left_x-small nds-b2b-modal-button nds-b2b-primary"
+                theme="slds" onclick={proceedDeleteOffer} label={labels.CMEXDelete}></vlocity_cmt-button>
+            </div>
+          </vlocity_cmt-modal>
+        </div>
+      </div>
+    </div>
+  </div>
+  <template if:true={eligibilityErrorMessage}>
+    <div class="nds-b2b-fixmember-container">
+      <div class="nds-b2b-fixmember-error-message">
+            {eligibilityErrorMessage}&nbsp;
+          <a onclick={autoFixMembers} class="nds-b2b-fixnow-link">{labels.CMEXFixNow}</a>
+      </div>
+    </div>
+  </template>
+  <template if:true={eligibilityNoneFixableError}>
+    <div class="nds-b2b-fixmember-container">
+      <div class="nds-b2b-fixmember-error-message">
+        {labels.CMEXNoMemberEligibilityErrorMessage}
+      </div>
+    </div>
+  </template>
+</template>

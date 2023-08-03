@@ -1,0 +1,3 @@
+"NAME","ESTA_ABAJO__C","CAMPO__C","NUMORDEN__C","TIPOIDENTIFICACION__C","TIPOPQR__C"
+"Case","true","Account.AccountNumber","CaseNumber","Account.Tipodedocumento__c","TipoCaso__c"
+"Legalizacion__c","true","Contrato__r.Account.AccountNumber","Name","Contrato__r.Account.Tipodedocumento__c",""

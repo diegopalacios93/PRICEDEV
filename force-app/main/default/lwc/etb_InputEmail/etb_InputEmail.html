@@ -1,0 +1,21 @@
+<template>
+    <div class="slds-grid slds-gutters slds-p-left_x-small">
+        <div class="slds-p-horizontal_x-small slds-size_6-of-12">
+            <lightning-input class="inputEmailClass" label="Email" type="email"
+                onchange={inputChangeEmail} value={emailValue} pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" message-when-value-missing="Requerido" message-when-pattern-mismatch="Formato de correo inválido" required>
+            </lightning-input>
+        </div>
+        <div class="slds-p-horizontal_x-small slds-size_6-of-12">
+            <lightning-input class="inputConfirmacionEmailClass" label="Confirmación del Email" type="email" onchange={inputChangeConfirmacionEmail} value={confirmacionEmailValue} oncontextmenu={handleContext} onpaste={handlePaste} pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" message-when-value-missing="Requerido" message-when-pattern-mismatch="Formato de correo inválido" required>
+            </lightning-input>
+        </div>
+    </div>
+    <div class="slds-grid slds-gutters slds-p-left_x-small" if:false={emailOk}>
+        <div class="slds-p-horizontal_x-small slds-size_6-of-12">
+            &nbsp;
+        </div>
+        <div class="slds-p-horizontal_x-small slds-size_6-of-12">
+            <span style="color:#ff0000;">* El campo debe coincidir con el "Email"</span> 
+        </div>
+    </div>
+</template>

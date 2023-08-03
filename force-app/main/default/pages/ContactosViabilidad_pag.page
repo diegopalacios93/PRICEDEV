@@ -1,0 +1,52 @@
+<apex:page standardController="Viabilidad__c" extensions="ContactosViabilidad_ctr" id="idContactos">
+
+ <apex:form >
+    <apex:pageBlock id="idContactosPB" title="Contactos" >
+	    <apex:pageBlockSection id="idContactosPBS">
+	       <apex:outputPanel id="opContact" layout="block" style="overflow:auto;width:900px">
+                <apex:pageBlockTable value="{!lstContacts}" var="con" id="contactTable" rendered="{!NOT(noResults)}">
+                        <apex:column title="{!$Label.NombreContacto}">
+                             <apex:facet name="header">
+                                <apex:outputLabel value="{!$Label.NombreContacto}"/>
+                             </apex:facet>
+                             <apex:commandLink value="{!con.Name}"  action="{!paginaContactoRedirect}" target="_parent">
+                                <apex:param name="idContacto" value="{!con.id}" assignTo="{!idContacto}"/>
+                             </apex:commandLink>
+                         </apex:column>
+                         <apex:column title="{!$Label.RolContacto}">
+                             <apex:facet name="header">
+                                <apex:outputLabel value="{!$Label.RolContacto}"/>
+                             </apex:facet> 
+                             <apex:outputText value="{!con.Rol__c}"/>
+                         </apex:column>
+                         <apex:column title="{!$Label.AreaContacto}">
+                             <apex:facet name="header">
+                                <apex:outputLabel value="{!$Label.AreaContacto}"/>
+                             </apex:facet>
+                             <apex:outputText value="{!con.Area__c}"/>
+                         </apex:column>
+                         <apex:column title="{!$Label.TelefonoContacto}">
+                             <apex:facet name="header">
+                                <apex:outputLabel value="{!$Label.TelefonoContacto}"/>
+                             </apex:facet>
+                             <apex:outputText value="{!con.Phone}"/>
+                         </apex:column>
+                         <apex:column title="{!$Label.MovilContacto}">
+                             <apex:facet name="header">
+                                <apex:outputLabel value="{!$Label.MovilContacto}"/>
+                             </apex:facet>
+                             <apex:outputText value="{!con.MobilePhone}"/>
+                         </apex:column>
+                         <apex:column title="{!$Label.CorreoElectronicoContacto}">
+                             <apex:facet name="header">
+                                <apex:outputLabel value="{!$Label.CorreoElectronicoContacto}"/>
+                             </apex:facet>
+                             <apex:outputText value="{!con.Email}"/>
+                         </apex:column>
+                </apex:pageBlockTable>
+                <apex:outputText value="{!$Label.NoContactResults}" rendered="{!noResults}"/>
+            </apex:outputPanel>
+	    </apex:pageBlockSection>
+    </apex:pageBlock>
+ </apex:form>
+</apex:page>

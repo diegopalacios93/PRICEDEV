@@ -1,0 +1,330 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_ServiciosCambioPlan_ctr">
+
+    <script>
+        function setDescuentoInputPlan(Id, Name, type)
+        {          
+            updateDescuentoInfoPlan(Id, Name, type);
+        }
+        
+        function setDescuentoInput( Type, Id, Name, Index )
+        {          
+            updateDescuentoInfo( Type, Id, Name, Index );
+        }
+        
+        function asignar(a,b,c){
+            updateCtaFacturacion(a,b,c);
+        }
+        
+        function CambioPlanScript(Index)
+        {          
+            CambioPlanFunction(Index);
+        }
+    </script>
+    <style>
+    	.div-minuto-voz-true input, .div-datos-navegacion-true input {
+            background-color: rgb(235, 235, 228);
+            color: rgb(84, 84, 84);
+            pointer-events: none;
+        }
+        
+        .div-minuto-voz-true a, .div-datos-navegacion-true a {
+            display : none
+        }
+    </style>
+	
+	<apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+		
+		<apex:actionFunction action="{!mostrarDescuento}" name="updateDescuentoInfoPlan"  rerender="idPage:idForm" >
+	        <apex:param name="firstParam" assignTo="{!strDescuentoId}" value=""/>    
+	        <apex:param name="secondParam" assignTo="{!strDescuentoName}" value=""/>   
+	        <apex:param name="thirdParam" assignTo="{!strDescuentoType}" value=""/>    
+	    </apex:actionFunction>
+	    <apex:actionFunction name="CambioHomogeneo" reRender="idPage:idForm, TheMessages" action="{!ocultarDescuentoPlanHomogeneo}"/>
+	    <apex:actionFunction name="CambioPlanFunction" reRender="idPage:idForm, TheMessages" action="{!ocultarDescuentoPlan}">
+	        <apex:param name="firstParam" assignTo="{!intRow}" value=""/>    
+	    </apex:actionFunction>
+	    <apex:actionFunction name="ocultarGuardar" reRender="idPage:idForm" action="{!ocultarBotonGuardar}"/>
+	    <apex:actionFunction action="{!actualizarTablaDescuentos}" name="updateDescuentoInfo"  rerender="idPage:idForm" >
+	        <apex:param name="firstParam" assignTo="{!strType}" value=""/>
+	        <apex:param name="secondParam" assignTo="{!strNivelId}" value=""/>
+	        <apex:param name="thirdParam" assignTo="{!strNivel}" value=""/>
+	        <apex:param name="fourthparam" assignTo="{!intRow}" value=""/>        
+    	</apex:actionFunction>
+    	<apex:actionFunction name="seleccionarTodos" reRender="idPage:idForm" action="{!seleccionarTodos}"/>
+    	<apex:actionFunction action="{!actualizarCtaFacturacion}" name="updateCtaFacturacion"  rerender="idPage:idForm" >
+	        <apex:param name="firstParam" assignTo="{!strNivelId}" value=""/>
+	        <apex:param name="secondParam" assignTo="{!strNivel}" value=""/>
+	        <apex:param name="thirdParam" assignTo="{!intRow}" value=""/>  
+    	</apex:actionFunction>
+    	<apex:actionFunction name="mostrarPlanHomogeneo" reRender="idPage:idForm, TheMessages" action="{!mostrarPlanHomogeneo}"/>
+    	<apex:actionFunction name="mostrarDctoHomogeneo" reRender="idPage:idForm, TheMessages" action="{!mostrarDctoHomogeneo}"/>
+		
+		<apex:pageBlock title="{!$Label.LTE_Titulo_Cambio_Plan}" >
+			<apex:pageBlockSection title="{!$Label.LTE_Cambio_Plan_Lineas}" id="_bloqueBuscar" columns="2" >
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput">
+						<label for="numConexiones" style="font: bold 11px Verdana;">{!$Label.LTE_Cambio_Plan_Num_Conexion}</label>
+						<apex:inputText value="{!numerosConexion}" id="numConexiones" />
+						<apex:commandButton value="{!$Label.Buscar}" action="{!buscar}" rendered="{!blnBuscar}" status="loading" reRender="idForm, TheMessages"/>
+					</apex:outputPanel>
+					
+					<apex:outputPanel id="_panelNumCaso" styleClass="lookupInput">
+						<label for="numCaso" style="font: bold 11px Verdana;">{!$Label.LTE_Etiqueta_Caso} </label>
+						<apex:outputText value="{!numeroCaso}" id="numCaso"/>
+						<label for="_estadoAprobacion" style="font: bold 11px Verdana;">{!$Label.LTE_Etiqueta_Estado_Aprobacion} </label>
+						<apex:outputText value="{!estadoAprobacion}" id="_estadoAprobacion"/>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem >
+					<apex:inputCheckbox value="{!blnPlanesHomogeneos}" id="checkedoneHomologados" disabled="{!blnDesactivaCheckHomogeneo}" onclick="mostrarPlanHomogeneo()"><label for="checkedoneHomologados" style="font: bold 11px Verdana;">{!$Label.LTE_Lbl_Planes_Homogeneos}</label></apex:inputCheckbox>
+					<apex:inputCheckbox value="{!blnDctosHomogeneos}" id="checkedoneDescuentos" disabled="{!blnDesactivaCheckHomogeneo}" onclick="mostrarDctoHomogeneo()"><label for="checkedoneDescuentos" style="font: bold 11px Verdana;">{!$Label.LTE_lbl_Aplica_Descuentos}</label></apex:inputCheckbox>
+	        	</apex:pageBlockSectionItem>
+	        	<apex:pageBlockSectionItem >
+	        		<apex:commandButton value="Continuar Aprovisionamiento" action="{!continuarAprovisionamiento}" rendered="{!blnOfertaRealizada}" status="loading" reRender="idForm, TheMessages"/>
+	        	</apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+			
+			<apex:pageBlockSection title="{!$Label.LTE_Cambio_Plan_Plan}" columns="1" id="_bloqueHomogeneos" rendered="{!blnBloqueHomogeneos}">
+			
+				<apex:pageBlockSection columns="2" id="bloquePlan" rendered="{!blnPlanesHomogeneos}">
+					<apex:pageBlockSectionItem >
+						<apex:outputPanel id="_labelPlan" styleClass="lookupInput">
+							<label for="_labelPlan" style="font: bold 11px Verdana;">{!$Label.LTE_Cambio_Plan_Plan} </label>
+							<apex:outputPanel rendered="{!blnPlanHomogeneo}">
+							    <apex:inputField value="{!objReservaHomogeneo.LTE_Plan__c}" onchange="CambioHomogeneo()" />
+							</apex:outputPanel>
+							<apex:outputPanel rendered="{!NOT(blnPlanHomogeneo)}">
+								<apex:outputField value="{!objReservaHomogeneo.LTE_Plan__c}" />
+							</apex:outputPanel>
+						</apex:outputPanel>
+						
+						<apex:outputPanel id="DctoPlan" styleClass="lookupInput" rendered="{!(NOT(objReservaHomogeneo.LTE_PlanMedida__c) && blnDctosHomogeneos && NOT(blnEsPrepagoHomogeneo))}">
+							<label for="DctoPlan" style="font: bold 11px Verdana;">{!strlabelDescuentoPlanHomogeneo} </label>
+							<apex:outputPanel rendered="{!blnPlanHomogeneo}">
+								<apex:inputText value="{!objReservaHomogeneo.LTE_DescuentoPlanAux__c}" styleClass="panel"/>
+									<apex:commandLink reRender="nothing"                            
+										onclick="window.open('/apex/LTE_Descuento_Cambio_Plan_pag?type=DtoPlan', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+										<img Id="ImageCaseTypeName" src="/s.gif" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+									</apex:commandLink> 
+							</apex:outputPanel>
+							<apex:outputPanel rendered="{!NOT(blnPlanHomogeneo)}">
+								<apex:outputField value="{!objReservaHomogeneo.LTE_DescuentoPlanAux__c}" />
+							</apex:outputPanel>
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+					
+					<apex:pageBlockSectionItem >
+						<apex:outputPanel id="_labelVoz" styleClass="lookupInput" rendered="{!objReservaHomogeneo.LTE_PlanMedida__c}">
+							<label for="_labelVoz" style="font: bold 11px Verdana;">{!$Label.LTE_Lbl_Voz} </label>
+							<apex:outputPanel rendered="{!blnPlanHomogeneo}">
+                                <div class="div-minuto-voz-{!objReservaHomogeneo.LTE_MinutosVozConfigurado__c}">
+							    	<apex:inputField value="{!objReservaHomogeneo.LTE_MinutoVoz__c}" rendered="{!objReservaHomogeneo.LTE_PlanMedida__c}"/>
+                                </div>
+							</apex:outputPanel>
+							<apex:outputPanel rendered="{!NOT(blnPlanHomogeneo)}">
+								<apex:outputField value="{!objReservaHomogeneo.LTE_MinutoVoz__c}" />
+							</apex:outputPanel>
+						</apex:outputPanel>
+						
+						<apex:outputPanel id="DctoVoz" styleClass="lookupInput" rendered="{!(objReservaHomogeneo.LTE_PlanMedida__c && blnDctosHomogeneos)}">
+							<label for="DctoVoz" style="font: bold 11px Verdana;">{!$Label.LTE_Lbl_Dcto_Voz} </label> 
+							<apex:outputPanel rendered="{!blnPlanHomogeneo}">
+								<apex:inputText value="{!objReservaHomogeneo.LTE_DescuentoVozAux__c}" styleClass="panel"/>
+								<apex:commandLink reRender="nothing"                            
+									onclick="window.open('/apex/LTE_Descuento_Cambio_Plan_pag?type=DtoVoz', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+									<img Id="ImageCaseTypeName" src="/s.gif" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+								</apex:commandLink> 
+							</apex:outputPanel>
+							<apex:outputPanel rendered="{!NOT(blnPlanHomogeneo)}">
+								<apex:outputField value="{!objReservaHomogeneo.LTE_DescuentoVozAux__c}" />
+							</apex:outputPanel>
+						</apex:outputPanel> 
+					</apex:pageBlockSectionItem>
+
+					<apex:pageBlockSectionItem >
+						<apex:outputPanel id="_labelDatos" styleClass="lookupInput" rendered="{!objReservaHomogeneo.LTE_PlanMedida__c}">
+							<label for="_labelDatos" style="font: bold 11px Verdana;">{!$Label.LTE_Lbl_Datos}</label>
+							<apex:outputPanel rendered="{!blnPlanHomogeneo}">
+                                <div class="div-datos-navegacion-{!objReservaHomogeneo.LTE_DatosNavegacionConfigurado__c}">
+							    	<apex:inputField value="{!objReservaHomogeneo.LTE_DatosNavegacion__c}" rendered="{!objReservaHomogeneo.LTE_PlanMedida__c}"/>
+                                </div>
+							</apex:outputPanel>
+							<apex:outputPanel rendered="{!NOT(blnPlanHomogeneo)}">
+                                <apex:outputField value="{!objReservaHomogeneo.LTE_DatosNavegacion__c}" />
+							</apex:outputPanel>
+						</apex:outputPanel>
+						
+						<apex:outputPanel id="DctoDatos" styleClass="lookupInput" rendered="{!(objReservaHomogeneo.LTE_PlanMedida__c && blnDctosHomogeneos)}">
+							<label for="DctoDatos" style="font: bold 11px Verdana;">{!$Label.LTE_Lbl_Dcto_Datos} </label>
+							<apex:outputPanel rendered="{!blnPlanHomogeneo}">
+								<apex:inputText value="{!objReservaHomogeneo.LTE_DescuentoDatosAux__c}" styleClass="panel"/>
+									<apex:commandLink reRender="nothing"                            
+										onclick="window.open('/apex/LTE_Descuento_Cambio_Plan_pag?type=DtoDato', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+										<img Id="ImageCaseTypeName" src="/s.gif" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+									</apex:commandLink> 
+							</apex:outputPanel>
+							<apex:outputPanel rendered="{!NOT(blnPlanHomogeneo)}">
+								<apex:outputField value="{!objReservaHomogeneo.LTE_DescuentoDatosAux__c}" />
+							</apex:outputPanel>
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+					
+				</apex:pageBlockSection> 
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockSection columns="1" id="_bloqueServicios" rendered="{!blnBloqueServicios}">
+				<apex:pageBlockSection title="Servicios - Página {!pageNumber} - Total Registros: {!intCantidadReg}" id="_seccionServicios" columns="1">
+					<apex:pageBlockTable value="{!lstActivosWrapper}" var="aw">
+						<apex:column width="25px">
+							<apex:facet name="header"> 
+		                        <apex:inputCheckbox value="{!blnAllChecked}">
+		                            <apex:actionSupport event="onclick" action="{!seleccionarTodos}" rerender="_seccionServicios,_botonera"/>
+		                         </apex:inputCheckbox>
+		                     </apex:facet>
+							<apex:inputCheckbox value="{!aw.checked}" disabled="{!aw.desactivado}" />
+						</apex:column>
+						<apex:column value="{!aw.activo.Name}" headerValue="Servicio"/>
+						<apex:column value="{!aw.activo.NumeroConexion__c}" headerValue="Número de Conexión"/>
+						<apex:column value="{!aw.activo.Contrato__c}" headerValue="Número de Contrato"/>
+						<apex:column value="{!aw.activo.Contrato__r.LTE_Contrato_negociado__c}" headerValue="Contrato Negociado"/>
+						<apex:column headerValue="OC's en vuelo">
+							<apex:repeat value="{!aw.activo.Operaciones_Comerciales__r}" var="oc">
+									<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+									<apex:outputText value=": {!oc.Estado__c} " />
+									<apex:outputText value=": {!oc.TOPP__r.TipodeOperacionporplan__c}" /><br />
+							</apex:repeat>
+						</apex:column>
+					</apex:pageBlockTable>
+					
+					<apex:panelGrid columns="4" id="_botonera">
+						<apex:commandLink action="{!first}" rendered="{!blnmostrarPrimero}" reRender="_seccionServicios,_botonera">Primero</apex:commandlink>
+						<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="_seccionServicios,_botonera">Anterior</apex:commandlink>
+						<apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="_seccionServicios,_botonera">Siguiente</apex:commandlink>
+						<apex:commandLink action="{!last}" rendered="{!blnmostrarUltimo}" reRender="_seccionServicios,_botonera">Último</apex:commandlink>
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+				
+	        </apex:pageBlockSection>
+			
+			<apex:pageBlockSection columns="1" id="_bloquePlanesDescuentos"  rendered="{!blnBloquePlanesDescuentos}">
+			
+				<apex:pageBlockSection title="Detalle Oferta Cambio de Plan" columns="1" rendered="{!blnMostrarDetalles && lstCambioPlan.size>0}">
+					<apex:pageBlockSectionItem >
+			            <apex:pageBlockTable value="{!lstCambioPlan}" var="cambioPlan" width="100%">
+							<apex:column headerValue="Indice" width="25px">
+			                    <apex:outputText value="{!cambioPlan.index+1}" />
+			                </apex:column>
+			                
+			                <apex:column headerValue="Servicio" >
+			                    <apex:outputText value="{!cambioPlan.activoETB.Name}" />
+			                </apex:column>
+			                
+							<apex:column headerValue="Nro. Conexión" >
+			                    <apex:outputText value="{!cambioPlan.activoETB.NumeroConexion__c}" />
+			                </apex:column>
+			                
+							<apex:column headerValue="Plan Actual">
+			                    <apex:outputText value="{!cambioPlan.detalleOferta_old.Plan__r.Name}" />
+			                </apex:column>
+			                
+							<apex:column headerValue="Valor Recurrente Actual">
+			                    <apex:outputText value="{0, number, $ ###,##0}">
+								    <apex:param value="{!cambioPlan.detalleOferta_old.LTE_Valor_Total_Plan__c}"/>
+								</apex:outputText>
+			                </apex:column>
+			                
+			                <apex:column headerValue="Nuevo Plan">
+			                    <apex:inputField value="{!cambioPlan.detalleOferta_new.Plan__c}" onchange="CambioPlanScript({!cambioPlan.index});"/>
+			                </apex:column>   
+			                
+			                <apex:column headerValue="Nuevo Valor Recurrente" >
+			                    <apex:outputText value="{0, number, $ ###,##0}">
+								    <apex:param value="{!cambioPlan.nuevoValorRecurrentePlan}"/>
+								</apex:outputText>
+			                </apex:column>
+			                
+			                <apex:column headerValue="Cuenta Facturación" rendered="{!blnPrepago_Postpago}">
+								<apex:outputPanel id="_panelCtaFacturacion" styleClass="lookupInput" rendered="{!cambioPlan.prepago_postpago}">
+									<apex:inputText value="{!cambioPlan.nombreCuentaFacturacion}" id="CuentaFactName" styleClass="panel"/>
+										<apex:commandLink reRender="nothing"                            
+											onclick="window.open('{!CuentaFact}{!cambioPlan.index}', 'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1', false);" rendered="true">
+											<img Id="ImageCaseTypeName" src="/s.gif" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+										</apex:commandLink> 
+								</apex:outputPanel>
+							</apex:column> 
+			                
+			                <apex:column headerValue="% Descuento Plan" rendered="{!blnDctosHomogeneos}">
+			                	<apex:outputPanel id="DctoPlanNuevo" styleClass="lookupInput" rendered="{!(NOT(cambioPlan.LTE_PlanMedida) && NOT(cambioPlan.postpago_prepago) && NOT(cambioPlan.prepago_prepago))}">
+				                    <apex:outputText value="{!cambioPlan.nombreDescuentoPlan}" />
+				                    <apex:commandButton value="{!cambioPlan.etiquetaAgregarCambiarDtoPlan}" onclick="window.open('/apex/LTE_Descuento_pag?type=DtoPlan&name='+''+'&row='+'{!cambioPlan.index}'+'&opp='+'', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" status="loading" reRender="_bloquePlanesDescuentos, TheMessages"/>
+				                    <apex:commandButton value="Borrar" action="{!borrarDescuentoCambioPlan}" rendered="{!cambioPlan.blnBtnBorrarDtoPlan}" reRender="_bloquePlanesDescuentos, TheMessages">
+										<apex:param name="firstParam" assignTo="{!intIndexBorrarDcto}" value="{!cambioPlan.index}"/>
+										<apex:param name="secondParam" assignTo="{!strDctoBorrar}" value="DtoPlan"/>  
+									</apex:commandButton>
+			                    </apex:outputPanel>
+			                </apex:column>
+			                
+			                <apex:column headerValue="Nuevo Plan Voz">
+                                <div class="div-minuto-voz-{!cambioPlan.LTE_MinutosVozConfigurado}">
+			                    	<apex:inputField value="{!cambioPlan.detalleOferta_new.LTE_MinutoVoz__c}" rendered="{!cambioPlan.LTE_PlanMedida}" onchange="ocultarGuardar()"/> 
+                                </div>
+			                </apex:column>   
+			                <apex:column headerValue="Nuevo % Dcto Voz" rendered="{!blnDctosHomogeneos}">
+			                	<apex:outputPanel id="DctoVozNuevo" styleClass="lookupInput" rendered="{!cambioPlan.LTE_PlanMedida}">
+				                    <apex:outputText value="{!cambioPlan.nombreDescuentoVoz}" />
+				                    <apex:commandButton value="{!cambioPlan.etiquetaAgregarCambiarDtoVoz}" onclick="window.open('/apex/LTE_Descuento_pag?type=DtoVoz&name='+''+'&row='+'{!cambioPlan.index}'+'&opp='+'', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" status="loading" reRender="_bloquePlanesDescuentos, TheMessages"/>
+				                    <apex:commandButton value="Borrar" action="{!borrarDescuentoCambioPlan}" rendered="{!cambioPlan.blnBtnBorrarDtoVoz}" reRender="_bloquePlanesDescuentos, TheMessages">
+										<apex:param name="firstParam" assignTo="{!intIndexBorrarDcto}" value="{!cambioPlan.index}"/>
+										<apex:param name="secondParam" assignTo="{!strDctoBorrar}" value="DtoVoz"/>  
+									</apex:commandButton>
+			                    </apex:outputPanel> 
+			                </apex:column>  
+			                
+			                <apex:column headerValue="Nuevo Plan Datos">
+                                <div class="div-datos-navegacion-{!cambioPlan.LTE_DatosNavegacionConfigurado}">
+			                    	<apex:inputField value="{!cambioPlan.detalleOferta_new.LTE_DatosNavegacion__c}" rendered="{!cambioPlan.LTE_PlanMedida}" onchange="ocultarGuardar()"/> 
+                                </div>
+			                </apex:column>   
+			                <apex:column headerValue="Nuevo % Dcto Datos" rendered="{!blnDctosHomogeneos}">
+			                	<apex:outputPanel id="DctoDatosNuevo" styleClass="lookupInput" rendered="{!cambioPlan.LTE_PlanMedida}">
+				                    <apex:outputText value="{!cambioPlan.nombreDescuentoDatos}" />
+				                    <apex:commandButton value="{!cambioPlan.etiquetaAgregarCambiarDtoDatos}" onclick="window.open('/apex/LTE_Descuento_pag?type=DtoDato&name='+''+'&row='+'{!cambioPlan.index}'+'&opp='+'', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" status="loading" reRender="_bloquePlanesDescuentos, TheMessages"/>
+				                    <apex:commandButton value="Borrar" action="{!borrarDescuentoCambioPlan}" rendered="{!cambioPlan.blnBtnBorrarDtoDatos}" reRender="_bloquePlanesDescuentos, TheMessages">
+										<apex:param name="firstParam" assignTo="{!intIndexBorrarDcto}" value="{!cambioPlan.index}"/>
+										<apex:param name="secondParam" assignTo="{!strDctoBorrar}" value="DtoDato"/>  
+									</apex:commandButton>
+			                    </apex:outputPanel> 
+			                </apex:column>   
+			                
+			                <apex:column headerValue="Fecha Probable de Corte" >
+			                    <apex:outputText value="{!cambioPlan.cicloFacturacion + '' + cambioPlan.fechaProximoCiclo}" />
+			                </apex:column>
+						</apex:pageBlockTable> 
+					</apex:pageBlockSectionItem>
+					
+					<apex:pageBlockSectionItem >
+						<apex:outputPanel id="_labelPlan">
+							<label for="nvoValorRecurrente" style="font: bold 11px Verdana;">Nuevo Valor Recurrente: </label>
+							<apex:outputText value="{0, number, $ ###,##0}">
+							    <apex:param value="{!dcmNuevoValorRecurrente}"/>
+							</apex:outputText>
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+		        </apex:pageBlockSection>
+			</apex:pageBlockSection>
+			
+	        <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" rendered="{!blnBotonContinuar}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.LTE_Guardar}" action="{!guardar}" rendered="{!blnBotonGuardar}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.LTE_Calcular_Valor_Recurrente_Nuevo}" action="{!calcularNuevoValorRecurrente}" rendered="{!blnBotonNuevoValorRecurrente}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.Regresar}" action="{!regresar}" rendered="{!blnBotonRegresar}" status="loading" reRender="idForm, TheMessages"/>
+			</apex:pageBlockButtons> 
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,388 @@
+<apex:page showHeader="true" sidebar="true" controller="AsignarCuentaFacturacion_ctr" lightningStylesheets="true">
+   <style type="text/css">
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            padding:10px;
+            position: absolute;
+            width: 96%;
+            left: 2%;            
+            top: 0%;  
+            height: 70%;       
+        }
+       .btn_copiar {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .btn_copiar img {
+           width: 100%;
+            height: 100%;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+
+    </style>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=9" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="X-UA-Compatible" content="IE=5" />
+    </head>
+     
+    <apex:sectionHeader title="Asignar Cuenta de facturación"/>
+    <apex:pageBlock >
+
+    <div ng-app="ngApp" ng-controller="cuentaFactCtrl" class="bPageBlock">
+ 
+    <form id="fpop" name="fpop">
+        <script src="{!URLFOR($Resource.jQueryUI,'jquery-ui-1.10.4/js/jquery-1.10.2.js')}"/>
+        <!-- [CG] - Popup Estandarización de Direcciones --> 
+        <div name="divpop" id="divpop" ng-show="popup">
+            <apex:outputPanel id="tstpopup" >
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="true" id="popupBackground" />
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="true" id="custPopup" >
+                    <!--  BEGIN - Manuel Medina - Ajuste de los botones Guardar y Cerrar - 19082016 -->
+                    <apex:iframe id="iframe1" scrolling="true" src="{SitePrefix}/apex/EstandarizarDireccion_pag?sinBotones=true" frameborder="true" height="85%" />
+                    <!--<button type="button" ng-click="copiarDireccion()" class="btn_copiar" ><apex:image url="{!$Resource.IconoCopiar}"/> </button>-->
+                    <input type="button" value="Guardar" ng-click="copiarDireccion();cerrarPopup()" class="btn" style="margin-left: 40%;"/>
+                    <input type="button" value="Cancelar" ng-click="cerrarPopup()" class="btn"/>
+                    <!--<button type="button" ng-click="copiarDireccion();copyToClipboard();" class="btn_copiar" ><apex:image url="{!$Resource.IconoCopiar}"/> </button>-->
+                    <!--  END - Manuel Medina - Ajuste de los botones Guardar y Cerrar - 19082016 -->
+                        <div style="clear:both"></div>
+                </apex:outputPanel>
+            </apex:outputPanel>  
+        </div>
+
+        <!-- [CG] - Fin Popup Estandarización de Direcciones -->
+    </form>        
+        
+    <table class="list">
+        <tr>
+        <td align="left" valign="top" style="display:{!renderCheckNuevaCuenta}">
+            <div>
+                1) Cuenta Nueva (Revchain): <input type="checkbox" ng-model="esNueva"/>
+            </div>
+            <div>
+                <apex:form >
+                    <apex:actionFunction name="reinderCuentaCobro"  action="{!changeCheckBox}" />
+                    2) Es Cuenta de Cobro: <apex:inputCheckbox value="{!blnCuentaCobro}" rendered="true" onchange="eleccionCxC()"/>
+                </apex:form> 
+            </div>
+        </td>
+
+        <td>
+        Cuenta de Facturacion:
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <input type="text" class="textol" ng-model="lupas['CuentaFacturacionName']" ng-readonly="true" id="CuentaFacturacionName"/>
+                <input type="image" src="/servlet/servlet.FileDownload?file={!idImgLupa}" class="lookupIcon" ng-click="getCuentaFact()" ng-show="habilitar"/>
+            </div>
+            <input type="button" ng-click="asignarCuenta()" value="Asignar Cuenta de Facturacion" ng-show="lupas['CuentaFacturacionId']"/>
+        </td>
+
+        <td ng-show="esNueva">
+        <form id="f1" name="f1">
+        Nombre cuenta de facturación:
+           <div class="requiredInput">
+           <div class="requiredBlock"></div>
+           <input type="text" class="texto1" ng-model="lupas['NombreCuentaFacturacion']" id="NombreCuentaFacturacion" name="NombreCuentaFacturacion" required="required"/>
+           </div>   
+        Direccion:
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <!-- BEGIN - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 -->
+                <input type="text" class="textol" ng-model="lupas['PoblacionDireccion']" id="direccion" name="direccion" required="required" ng-readonly="true"/>
+                <!--<input type="text" class="textol" ng-model="lupas['PoblacionDireccion']" id="direccion" name="direccion" required="required" ng-readonly="{!NOT($Setup.AVX_EstandarizarDirecciones__c.AVX_HabilitarCampoDireccion__c)}"/>-->
+                <!-- END - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 -->
+                <input type="button" value="Estandarizar" ng-click="mostrarPopup()" ng-show="habilitar"/>                                   
+            </div>
+        <!-- Tipo Facturación:
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <select name="TipoFacturacion" size="1" ng-model="lupas['TipoFacturacion']" id="CuentaFacturacionName"> 
+                   <option selected="selected" value="Revchain">Revchain</option> 
+                   <option value="Cuenta de Cobro">Cuenta de Cobro</option> 
+                </select> 
+            </div> -->
+        Ciudad:
+            <div class="requiredInput">
+                <div class="requiredBlock"></div>
+                <input type="text" class="textol"  ng-model="lupas['PoblacionName']" ng-readonly="true" id="ciudad" name="ciudad" required="required"/>
+                <input type="image" src="/servlet/servlet.FileDownload?file={!idImgLupa}" class="lookupIcon" ng-click="getCiudad()" ng-show="habilitar"/>
+            </div>
+            
+        Email:
+           <div class="requiredInput">
+           <div class="requiredBlock"></div>
+           <input type="email" class="texto1" ng-model="lupas['Email']" id="email" name="email" required="required"/>
+           
+           </div>     
+                
+       Confirmacion Email:
+           <div class="requiredInput">
+           <div class="requiredBlock"></div>
+           <input type="email" class="texto1" ng-model="lupas['ConfirmacionEmail']" id="confiremail" name="confiremail" required="required"/>           
+           </div>  
+        Método de envío:  
+            <div class="requiredInput">
+           <div class="requiredBlock"></div>
+           <select ng-model="lupas['MetodoEnvio']" id="MetodoEnvio" name="MetodoEnvio" ng-options="val for val in MetodoEnvio" style="width:173px;">
+    	   </select>           
+           </div>  
+           Tipo de cuenta(Padre/Hija):  
+            <div class="requiredInput">
+           <div class="requiredBlock"></div>
+           <select ng-model="lupas['TipoDeCuenta']" id="TipoDeCuenta" name="TipoDeCuenta" ng-options="val for val in TipoDeCuenta" style="width:173px;">
+    	   </select>           
+           </div> 
+           Cuenta de Facturacion padre:
+            <div>                
+                <input type="text" class="textol" ng-model="lupas['CuentaFacturacionPadreName']" ng-readonly="true" id="CuentaFacturacionPadreName"/>
+                <input type="hidden" class="textol" ng-model="lupas['CuentaFacturacionPadreId']" ng-readonly="true" id="CuentaFacturacionPadreId"/>
+                <input type="image" src="/servlet/servlet.FileDownload?file={!idImgLupa}" class="lookupIcon" ng-click="getCuentaFactPadre()" ng-show="habilitar"/>
+            </div>
+            <input type="button" ng-click="crearCuenta()" value="Crear Cuenta" />
+            </form>        
+        </td>
+        </tr>
+
+    </table>
+
+
+    <table class="list">
+    <tr>
+        <th></th>
+        <th class="headerRow">{!$ObjectType.OperacionComercial__c.fields.Name.label}</th>
+        <th class="headerRow">{!$ObjectType.ActivoETB__c.fields.Name.label}</th>
+        <th class="headerRow">{!$ObjectType.Planes__c.fields.Name.label}</th>
+    </tr>
+
+
+    <tr ng-repeat="o in oc">
+        <td class="dataCell">{{$index+1}}</td>
+        <td class="dataCell"><a ng-href="/{{o.Id}}" target="_blank">{{o.Name}}</a></td>
+        <td class="dataCell"><a ng-href="/{{o.Activo__c}}" target="_blank">{{o.Activo__r.Name}}</a></td>
+        <td class="dataCell">{{o.Plan__r.Name}}</td>
+    </tr>
+    </table>
+
+    </div>
+
+    <script src="{!URLFOR($Resource.libraryjs,'angular.min.js')}"/>
+    <script type="text/javascript">
+
+		
+        function asignar(a,b,c){
+            var appElement = document.querySelector('[ng-controller=cuentaFactCtrl]');
+            var scp = angular.element(appElement).scope();
+            scp.asignarJS(a,b,c);
+        }
+
+        var ngApp=angular.module("ngApp", []);
+
+        ngApp.controller("cuentaFactCtrl",function ($scope) {
+			
+            $scope.leg='{!leg.id}';
+            $scope.cliente='{!leg.Nombredelacuenta2__c}';
+            $scope.oc=JSON.parse('{!data}');
+            $scope.linkCuentaF='{!CuentaFact}';
+            $scope.linkCuentaFPadre='{!CuentaFactPadre}';
+            $scope.linkCiudad='{!Ciudad}';            
+            $scope.lupas={};
+            $scope.habilitar=true;
+            $scope.cuentaF={};
+            $scope.cuentaCobroInfo={};
+            $scope.cuentaCobro='{!blnCuentaCobro}';
+            $scope.MetodoEnvio = [{!OpcionesMetodoEnvio}]; 
+            $scope.TipoDeCuenta = [{!OpcionesTipoCuenta}];
+
+            $scope.asignarCuenta = function() {                
+                for(i = 0; i < $scope.oc.length; i++){$scope.oc[i]
+                    $scope.oc[i].CuentaFacturacion__c=$scope.lupas['CuentaFacturacionId'];                                                                          
+                }
+                $scope.NumCuentaFact = $scope.lupas['CuentaFacturacionName'];
+                console.log($scope.ocClass);
+                console.log(angular.fromJson($scope.ocClass));
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.AsignarCuentaFacturacion_ctr.setOC}',angular.toJson($scope.oc),angular.toJson($scope.NumCuentaFact),$scope.handleResult);
+            };
+
+
+            $scope.crearCuenta = function() {
+                
+                if(f1.direccion.value != '' && f1.ciudad.value != '' && f1.email.value != '' && f1.confiremail.value != '' && f1.NombreCuentaFacturacion.value != '' && $scope.lupas['MetodoEnvio'] != null && $scope.lupas['TipoDeCuenta'] != null){
+                
+                 expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                 
+                    if ( expr.test(f1.email.value) && expr.test(f1.confiremail.value)){
+                    
+                        if(f1.email.value == f1.confiremail.value){
+                            
+                            if($scope.lupas['TipoDeCuenta'] == 'Hija' && f1.CuentaFacturacionPadreName.value == ''){
+                                alert('Para el tipo de cuenta "Hija", debe ingresar una cuenta de facturación padre.');
+                            }else{
+                                if($scope.lupas['TipoDeCuenta'] == 'Padre' && f1.CuentaFacturacionPadreName.value != ''){
+                                	alert('Para el tipo de cuenta "Padre", no debe ingresar una cuenta de facturación padre.');
+                                    $scope.lupas['CuentaFacturacionPadreId'] = null;
+                                    $scope.lupas['CuentaFacturacionPadreName'] = null;
+                                }else{
+                                    $scope.cuentaF.LTE_MetodoEnvio__c=$scope.lupas['MetodoEnvio'];
+                                    $scope.cuentaF.LTE_NombreCuentaFacturacion__c=$scope.lupas['NombreCuentaFacturacion'];
+                                    $scope.cuentaF.Ciudad__c=$scope.lupas['PoblacionId'];
+                                    $scope.cuentaF.DirCorresp__c=$scope.lupas['PoblacionDireccion'];
+                                    // $scope.cuentaF.Tipo_Facturacion__c=$scope.lupas['TipoFacturacion'];
+                                    $scope.cuentaF.Cliente__c=$scope.cliente;
+                                    $scope.cuentaF.LTE_Email__c=$scope.lupas['Email'];                    
+                                    $scope.cuentaF.Confirmacion_Email__c=$scope.lupas['ConfirmacionEmail'];
+                                    if($scope.lupas['TipoDeCuenta'] == 'Padre')
+                                    	$scope.cuentaF.Facturable__c=true;
+                                    else
+                                        $scope.cuentaF.Facturable__c=false;
+                                    $scope.cuentaF.LTE_CuentaFacturacionPadre__c=$scope.lupas['CuentaFacturacionPadreId'];
+                                    $scope.cuentaF.Tipo_de_cuenta__c=$scope.lupas['TipoDeCuenta'];
+                                    
+                                    /* BEGIN - Manuel Medina - Validacion para registrar el campo observaciones - 05092016 */
+                                    var iframe = angular.element('#iframe1');
+                                    iframe = iframe.contents();
+                                    if( iframe.find(".observacion").val() != '' ){
+                                        $scope.cuentaF.AVX_ObservacionesIngresadas__c=true;
+                                    }
+                                    /* END - Manuel Medina - Validacion para registrar el campo observaciones - 05092016 */
+                                    
+                                    console.log($scope.cuentaF);            
+                                    Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.AsignarCuentaFacturacion_ctr.setCuentaFacturacion}',angular.toJson($scope.cuentaF),$scope.cuentaFactResponse);
+                                }
+                            }
+                        }else{
+                            alert('Los Campos Email y Confirmación Email deben coincidir');
+                        }
+                    }else{
+                        alert('El Email o Confirmacion Email ingresado no tiene un formato valido, por favor corrijalo');
+                    }
+                }else{
+                    alert('Ningun campo debe quedar vacio, Por favor diligencielos todos');
+                }
+            };
+
+            $scope.getCuentaFact=function(){
+                $scope.abrirVentana($scope.linkCuentaF);
+            };
+            
+            $scope.getCuentaFactPadre=function(){
+                $scope.abrirVentana($scope.linkCuentaFPadre);
+            };
+
+            $scope.getCuentaFactCxC=function(){
+                $scope.abrirVentana($scope.linkCuentaF);
+            };
+
+            $scope.getCiudad=function(){
+                $scope.abrirVentana($scope.linkCiudad);
+            };            
+           
+            $scope.getCiudad=function(){
+                $scope.abrirVentana($scope.linkCiudad);
+            };
+
+            $scope.mostrarPopup=function(){
+                $scope.popup=true;
+            };
+
+            $scope.cerrarPopup=function(){
+                $scope.popup=false;
+            };
+            
+            $scope.abrirVentana=function(url,idt){
+                ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1');
+            };
+
+            $scope.asignarJS=function(id,name,info){
+                $scope.lupas[info+"Id"]=id;
+                $scope.lupas[info+"Name"]=name;
+                console.log($scope.lupas);
+                $scope.$apply();
+            };
+
+            $scope.cuentaFactResponse=function (result, event) {
+                if (event.status) {
+                    $scope.responsecf=JSON.parse(result.replace(/(&quot\;)/g,"\""));
+                    $scope.tieneError=false;
+                    $scope.lupas['CuentaFacturacionId']=$scope.responsecf.obj.Id;
+                    $scope.lupas['CuentaFacturacionName']=$scope.responsecf.obj.Name;                    
+                } else if (event.type === 'exception') {
+                    $scope.errorApex = event.message+"<br/>\n<pre>" + event.where + "</pre>";
+                    $scope.tieneError=true;
+                } else {
+                    $scope.errorApex=event.message;
+                    $scope.tieneError=true;
+                }
+
+                console.log($scope.responsecf.obj);
+                $scope.$apply();
+            }
+
+            $scope.handleResult=function (result, event) {
+                if (event.status) {
+                    $scope.responsejs=JSON.parse(result.replace(/(&quot\;)/g,"\""));
+                    $scope.tieneError=false;                    
+                } else if (event.type === 'exception') {
+                    $scope.errorApex = event.message+"<br/>\n<pre>" + event.where + "</pre>";
+                    $scope.tieneError=true;
+                } else {
+                    $scope.errorApex=event.message;
+                    $scope.tieneError=true;
+                }
+                if($scope.responsejs.error==''){
+                    window.location = "/"+$scope.leg;
+                }else{                      
+                    alert($scope.responsejs);
+                }
+                $scope.$apply();
+            }
+
+             $scope.copiarDireccion = function(){
+                
+                var iframe = angular.element('#iframe1'),
+                    direccion = null;
+                if(iframe.length > 0){
+                    
+                    iframe = iframe.contents();
+                    direccion = iframe.find(".dirAbreviada").val();
+                    direccion = direccion + ' ' + iframe.find(".observacion").val();
+                }
+                $scope.lupas['PoblacionDireccion'] = direccion;
+                f1.direccion.value = direccion;
+                //alert('Direccion : '+direccion);
+            } 
+             
+        });
+
+         function eleccionCxC() {
+           reinderCuentaCobro();
+        }
+        
+    </script>
+
+
+    </apex:pageBlock>
+   
+</apex:page>

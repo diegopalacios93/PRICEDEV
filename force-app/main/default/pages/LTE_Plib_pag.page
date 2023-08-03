@@ -1,0 +1,63 @@
+<!-- ********************************************************************** 
+Develope by:            Avanxo Colombia
+Author:                 Carlos A. Rodriguez B. 
+Project:                ETB-LTE   
+Description:            VisualForce encargada de la información y el consumo del sistema legado Plib.                          
+Sprint                  1
+Release                 1
+
+Cambios (Versiones)
+********************************
+No.     Fecha       Autor                           Descripción
+******  **********  ********************            ****************
+1.0     14/08/2015  Carlos A. Rodriguez B.          Creation. 
+**************************************************************************** -->
+<apex:page controller="LTE_Plib_ctr" showHeader="true" sidebar="true" tabStyle="Case">
+	<apex:form >
+		<apex:pageMessages />
+		<apex:pageBlock title="Información para el sistema legado Plib">
+
+			<apex:pageBlockButtons location="bottom">
+					<apex:commandButton action="{!guardar}" value="{!$Label.LTE_Guardar}" id="btnGuardar"/>
+			</apex:pageBlockButtons>
+				
+			<apex:pageBlockSection columns="2" title="Información del caso">
+			  	<apex:outputText value="{!objCase.CaseNumber}"/>
+			  	<apex:outputText value="{!objCase.LTE_Origen__c}"/>
+			  	<apex:inputField value="{!objCase.LTE_Servicio__c}" onchange="Cambio()" required="true"/>			  	
+			  	<apex:outputText label="Falla" value="{!objCase.Tipologia__c}"/>
+
+				  <!-- 	<apex:selectList label="Garantía" value="{!strGarantiaSelec}" size="1">
+						<apex:selectOptions value="{!lstOpcionesGarantia}"/>					
+					</apex:selectList> -->
+				<apex:pageBlockSection columns="3">
+					<table width="100%">
+						<tr>
+							<td  align="right" style="vertical-align:middle;"><label style="color:#4a4a56;font-weight:bold;font-size:90%">Garantía</label></td>
+						    <td  align="left"><apex:outputPanel styleClass="requiredInput" layout="block" id="pwPanel" > 
+				   				<apex:outputPanel styleClass="requiredBlock"/>	   			
+			  	<apex:selectList label="Garantía" value="{!strGarantiaSelec}" size="1">
+					<apex:selectOptions value="{!lstOpcionesGarantia}"/>					
+				</apex:selectList>
+			    			</apex:outputPanel></td> 
+						</tr>
+					</table>
+				</apex:pageBlockSection>
+
+			  	<apex:inputField value="{!objCase.LTE_Comentarios__c}" style="width:85%"/>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="InfoEquipo" columns="2" title="Información del equipo">
+			  	<apex:outputText value="{!objCase.LTE_Marca__c}"/>
+			  	<apex:outputText value="{!objCase.LTE_ModeloComercial__c}"/>
+			  	<apex:outputText value="{!objCase.LTE_IMEI__c}"/>
+			  	<apex:outputText value="{!objCase.NumeroConexion__c}"/>
+			  	<apex:outputText label="Fecha de compra" value="{0, date, dd-MM-yyyy}"> 
+    				<apex:param value="{!objCase.LTE_FechaCompra__c}"/>
+				</apex:outputText>
+
+				<apex:actionFunction name="Cambio" action="{!actualizarInfoEquipo}" reRender="InfoEquipo"/>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

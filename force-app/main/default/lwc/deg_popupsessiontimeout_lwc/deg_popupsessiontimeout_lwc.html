@@ -1,0 +1,34 @@
+<!-- sldsValidatorIgnore -->
+<!--
+  @description       : 
+  @author            : j.martinez.mercado
+  @group             : 
+  @last modified on  : 01-11-2022
+  @last modified by  : j.martinez.mercado
+-->
+<template>
+    <template if:false={closePopup}>
+        <div class="warning_page">
+            <div class="container">
+                <div class="popup_container">
+                   <span>
+                    <lightning-icon 
+                        icon-name="utility:info"
+                    ></lightning-icon>
+                   </span>
+                    <span>
+                        Este chat finalizará por inactividad.
+                    </span>
+                    <span>
+                        <button 
+                            title="Volver al chat" 
+                            onclick={handleClick}
+                             class="slds-button slds-button_brand slds-m-bottom_medium">
+                             Aceptar
+                        </button>
+                    </span>     
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

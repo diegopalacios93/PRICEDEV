@@ -1,0 +1,91 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Contract" applyBodyTag="false" extensions="Semaforo_PDF_ctr"  lightningStylesheets="true">
+<head>
+<style type="text/css">         
+    .contenido_14px {
+       font-weight: bold;
+       font-size: 13px;
+    }
+    .contenido_14px_NB {       
+       font-size: 13px;
+    }
+    .contenido_13px_NB {       
+       font-size: 13px;
+    }
+	.contenido_18px {
+       font-weight: bold;
+       font-size: 17px;
+    }
+    .contenido_22px {
+       font-weight: bold;
+       font-size: 22px;
+    }
+    .contenido_7px {
+       font-weight: bold;
+       font-size: 7px;
+    }
+    .contenido_7px_NB {       
+       font-size: 7px;
+    }
+    .contenido_8px {
+       font-weight: bold;
+       font-size: 8px;
+    }
+    .contenido_8px_NB {       
+       font-size: 8.5px;
+    }
+    .contenido_9px {
+       font-weight: bold;
+       font-size: 9px;
+    }
+    .contenido_9px_white {
+       font-weight: bold;
+       font-size: 9px;
+       color: white;
+    }    
+    .contenido_9px_NB {       
+       font-size: 9px;
+    }
+@page {  
+    size: A4 landscape;
+    margin: 5mm; 
+    } 
+</style>  
+</head> 
+    <table style="width: 100%;">
+        <tbody>
+        <tr>                            
+        	<td align="center" class="contenido_22px">Semáforo de Contratos</td>        
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr>                            
+        	<td align="center">
+                <apex:form id="idForm1">
+                    <apex:commandButton value="Exportar" action="{!generarInforme}"/>
+                    <apex:commandButton value="Imprimir" onclick="window.print()"/>
+                    <apex:commandButton value="Cerrar" action="{!cerrarPagina}"/>                    
+  				</apex:form>
+            </td>                    
+        </tr>
+        </tbody>
+      </table>
+  <apex:form id="idForm">
+      <apex:sectionHeader title="" />      	
+      <apex:outputtext value="{!htmlScript}" escape="false" id="htmlScript"/>      
+  </apex:form>
+      <table style="width: 100%;">
+        <tbody>
+        <tr>                            
+        	<td align="center">&nbsp;</td>        
+        </tr>
+        <tr>                            
+        	<td align="center">
+                <apex:form id="idForm2">
+                    <apex:commandButton value="Exportar" action="{!generarInforme}"/>
+                    <apex:commandButton value="Imprimir" onclick="window.print()"/>
+                    <apex:commandButton value="Cerrar" action="{!cerrarPagina}"/>                    
+  				</apex:form>
+            </td>                    
+        </tr>
+        </tbody>
+      </table>
+</apex:page>

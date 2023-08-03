@@ -1,0 +1,58 @@
+<apex:page id="pgAsignarServicioSDWAN" controller="AsignarOC_SDWAN_ctr">
+    
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+    <apex:form id="frmOCs">
+        <apex:outputPanel >            
+        	<apex:pageBlock id="bloqueTabla" title="Asignar operaciones comerciales" tabStyle="Account">        		
+                <apex:pageMessages />                
+                <apex:outputPanel id="out">
+                    <apex:actionRegion >
+                        <apex:actionFunction name="checkAll" action="{!checkAll}" rerender="out"/>
+                        <apex:pageBlockSection id="sectabla" Columns="1" title="Operaciones comerciales de la cuenta" rendered="{!showOCs}">
+                            <apex:outputpanel id="opOCs">                                
+                                    <apex:inputText value="{!stringBusqueda}" id="filtrarOCs" style="width:250px" onchange="seleccion(this)"/>
+                                	<apex:commandButton value="Buscar operación comercial" action="{!filtrarOCs}"/>                                
+                            </apex:outputpanel>                            
+                            <apex:pageBlockTable value="{!wOCs}" var="Est" align="center" id="tablaRegistros"  styleClass="checkableTable">
+                                <apex:column >
+                                    <apex:facet name="header">
+                                        <apex:inputCheckbox value="{!blncheckedAll}" onchange="checkAll()"/>
+                                    </apex:facet>
+                                    <apex:inputCheckbox value="{!Est.blnChecked}"/>                                    
+                                </apex:column>                                
+                                <apex:column headerValue="Número OC" value="{!Est.oc.Name}"/>
+                                <apex:column headerValue="Estado OC" value="{!Est.oc.Estado__c}"/>
+                                <apex:column headerValue="Tipo de operación por plan" value="{!Est.oc.TOPP__r.Name}"/>                    
+                                <apex:column headerValue="Oportunidad" value="{!Est.oc.Oportunidad__r.Name}"/>                                
+                                <apex:column headerValue="Servicio ETB"  value="{!Est.oc.Activo__r.Name}"/>
+                                <apex:column headerValue="Producto del servicio" value="{!Est.oc.Activo__r.Plan__r.NombredelProducto__r.Name}"/>
+                                <apex:column headerValue="Plan del servicio" value="{!Est.oc.Activo__r.Plan__r.Name}"/>                                                                
+                                <apex:column headerValue="Estado del servicio" value="{!Est.oc.Activo__r.Estado__c}"/> 
+                                <apex:column headerValue="ID servicio" value="{!Est.oc.Activo__r.IDservicio__c}"/> 
+                                <apex:facet name="footer">
+                                    <apex:outputPanel id="paginacion">
+                                        <apex:outputText value="Pagina {!paginator.pageNumberDisplayFriendly} de {!paginator.pageCount} en {!paginator.recordCount} Resultados "/>
+                                        <apex:outputPanel >    </apex:outputPanel>
+                                        <apex:commandLink value=" Anterior" action="{!paginator.previous}"
+                                            rendered="{!IF(paginator.hasPrevious,'true','false')}"/>
+                                        <apex:outputText value="Anterior" rendered="{!IF(NOT(paginator.hasPrevious),'true','false')}"/>
+                                        <apex:outputPanel > | </apex:outputPanel>
+                                        <apex:commandLink value="Siguiente" action="{!paginator.next}"
+                                            rendered="{!IF(paginator.hasNext,'true','false')}"/>
+                                        <apex:outputText value="Siguiente" rendered="{!IF(NOT(paginator.hasNext),'true','false')}"/>
+                                    </apex:outputPanel>
+                                </apex:facet>    
+                            </apex:pageBlockTable>    
+                        </apex:pageBlockSection>
+                        <div align="center" draggable="false" > 
+                            <apex:outputPanel >
+                                <apex:commandButton value="Asignar" action="{!asignarOCs}" rendered="{!showBtnAsignar}"/>
+                                <apex:commandButton value="Regresar" action="{!regresar}"/>                                
+                            </apex:outputPanel>
+                        </div>                        
+                    </apex:actionRegion>
+                </apex:outputPanel>                      
+            </apex:pageBlock>
+		</apex:outputPanel>
+    </apex:form>    
+</apex:page>

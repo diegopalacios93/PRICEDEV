@@ -1,0 +1,21 @@
+<apex:page id="idPage" Controller="LTE_aprovisionar_ctr">
+<apex:pagemessages id="TheMessages"/>
+	<apex:form id="idForm">
+		<apex:pageBlock title="" rendered="{!mostrar}">
+			<apex:pageBlockButtons >
+			<apex:outputPanel ><button type="button" class="btn" onclick="Ejecutar(this)" style="padding: 4px 3px;">Ejecutar</button></apex:outputPanel>		
+			</apex:pageBlockButtons>
+				<apex:selectList id="Positions" size="1" value="{!opcion}">
+<apex:selectOptions value="{!options}"/>
+				</apex:selectList>
+				<apex:actionFunction name="EjecutarJs" action="{!ejecutar}"/>
+		</apex:pageBlock>
+	</apex:form>
+	
+	<script>
+	function Ejecutar(t){
+		t.disabled = true;
+		EjecutarJs();
+	}
+	</script>
+</apex:page>

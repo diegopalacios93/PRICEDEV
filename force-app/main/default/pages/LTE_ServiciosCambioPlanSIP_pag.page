@@ -1,0 +1,68 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_ServiciosCambioPlanSIP_ctr">
+	<apex:pagemessages id="TheMessages"/>    
+    <apex:form id="idForm">
+        <apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+		<apex:inputField value="{!objOfertaEconomica.LTE_TipodePlan__c}" id="LTE_TipodePlan__c" style="display:none"/>
+		
+		<apex:actionFunction name="CambioPlan" reRender="idForm, TheMessages" action="{!cambioPlan}"/>
+		
+		<apex:pageBlock id="_bloquePrincilal" title="{!$Label.LTE_Titulo_Cambio_Plan_SIP}" >
+		
+			<apex:pageBlockSection title="" id="_bloqueBuscar" columns="2" >
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput">
+						<label for="numConexiones" style="font: bold 11px Verdana;">{!$Label.LTE_Cambio_Plan_Num_Conexion}</label>
+						<apex:inputText value="{!numerosConexion}" id="numConexiones" />
+						<apex:commandButton value="{!$Label.Buscar}" action="{!buscar}" rendered="{!blnBuscar}" status="loading" reRender="idForm, TheMessages"/>
+					</apex:outputPanel>
+					
+					<apex:outputPanel id="_panelNumCaso" styleClass="lookupInput">
+						<label for="numCaso" style="font: bold 11px Verdana;">{!$Label.LTE_Etiqueta_Caso} </label>
+						<apex:outputText value="{!numeroCaso}" id="numCaso"/>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+			
+			<apex:pageBlockSection columns="1" id="_bloqueServicios" rendered="{!blnBloqueServicios}">
+				<apex:pageBlockSection title="Servicios ETB" id="_seccionServicios" columns="1">
+					<apex:pageBlockTable value="{!lstActivos}" var="activo">
+						<apex:column value="{!activo.Name}" headerValue="Servicio"/>
+						<apex:column value="{!activo.NumeroConexion__c}" headerValue="Número de Conexión"/>
+						<apex:column value="{!activo.Estado__c}" headerValue="Estado"/>
+						<apex:column value="{!activo.Contrato__c}" headerValue="Número de Contrato"/>
+						<apex:column value="{!activo.Contrato__r.LTE_Contrato_negociado__c}" headerValue="Contrato Negociado"/>
+						<apex:column headerValue="OC's en vuelo">
+							<apex:repeat value="{!activo.Operaciones_Comerciales__r}" var="oc">
+									<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+									<apex:outputText value=": {!oc.Estado__c} " />
+									<apex:outputText value=": {!oc.TOPP__r.TipodeOperacionporplan__c}" /><br />
+							</apex:repeat>
+						</apex:column>
+					</apex:pageBlockTable>
+				</apex:pageBlockSection>
+				
+				<apex:pageBlockSection id="_bloquePlan" columns="2" rendered="{!blnBloquePlan}">
+						<apex:outputText value="{!planActual}" id="_planActual" label="{!$Label.LTE_Plan_Actual}"/>
+                        <apex:outputText value="{!subPlanActual}" id="_subPlanActual" label="{!$Label.LTE_SubPlan_Actual}"/>
+                    
+                        <apex:inputField value="{!objOfertaEconomica.LTE_Plan__c}" onchange="CambioPlan()" label="{!$Label.LTE_Nuevo_Plan}" />	    
+                        <apex:inputField value="{!objOfertaEconomica.LTE_DatosNavegacion__c}" onchange="CambioPlan()" label="{!$Label.LTE_Nuevo_SubPlan}"/>
+                    
+                        <apex:outputText value="{!tarifaMinutoAdicionalActual}" id="_tarifaMinutoAdicionalActual" rendered="{!planActualAbierto || planSeleccionadoAbierto}" label="{!$Label.LTE_Tarifa_Minuto_Adicional}"/>
+                        <apex:inputCheckbox value="{!blnIntegrarGestor}" id="_blnIntegrarGestor" label="Integrar con Gestor"/>
+                    
+					    <apex:inputField value="{!objOfertaEconomica.Tarifa_minuto_adicional__c}" onchange="CambioPlan()" rendered="{!planSeleccionadoAbierto}" label="{!$Label.LTE_Nueva_Tarifa_Minuto_Adicional}"/>
+				</apex:pageBlockSection>
+	        </apex:pageBlockSection>
+		
+
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" rendered="{!blnBotonContinuar}" status="loading" reRender="idForm, TheMessages"/>
+			</apex:pageBlockButtons> 
+		</apex:pageBlock>
+    </apex:form>
+</apex:page>

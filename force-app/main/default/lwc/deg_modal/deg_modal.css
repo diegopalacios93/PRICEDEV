@@ -1,0 +1,64 @@
+[data-min-height="10"] {
+    min-height: calc(10vh - 8.1rem);
+}
+
+[data-min-height="20"] {
+    min-height: calc(20vh - 8.1rem);
+}
+
+[data-min-height="30"] {
+    min-height: calc(30vh - 8.1rem);
+}
+
+[data-min-height="40"] {
+    min-height: calc(40vh - 8.1rem);
+}
+
+[data-min-height="50"] {
+    min-height: calc(50vh - 8.1rem);
+}
+
+[data-min-height="60"] {
+    min-height: calc(60vh - 8.1rem);
+}
+
+[data-min-height="70"] {
+    min-height: calc(70vh - 8.1rem);
+}
+
+[data-min-height="80"] {
+    min-height: calc(80vh - 8.1rem);
+}
+
+[data-min-height="90"] {
+    min-height: calc(90vh - 8.1rem);
+}
+
+[data-min-height="100"] {
+    min-height: calc(100vh - 8.1rem);
+}
+
+[data-min-height] {
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.slds-modal__content {
+    overflow: visible;
+    overflow-y: visible;
+}
+
+.modal-etb-inside{
+    padding: 0px; 
+    height:100%; 
+    overflow:hidden;
+}
+
+.modal-etb{
+    position: absolute; 
+    bottom: 0px; 
+    right: 0px; 
+    margin-right: var(--lwc-sidebarWidth,369px); 
+    height: var(--lwc-sidebarHeight,465px); 
+    padding: 0;
+}

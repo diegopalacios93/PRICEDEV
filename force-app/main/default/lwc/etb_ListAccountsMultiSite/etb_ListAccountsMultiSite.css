@@ -1,0 +1,120 @@
+.open{
+    display: inline;
+}
+
+.close{
+    display: none;
+}
+
+.slds-icon_container{
+    display: inline;
+}
+
+.slds-scope .slds-button{
+    border-color: #E8E6E6;
+}
+
+.c-button-border-color{
+    --slds-c-button-color-border: #E8E6E6;
+    --sds-c-button-color-border: #E8E6E6;
+    --slds-c-button-neutral-color-border: #E8E6E6;
+}
+
+table tr td.loading-top-padding {
+    padding-top: 50px;
+}
+
+.icon-groups{
+    position: relative;
+    bottom: 0.3rem;
+}
+
+.c-display-in-flex{
+    display: inline-flex;
+}
+
+.c-display-vertical-center{
+    display: inline-grid;
+    align-content: center;
+}
+
+.slds-table thead th {
+    background-color: #fafaf9;
+    padding: 1.1rem 0.5rem;
+}
+
+.c-bcolor-group{
+    background-color: #fafaf9;
+}
+.c-bcolor-nogroup{
+    background-color: #E0E8EC;
+}
+.c-bcolor-nogroup-selected{
+    background-color: #E8E8E7;
+}
+
+.c-text-bold{
+    --lwc-tabsFontWeight: 700;
+}
+
+.slds-table tr td {
+    padding: 0.32rem 0.5rem;
+}
+
+table{
+    table-layout: fixed;
+    width: 100%;
+}
+
+table tr td{
+    color: black !important;
+    white-space: normal;
+    word-break: break-word;
+}
+
+table tr th{
+    white-space: normal;
+    font-size: 13px;
+    color: #514F4D;
+}
+
+.c-color-blue-icon{
+    --sds-c-icon-color-foreground-default: #0A4A8C;
+}
+
+.c-color-blue-nogroup{
+    color: #034589;
+}
+
+.c-slds-border_bottom{
+    border-bottom: 1px solid #034589;
+}
+
+.c-bcolor-blue{
+    background: #034589;
+}
+
+.c-p-top-ungrupedItem{
+    padding-top: 0.45rem;
+}
+
+.c-wfirst-col{
+    width: 7%;
+}
+
+.c-customColor{
+    color: #0ACCF9;
+}
+
+.c-slds-checkbox_faux{
+    --lwc-spacingXSmall: 0;
+    margin-right: 0.5rem;
+}
+
+/* lightning-button-menu.button-menu {
+    --sds-c-button-neutral-color-background: #034589 !important;
+    --sdls-c-button-brand-color-background: #034589 !important;
+    --slds-c-button-color-background: #034589 !important;
+    --slds-c-button-inverse-color-background: #034589 !important;
+    background-color: #034589 !important;
+} */

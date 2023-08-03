@@ -1,0 +1,17 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Contract" extensions="SeleccionarExportacionDatos_ctr" lightningStylesheets="true">
+    <apex:form id="idForm">
+        <apex:sectionHeader title="" subtitle="Exportar registros del contrato" />
+        <apex:pageBlock title="" id="SeleccionExportarRegistros">            
+            <apex:pageBlockSection title="" columns="4" id="SeleccionExportarRegistros_1" collapsible="false">
+                <label style="font: 12px Verdana;" aling= "right">Seleccione el registro a exportar: </label>
+                <apex:selectList value="{!tipoExportacion}" size="1" id="SeleccionTipoExportacion">
+                    <apex:selectOptions value="{!items}"/>
+                </apex:selectList>                
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Exportar" action="{!generarInforme}" status="loading" reRender="idForm, TheMessages"/>
+                <apex:commandButton value="Cerrar" action="{!cerrarPagina}"/>
+			</apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>  
+</apex:page>

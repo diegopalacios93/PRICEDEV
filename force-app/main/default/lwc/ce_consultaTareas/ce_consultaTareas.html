@@ -1,0 +1,43 @@
+<template>
+    <div class="slds-card_boundary slds-var-p-around_medium">
+        <lightning-card title="Tareas de Agendamiento" icon-name="standard:timesheet_entry">
+            <!--Lógica spinner de carga cuando se está procesando la información-->
+            <template if:true={isRendering}>
+                <lightning-spinner variant="brand"></lightning-spinner>
+            </template>
+            <!--Se muestra el data table o mensaje de error en caso de que el caso corresponda a una categoría pertinente-->
+            <template if:true={validCase}>
+                <!--Lógica spinner de carga cuando se presiona el botón de una fila del data table-->
+                <template if:true={isRendering2}>
+                    <div class="slds-spinner_container slds-is-relative slds-is-fixed">
+                        <lightning-spinner size="large" variant="brand"></lightning-spinner>
+                    </div>
+                </template>
+                <!--Se muestra el data table en caso tal que se haya retornado la información correctamente-->
+                <template if:true={tableValues}>
+                    <div class="slds-card_boundary">
+                        <div class={dataTableHeight}>
+                            <lightning-datatable key-field="TaskID" data={tableValues} columns={columns}
+                                hide-checkbox-column resize-column-disabled enable-infinite-loading
+                                onloadmore={loadMoreData} onrowaction={getRowDetail}>
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </template>
+                <!--Se muestra un mensaje de advertencia en caso de que algún error ocurra-->
+                <template if:true={errorMessage}>
+                    <lightning-icon icon-name="utility:warning" class="slds-m-left_medium" size="small">
+                    </lightning-icon>
+                    <span class="slds-var-m-left_medium">{errorMessage}</span>
+                </template>
+            </template>
+            <!--Se muestra un mensaje de advertencia en caso de que la categoría sea inválida-->
+            <template if:false={validCase}>
+                <lightning-icon icon-name="utility:warning" class="slds-m-left_medium" size="small">
+                </lightning-icon>
+                <lightning-formatted-text class="slds-var-m-left_medium" value={label.CATEGORIA_INVALIDA}>
+                </lightning-formatted-text>
+            </template>
+        </lightning-card>
+    </div>
+</template>

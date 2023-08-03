@@ -1,0 +1,49 @@
+<apex:page Controller="OperacionesComercialesLegalizar_ctr" action="{!AnalizaAccion}" id="idPage"> 
+    <apex:sectionHeader title="{!$Label.OpComLegalizar_Titulo}" subtitle="{!strNombreCon}"/> 
+    
+    <script>
+        function ValidaGuardar(){
+        alert({!blnValidaSel});
+       
+         if({!blnValidaSel}){
+             guardaJS();
+         }
+         else{
+             errorJS();
+         }       
+            
+        }    
+    
+    </script>    
+           
+    <apex:form id="idForm" >                
+        <apex:actionFunction name="validaJS" action="{!ValidaSel}" oncomplete="ValidaGuardar();"/>                        
+        <apex:actionFunction name="guardaJS" action="{!Crear}"/>   
+        <apex:actionFunction name="errorJS" action="{!MostrarError}" rerender="idPage:idForm:idPageBlock1"/>   
+        
+        <apex:actionFunction name="goBackJS" action="{!ValidaSel}" rerender="idPage:idForm"/>   
+        
+        
+        
+        
+        <apex:pageBlock id="idPageBlock1">
+        <apex:pageMessages escape="false" />            
+            <apex:pageBlockSection columns="1" id="idPBS1" rendered="{!blnLista}">                                      
+                <apex:pageBlockTable value="{!lstResult}" var="i">
+                    <apex:column headerValue="Seleccione">
+                        <apex:inputCheckbox value="{!i.blnSel}"/>
+                    </apex:column>
+                    <apex:column value="{!i.OpCome.Name}"/>
+                    <apex:column value="{!i.OpCome.Oportunidad__c}"/>
+                    <apex:column value="{!i.OpCome.Activo__r.NombredelProducto__c}"/>
+                    <apex:column value="{!i.OpCome.Plan__c}"/>
+                    <apex:column value="{!i.OpCome.TOPP__c}"/>                                      
+                </apex:pageBlockTable>
+                
+             </apex:pageBlockSection>          
+             
+            <apex:commandButton value="Crear" action="{!Crear}" rendered="{!blnBtnCrear}" />      
+            <apex:commandButton value="Volver" action="{!Cancelar}" />                          
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,327 @@
+<apex:page Controller="CheckList_ctr" applyBodyTag="false"
+	renderAs="pdf">
+	<!-- CheckList_ctr renderAs="pdf" -->
+	<head>
+	<style>
+body {
+	font-family: 'Arial Unicode MS';
+	font-size: 12px;
+}
+
+.title {
+	font-weight: bold;
+	font-size: 13px;
+	text-align: center;
+}
+
+.linea {
+	
+}
+
+.cin {
+	width: 50%;
+}
+
+.sub {
+	font-size: 7px
+}
+
+.chk th {
+	font-size: 9px;
+	width: 18%;
+}
+
+table {
+	font-size: 10px;
+}
+
+.chk td {
+	font-size: 9px;
+	width: 7%;
+}
+
+.bPageBlock .detailList .dataCol {
+	font-size: 8px;
+	width: 5%;
+}
+
+.bPageBlock th.vfLabelColTextWrap {
+	white-space: nowrap;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+td {
+	vertical-align: text-top;
+}
+</style>
+	</head>
+	<body>
+	<table>
+		<tr>
+			<td style="width: 20%"><img
+				src="/servlet/servlet.ImageServer?id=01540000001JRnu&oid=00D40000000MzGu&lastMod=1382978758000" /></td>
+			<td style="width: 60%; text-align: center;">
+			<h3>CHECK LIST LEGALIZACION Y FIRMAS</h3>
+			No.LEGALIZACION {!leg.name}</td>
+			<td style="width: 20%"></td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<td style="text-align: right;"><span>FECHA DE RADICACION: ___________________________________</span></td>
+		</tr>
+		<tr>
+			<td><span>DATOS DEL CLIENTE</span></td>
+		</tr>
+		<tr>
+			<td>RAZON SOCIAL {!leg.Contrato__r.Account.Name}</td>
+		</tr>
+		<tr>
+			<td>NIT - DV {!leg.Contrato__r.Account.AccountNumber}&nbsp;&nbsp;{!UPPER($ObjectType.contract.Fields.ContractNumber.Label)}: {!leg.Contrato__r.ContractNumber}
+			{!UPPER($ObjectType.Contract.Fields.NumeroContratoSGC__c.Label)}:{!IF(leg.Contrato__r.NumeroContratoSGC__c==null,'__________',leg.Contrato__r.NumeroContratoSGC__c)}
+			{!IF (leg.Contrato__r.Contrato_Relacionado__c!=null,'CONTRATO
+			RELACIONADO '+leg.Contrato__r.Contrato_Relacionado__r.name,'')}
+			{!UPPER($ObjectType.Contract.Fields.TipodecontratoETB__c.Label)}:{!UPPER(leg.Contrato__r.TipodecontratoETB__c)}
+			{!UPPER($ObjectType.Contract.Fields.NoModificacion__c.Label)}:{!UPPER(leg.Contrato__r.NoModificacion__c)}
+			</td>
+		</tr>
+		<tr>
+		<td>{!UPPER($ObjectType.Checklist__c.Fields.NO_Nive_de_autorizaci_del_configurador__c.Label)}:&nbsp;&nbsp;
+		{!UPPER(ch.NO_Nive_de_autorizaci_del_configurador__c)}
+		</td>
+		</tr>
+
+	</table>
+
+
+
+
+	<div
+		style="width: 100%; border: 2px solid black; display: block; background: #EBEDEC">
+	<table style="width: 100%; border: 1px solid black">
+		<tr>
+			<td colspan="4" style="text-align: center;">
+			<div class="title">DATOS DE CONTRATO, LICITACION, OFERTA QUE SE
+			ESTA LEGALIZANDO</div>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 25%;">VIGENCIA EN MESES</td>
+			<td style="width: 25%;"><span class="linea">{!leg.Contrato__r.ContractTerm}</span></td>
+			<td style="width: 25%;">{!UPPER($ObjectType.contract.Fields.Valor_Total_contrato_con_Iva__c.Label)}</td>
+			<td style="width: 25%;"><span class="linea">${!valortotalconiva}</span></td>
+		</tr>
+		<tr>
+			<td style="width: 25%;">{!UPPER($ObjectType.contract.Fields.Duracion__c.Label)}</td>
+			<td style="width: 25%;"><span class="linea">{!leg.Contrato__r.Duracion__c}</span></td>
+			<td style="width: 25%;">{!UPPER($ObjectType.contract.Fields.ValorTotaldelcontrato__c.Label)}</td>
+			<td style="width: 25%;"><span class="linea">${!valortotalcon}</span></td>
+		</tr>
+	</table>
+	</div>
+
+	<div class="title">TIPO DE SERVICIO</div>
+
+	<table
+		style="width: 100%; border: 1px solid black; background: #EBEDEC">
+		<tr>
+			<td style="border: solid 2px black; width: 50%;">{!LineaNeg}</td>
+			<td style="border: solid 2px black; width: 50%;">
+			<table>
+				<tr>
+					<td style="width: 50%;">COLABORADOR<br />
+					</td>
+					<td style="width: 50%;">{!aliado}</td>
+				</tr>
+				<tr>
+					<td style="width: 50%;">REVENTA</td>
+					<td style="width: 50%;">{!tipoaliado}<br />
+					</td>
+				</tr>
+				<!-- <tr>
+					<td style="width: 50%;" class="sub">DESCRIPCION DE LA SOLUCION</td>
+					<td style="width: 50%;"></td>
+				</tr>-->
+				<tr>
+					<td style="width: 50%;" class="sub">PORCENTAJE TOTAL MARGEN
+					ETB</td>
+					<td style="width: 50%;">{!ch.NO_Porcentaje_Total_Margen_ETB__c}</td>
+				</tr>
+				<tr>
+					<td style="width: 50%;" class="sub">{!UPPER($ObjectType.Checklist__c.Fields.NO_Nive_de_autorizaci_del_configurador__c.Label)}</td>
+					<td style="width: 50%;">{!ch.NO_Nive_de_autorizaci_del_configurador__c}</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+
+
+
+	<p></p>
+	<table
+		style="width: 100%; border: 1px solid black; background: #EBEDEC">
+		<tr>
+			<td style="border: solid 2px black; width: 50%;">
+			<table style="width: 100%;">
+				<tr>
+					<td colspan="2" style="text-align: center;">VALOR NUEVO</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: center;">VALOR TOTAL
+					MENSUAL SIN IVA</td>
+				</tr>
+				<tr>
+					<td>{!UPPER($ObjectType.contract.Fields.Total_Cargo_fijo_Mensual_Nuevo__c.Label)}</td>
+					<td>${!totalcargofijo}</td>
+				</tr>
+				<tr> 
+					<td>{!UPPER($ObjectType.contract.Fields.ValorNuevoNoRecurrente__c.Label)}</td>
+					<td>${!valornuevorecurrente}</td>
+				</tr>
+				<tr>
+					<td>{!UPPER($ObjectType.contract.Fields.ValorNuevoNetworking__c.Label)}</td>
+					<td>${!valornuevonetworking}</td>
+				</tr>
+
+
+			</table>
+			</td>
+			<td style="border: solid 2px black; width: 50%;">
+			<table style="width: 100%;">
+				<tr>
+					<td colspan="2" style="text-align: center;">VALOR ANTERIOR</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: center;">VALOR TOTAL
+					MENSUAL SIN IVA</td>
+				</tr>
+				<tr>
+					<td>{!UPPER($ObjectType.Contract.Fields.Incidencia_ingresos__c.Label)}</td>
+					<td>${!incidenciaingresos}</td>
+				</tr>
+				<tr>
+					<td>CARGO FIJO MENSUAL ACTUAL SIN IVA</td>
+					<td>${!valoranteriordatos}</td>
+
+				</tr>
+
+			</table>
+			</td>
+		</tr>
+	</table>
+
+	<!-- ################## --->
+	<table style="width: 100%;">
+		<tr>
+			<td>TIPO DE FACTURACION</td>
+		</tr>
+		<tr>
+			<td>{!IF(leg.Contrato__r.Forma_de_Pago__c=='Si','NO ESTANDAR','ESTANDAR')}</td>
+		</tr>
+	</table>
+	<apex:pageBlock >
+		<apex:form >
+			<div Class="chk"><apex:dynamicComponent componentValue="{!checkLeg}" /></div>
+		</apex:form>
+	</apex:pageBlock>
+
+	<div style="width: 100%; border: 2px solid black;">
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="2" style="text-align: center;">
+			<div class="title">CONTACTO ENTIDAD PARA LEGALIZACION Y CORRESPONDENCIA</div>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 50%">{!UPPER($ObjectType.contact.Fields.Name.Label)}:
+			{!UPPER(ch.NO_Contacto_para_legalizacion__r.name)}</td>
+			<td style="width: 50%">{!UPPER($ObjectType.contact.Fields.Title.Label)}:
+			{!UPPER(ch.NO_Contacto_para_legalizacion__r.Title)}</td>
+		</tr>
+		<tr>
+			<td style="width: 50%">{!UPPER($ObjectType.contact.Fields.Direccion__c.Label)}:
+			{!UPPER(ch.NO_Contacto_para_legalizacion__r.Direccion__c)}</td>
+			<td style="width: 50%">{!UPPER($ObjectType.contact.Fields.Phone.Label)}:
+			{!UPPER(ch.NO_Contacto_para_legalizacion__r.Phone)}</td>
+		</tr>
+		<tr>
+			<td style="width: 50%">{!UPPER($ObjectType.contact.Fields.Email.Label)}:
+			{!UPPER(ch.NO_Contacto_para_legalizacion__r.Email)}</td>
+			<td style="width: 50%">{!UPPER($ObjectType.contact.Fields.MobilePhone.Label)}:
+			{!UPPER(ch.NO_Contacto_para_legalizacion__r.MobilePhone)}</td>
+		</tr>
+	</table>
+	</div>
+	<!-- <div class="title">LISTADO DE VIABILIDAD Y LEGALIZACION</div>
+	<div style="width: 100%; border: 2px solid black;">{!Viab}</div>
+	 -->
+<!-- FIRMAS -->
+<p></p>
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 30%">NOMBRE DE EJECUTIVO CUENTA:</td><td style="width: 45%">{!UPPER(leg.Contrato__r.Account.owner.name)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">NOMBRE DIRECTOR DE VENTAS:</td><td style="width: 45%">{!UPPER(leg.Contrato__r.Account.owner.Manager.name)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">NOMBRE GERENTE DE VENTAS:</td><td style="width: 45%">{!UPPER(leg.Contrato__r.Account.owner.Manager.Manager.name)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">NOMBRE ABOGADO JURIDICA:</td><td style="width: 45%">{!UPPER(ch.NO_Abogado_Juridica__c)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">NOMBRE ING. SOLUCIONES TI:</td><td style="width: 45%">{!UPPER(ch.NO_Ing_Soluciones_TI__r.Name)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">NOMBRE ING. PREVENTA:</td><td style="width: 45%">{!UPPER(ch.NO_Ing_Preventa__r.Name)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">NOMBRE DIRECT SOLUCIONES TI:</td><td style="width: 45%">{!UPPER(ch.NO_gestor_ing_TI__c)}</td>
+			<td style="width: 25%">V.B._______________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 30%">{!UPPER($ObjectType.user.Fields.Division.Label)}</td><td style="width: 45%">{!UPPER(leg.Contrato__r.Account.owner.Division)}</td>
+			<td style="width: 25%"></td>
+		</tr>
+	</table>
+<p></p>
+	
+
+	<div class="title">OBSERVACIONES Y COMENTARIOS</div>
+	<div style="width: 100%; border: 2px solid black;">
+	{!ch.NO_Observaciones__c}</div>
+
+<!-- FIRMAS PIE -->
+<p></p>
+<!-- 
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 40% ;text-align: center;">______________________________________________</td>
+			<td style="width: 40% ;text-align: center;">______________________________________________</td>
+			<td style="width: 20% ;text-align: center;">__________________________</td>
+		</tr>
+		<tr>
+			<td style="width: 40% ;text-align: center;">NOMBRE DE QUIEN LEGALIZA</td>
+			<td style="width: 40% ;text-align: center;">NOMBRE DE ARCHIVA</td>
+			<td style="width: 20% ;text-align: center;">FECHA</td>
+		</tr>
+	</table>
+
+ -->
+
+
+
+	</body>
+</apex:page>

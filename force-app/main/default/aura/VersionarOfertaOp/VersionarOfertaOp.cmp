@@ -1,0 +1,29 @@
+<aura:component controller="VersionarOfertaOpController" implements="force:lightningQuickAction,force:hasRecordId,lightning:isUrlAddressable,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes">
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:attribute name="motivoMap" type="Map"/>
+    <aura:attribute name="oferta" type="Oferta_Op__c" default="{'sobjectType':'Oferta_Op__c', 
+                                                       'Motivo_de_versionamiento__c': '',
+                                                       'Comentarios__c': ''}"/>
+     
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+
+    <div class="form-group">
+        <lightning:select aura:id="motivoPicklist" value="{!v.oferta.Motivo_de_versionamiento__c}" name="motivoPicklist" label="Motivo de versionamiento" required="true">
+            <option value="">--None--</option>
+            <aura:iteration items="{!v.motivoMap}" var="ind" indexVar="key">
+                <option text="{!ind.value}" value="{!ind.key}" selected="{!ind.key==v.oferta.Motivo_de_versionamiento__c}" />
+            </aura:iteration>
+        </lightning:select>
+    </div>
+            
+    <div class="form-group">
+        <lightning:textarea name="comment" type="text" required="true" maxlength="50" label="Comentarios" value="{!v.oferta.Comentarios__c}" />
+    </div>
+    <br/>
+    
+    <div class="slds-align_absolute-center">
+        <lightning:button variant="brand" label="Versionar" onclick="{!c.handleOfferSave}" />   
+    </div>
+    
+</aura:component>

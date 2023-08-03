@@ -1,0 +1,137 @@
+<apex:page docType="html-5.0" controller="RetiroLD_ctr"
+	id="pagina">
+	<apex:stylesheet value="//cdn.jsdelivr.net/webjars/bootstrap-sf1/0.1.0-beta.6/css/bootstrap-namespaced.css" />
+	<apex:includeScript value="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js" />
+    <style type="text/css">
+        select.ng-invalid-required { background-color:lightgray; }
+        .divCentrar{width: 100% ; text-align: center;}
+    </style>
+    
+    
+<apex:pageMessages id="msg" />
+
+<apex:sectionHeader title="{!toppr.Name}" subtitle="{!toppr.TipodeOperacionporplan__c}"/>
+
+<div ng-app="ngApp" ng-controller="retiro" class="bPageBlock">
+<div class="message errorM3" role="alert" ng-show="errorApex != null">{{errorApex}}</div>
+
+
+	<form name="formLineas" ng-submit="guardar()">
+	<p>
+	<table class="list">
+	<tr>
+		<th></th>
+		<th class="headerRow" ng-if="conf.t == 'True' " >Por retirar</th>
+		<th class="headerRow">{!$ObjectType.Linea__c.fields.Name.label}</th>
+	</tr>
+
+
+	<tr ng-repeat="l in lineasInfo.correcto">
+		<td class="dataCell">{{$index+1}}</td>
+		<td class="dataCell" ng-if="conf.t == 'True' "><input type="checkbox" name="l.nameF" ng-model='l.existe' /></td>
+		<td class="dataCell">{{ l.Linea.Name}}</td>
+	</tr>
+	</table>
+	</p>
+
+	<p >
+	<div class="message errorM3" role="alert" ng-if="lineasInfo.conErrores.length">
+	<span ng-if="conf.t=='True'">{{msgError.Error01}}</span>
+	<span ng-if="conf.t=='False'">{{msgError.Error02}}</span>
+	</div>
+	<table class="list" ng-if="lineasInfo.conErrores.length">
+	<tr>
+		<th></th>
+		<th class="headerRow">Operacion comercial en curso</th>
+		<th class="headerRow">{!$ObjectType.Linea__c.fields.Name.label}</th>
+	</tr>
+
+
+	<tr ng-repeat="l in lineasInfo.conErrores">
+		<td class="dataCell">{{$index+1}}</td>
+		<td class="dataCell">
+			<a ng-href="/{{l.Linea.Operacion_Comercial_Actual__c}}" target="_blank">
+			{{ l.Linea.Operacion_Comercial_Actual__r.Name }}
+			</a>
+		</td>
+		<td class="dataCell">{{ l.Linea.Name}}</td>
+	</tr>
+	</table>
+	</p>
+
+<div class="divCentrar">
+	<input class="btn" type="submit" id="Guardar" value="Guardar"
+	ng-if="(status.datos.hasError!='True' && errorApex==null) && !(conf.t=='False' && lineasInfo.conErrores.length)"/>
+</div>
+
+	</form>
+
+ 
+
+</div>
+
+<script type="text/javascript">
+
+	var ngApp=angular.module("ngApp", []);
+
+
+	ngApp.controller("retiro",function ($scope) {
+
+
+
+			$scope.lineasInfo={!Lineas};
+			$scope.errorApex=null;
+			$scope.tieneError;
+			$scope.conf={!Conf};
+			$scope.status=null;
+			$scope.msgError={"Error01":"Las siguientes lineas se encuentran con operaciones comerciales en curso y no seran procesadas","Error02":"No se puede continuar existen lineas con operaciones comerciales en curso"};
+
+
+			$scope.ResultGuardar=function (result, event) {
+				if (event.status) {
+					$scope.status=JSON.parse(result.replace(/(&quot\;)/g,"\"").replace(/(&quot\;)/g,"\""));
+				} else if (event.type === 'exception') {
+					$scope.errorApex = event.message+" " + event.where;
+				} else {
+					$scope.errorApex=event.message;
+				}
+                $scope.$apply();
+
+                console.debug($scope.status.datos);
+                if($scope.status.datos.hasError=='False'){
+                	window.location='/'+$scope.status.datos.Redirect;
+                }
+
+
+
+
+			}
+
+		    $scope.guardar = function() {
+
+
+		        Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.RetiroLD_ctr.guardarLineas}',angular.toJson($scope.lineasInfo.correcto),angular.toJson($scope.conf),$scope.ResultGuardar);
+		    };
+
+
+
+
+
+		}
+		);
+
+		
+
+
+
+</script>
+
+
+</apex:page>
+<!-- 
+
+
+	
+	
+
+ -->

@@ -1,0 +1,77 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_gestionIMEI_ctr">
+    <apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">        
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+            </apex:facet>
+        </apex:actionStatus> 
+        <script>
+            function seleccionarRegistroScript(activoId)
+            {
+                seleccionarRegistro(activoId);
+            }        
+        </script>
+        <apex:actionFunction name="validateIMEI" action="{!validate}" />
+        <apex:actionFunction name="seleccionarRegistro" reRender="idPage:idForm" action="{!selectRecords}" status="loading">
+            <apex:param name="firsParam" assignTo="{!strIdSelect}" value=""/>
+        </apex:actionFunction>        
+        <apex:pageBlock title="{!$Label.LTE_Titulo_Gestion_IMEI}" >
+            <apex:pageBlockSection title="Consultar Por" id="_bloqueBuscar" columns="1" collapsible="false" >
+                <apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput" rendered="{!blnDesbloqueo }">
+                    <label for="numConexiones" style="font: bold 11px Verdana;">{!strLabel1}</label>
+                    <apex:inputText value="{!strNumeroIMEI}" id="numConexiones" style="width:70%" />
+                    <apex:commandButton value="{!$Label.Buscar}" action="{!buscar}" status="loading" reRender="idForm, TheMessages, _bloqueServicios, _seccionIMEI"/>
+                </apex:outputPanel> 
+             </apex:pageBlockSection>
+             <apex:pageBlockSection columns="2">
+                <apex:outputPanel >
+                    <label for="numId" style="font: bold 11px Verdana;">Documento</label>
+                    <apex:inputText id="numId" value="{!strDoc}"/>
+                </apex:outputPanel>
+                <apex:outputPanel >
+                    <label for="tipoId" style="font: bold 11px Verdana;">Tipo Documento</label>
+                    <apex:SelectList value="{!strTipoDoc}" size="1">
+                        <apex:selectOptions value="{!lstTipDoc}"/>
+                    </apex:SelectList>
+                </apex:outputPanel>
+            </apex:pageBlockSection> 
+            <apex:pageBlockSection columns="1" id="_bloqueServicios" >
+                <apex:pageBlockSection title="Listado IMEI" id="_seccionIMEI" columns="1">
+                    <apex:pageBlockTable value="{!lstDetalleWrapper}" var="detalle">
+                        <apex:column width="25px" rendered="{!NOT(blnConsultaXIMEI)}">
+                            <apex:facet name="header"> 
+                                <apex:inputCheckbox value="{!blnAllChecked}"> 
+                                    <apex:actionSupport event="onclick" action="{!seleccionarTodos}" rerender="_bloqueServicios" status="loading"/>
+                                 </apex:inputCheckbox>
+                             </apex:facet>
+                            <apex:inputCheckbox value="{!detalle.blnSelect}" disabled="{!detalle.blnAplica}" id="checkboxId" onchange="seleccionarRegistroScript('{!detalle.strId}');"/> <!-- -->
+                        </apex:column>                    
+                        <apex:column rendered="{!NOT(blnConsultaXIMEI)}" value="{!detalle.strNumero}" headerValue="{!$Label.LTE_Cambio_Plan_Num_Conexion}" width="5"/>
+                        <apex:column value="{!detalle.strIMEI}" headerValue="IMEI" width="10" />
+                        <apex:column rendered="{!NOT(blnConsultaXIMEI)}" headerValue="IMEI Alterno" width="10" >
+                            <apex:inputText value="{!detalle.strIMEI_Alterno}" onblur="validateIMEI();" />
+							<apex:outputText value="{!detalle.errorMessage}" styleClass="errorMsg" rendered="{!LEN(detalle.errorMessage)>0}"/>                            
+                        </apex:column>
+                        <apex:column rendered="{!NOT(blnConsultaXIMEI)}" value="{!detalle.strNombre }" headerValue="Servicio" />
+                        <apex:column value="{!detalle.strEstado }" headerValue="Estado"/>                        
+                        <apex:column value="{!detalle.strCodRtaLst }" headerValue="Cod. Respuesta Listas"/>
+                        <apex:column value="{!detalle.strMarca }" headerValue="Marca"/>                        
+                        <apex:column value="{!detalle.strModelo }" headerValue="Modelo"/>
+                        <apex:column value="{!detalle.strRtaGSMA }" headerValue="GSMA"/>
+                        <apex:column value="{!detalle.strProbadoETB }" headerValue="Probado ETB"/>
+                        <apex:column value="{!detalle.strRtaPruebaRedETB }" headerValue="Prueba Red ETB"/>
+                        <apex:column value="{!detalle.strHomologadoColombia }" headerValue="Homologado Colombia"/>                        
+                        <apex:column value="{!detalle.strDescripcionError}" headerValue="Desc. Error"/>                        
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="{!strSubTOPP}" action="{!guardar}" rendered="{!(blnHabilitar && blnDesbloqueo )}" status="loading" reRender="idForm, TheMessages"/>
+                <apex:commandButton value="{!$Label.Regresar}" action="{!regresar}" rendered="{!NOT(blnConsultaXIMEI)}" status="loading" reRender="idForm, TheMessages"/>
+                <apex:commandButton value="{!$Label.Cerrar}" onClick="window.close();"/>
+            </apex:pageBlockButtons> 
+                       
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

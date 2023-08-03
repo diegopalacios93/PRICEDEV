@@ -1,0 +1,214 @@
+<!-- ********************************************************************** 
+Develope by:            Avanxo Colombia
+Author:                 Carlos A. Rodriguez B. 
+Project:                ETB-LTE   
+Description:            VisualForce encargada de la creación y edición de cuentas de facturación.                          
+Sprint                  1
+Release                 1
+
+Cambios (Versiones)
+********************************
+No.     Fecha       Autor                           Descripción
+******  **********  ********************            ****************
+1.0     31/07/2015  Carlos A. Rodriguez B.          Creation. 
+2.0     12/07/2016  Alvaro Sevilla                  Adicion de campo Confirmacion Email
+**************************************************************************** -->
+<apex:page id="direcciones" standardController="CuentaFacturacion__c" extensions="LTE_CreacionCuentaFacturacion_ctr" showHeader="true" sidebar="true" tabStyle="CuentaFacturacion__c" action="{!redirectPage}">
+	<style type="text/css">
+	.custPopup{
+		background-color: white;
+		border-width: 2px;
+		border-style: solid;
+		z-index: 9999;
+		padding:10px;
+		position: absolute;
+		width: 96%;
+		left: 2%;            
+		top: 0%;  
+		height: 70%;       
+	}
+	.popupBackground{
+		background-color:black;
+		opacity: 0.20;
+		filter: alpha(opacity = 20);
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 9998;
+	}
+	</style>
+	<apex:includeScript value="{!URLFOR($Resource.jQueryUI, 'jquery-ui-1.10.4/js/jquery-1.10.2.js')}" />   
+	<script type="text/javascript">  
+	$j = jQuery.noConflict();
+
+	function goBack() 
+	{
+		window.history.back()
+	}   
+	// Estandarización de Direcciones
+	function pegar()
+	{
+		var inside = iframeRef( document.getElementById('iframe1') )
+		var txt = inside.getElementsByClassName('dirAbreviada')[0].value;                	
+		txt = txt + ' ' + inside.getElementsByClassName('observacion')[0].value;
+		
+		/* BEGIN - Manuel Medina - Cambio de asignacion para campo inputfield - 13092016 */
+		document.getElementById('inputDireccion').value = txt;
+		//document.getElementById('{!$Component.direcciones:frmDir:pbDir:lugarFact:inputDireccion}').value = txt;
+		/* END - Manuel Medina - Cambio de asignacion para campo inputfield - 13092016 */
+		
+		$j('[id$=inputDireccionH]').val(txt);
+		//alert('{!$Label.DireccionEstandarizadaED}'+' : '+txt);
+		
+		/* BEGIN - Manuel Medina - Validacion para registrar el campo observaciones - 05092016 */
+		if( inside.getElementsByClassName('observacion')[0].value != '' ){
+			$j('[id$=observacionesH]').val(true);
+		}
+		/* END - Manuel Medina - Validacion para registrar el campo observaciones - 05092016 */
+		
+	}        
+	function iframeRef( frameRef ) {
+		return frameRef.contentWindow
+		? frameRef.contentWindow.document
+		: frameRef.contentDocument
+	} 
+	// Fin Estandarización de Direcciones    
+	</script>
+
+	<apex:form id="frmDir">
+		<!-- [CG] - Popup Estandarización de Direcciones -->        
+		<apex:outputPanel id="tstpopup">
+			<apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!blnDisplayPopUp}" />
+			<apex:outputPanel styleClass="custPopup" layout="block" rendered="{!blnDisplayPopUp}" >
+				<apex:iframe id="iframe1" scrolling="true" src="/apex/EstandarizarDireccion_pag?sinBotones=true" frameborder="true" height="85%" />
+				
+				<!-- BEGIN - Manuel Medina - Ajuste de los botones Guardar y Cerrar - 22082016 -->
+				<!--<apex:image onclick="pegar();" url="{!$Resource.IconoCopiar}" style="width: 3%; heigth: 3%;"/>-->
+				<!--<apex:commandButton value="Salir" action="{!closePopup}" rerender="tstpopup" immediate="true"/>-->
+				<input type="button" value="Guardar" onclick="pegar();closePopup()" class="btn" style="margin-left: 40%;"/>
+				<apex:commandButton value="Cancelar" action="{!closePopup}" rerender="tstpopup" immediate="true"/>
+				<apex:actionFunction name="closePopup" action="{!closePopup}" reRender="tstpopup" immediate="true"/>
+				<!-- END - Manuel Medina - Ajuste de los botones Guardar y Cerrar - 22082016 -->
+				
+			</apex:outputPanel>
+		</apex:outputPanel> 
+		<!-- [CG] - Fin Popup Estandarización de Direcciones -->
+
+		<apex:pageMessages />
+		<apex:pageBlock id="pbDir" title="{!$Label.LTE_CuentasFacturacion}">
+
+			<apex:pageBlockButtons >
+				<apex:commandButton action="{!guardar}" value="{!$Label.LTE_Guardar}" id="btnGuardar"/>
+				<apex:commandButton value="{!$Label.Cancelar}" immediate="true" oncomplete="goBack()"/>
+				<apex:commandButton value="Estandarizar {!$Label.LTE_DireccionFacturacion}" action="{!showPopup}" immediate="true" rerender="tstpopup" />     
+			</apex:pageBlockButtons>
+
+			<apex:pageBlockSection id="infofact" title="{!$Label.LTE_InformacionFacturacion}"  columns="2">
+				<apex:outputText label="{!$Label.LTE_CuentaFacturacion}" value="{!objCuentaFact.Name}"/>
+
+				<!--<apex:inputText label="{!$Label.LTE_NombreCuentaFacturacion}" value="{!objCuentaFact.LTE_NombreCuentaFacturacion__c}" disabled="{!blnHabilitar}"/>-->
+				<apex:inputField label="{!$Label.LTE_NombreCuentaFacturacion}" value="{!objCuentaFact.LTE_NombreCuentaFacturacion__c}" required="true" />
+
+				<apex:inputField label="{!$Label.LTE_Cliente}" value="{!objCuentaFact.Cliente__c}" rendered="{!if(blnHabilitar == false, true, false)}" required="true"/>
+				<apex:outputText label="{!$Label.LTE_Cliente}" value="{!strNombreCuenta}" rendered="{!blnHabilitar}"/>
+				<apex:inputField label="{!$Label.LTE_CuentaFacturacionPadre}" value="{!objCuentaFact.LTE_CuentaFacturacionPadre__c}" rendered="{!if(blnHabilitar == false, true, false)}"/>
+				<apex:outputText label="{!$Label.LTE_CuentaFacturacionPadre}" value="{!strNombreCuentaFactPadre}" rendered="{!blnHabilitar}"/>
+
+				<apex:pageBlockSection columns="3">
+					<table width="100%">
+						<tr>
+							<td  align="right" style="vertical-align:middle;">
+								<label style="color:#4a4a56;font-weight:bold;font-size:90%">{!$Label.LTE_Ciclofacturacion}</label>
+							</td>
+							<td  align="left">
+								<apex:outputPanel styleClass="requiredInput" layout="block" id="pwPanel" > 
+									<apex:outputPanel styleClass="requiredBlock"/>              
+									<apex:selectList value="{!strCicloFactSelec}" multiselect="false" size="1">
+										<apex:selectOptions value="{!lstOpcionesCicloFact}"/>     
+									</apex:selectList>
+								</apex:outputPanel>
+							</td> 
+						</tr>
+					</table>               
+				</apex:pageBlockSection>    
+
+				<apex:pageBlockSection columns="3">
+					<table >
+						<tr>
+							<td align="right" style="vertical-align:middle;">
+								<label style="color:#4a4a56;font-weight:bold;font-size:90%">{!$Label.LTE_Metodoenvio}</label>
+							</td>
+							<td  align="left" >
+								<apex:outputPanel styleClass="requiredInput" layout="block" id="pwPanel2" > 
+									<apex:outputPanel styleClass="requiredBlock"/>              
+									<apex:selectList value="{!strMetodoEnvioSelec}" multiselect="false" size="1">
+										<apex:selectOptions value="{!lstOpcionesMetodoEnvio}"/>   
+									</apex:selectList>
+								</apex:outputPanel>
+							</td> 
+						</tr>
+					</table>
+				</apex:pageBlockSection>
+
+				<apex:inputCheckbox label="{!$Label.LTE_EsFacturable}" value="{!objCuentaFact.Facturable__c}" disabled="{!blnHabilitar}"/>  
+				<apex:inputField label="{!$Label.LTE_Email}" value="{!objCuentaFact.LTE_Email__c}"  required="true"/>
+				&nbsp;
+				<apex:inputField label="{!$Label.Confirmacion_Email}" value="{!objCuentaFact.Confirmacion_Email__c}"  required="true"/>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection id="lugarFact" title="{!$Label.LTE_LugarFacturacion}"  columns="2">
+				
+				<!-- BEGIN - Manuel Medina - Ajuste para garantizar campo obligatorio - 13092016 -->
+				<!--<apex:inputField id="inputDireccion" label="{!$Label.LTE_DireccionFacturacion}" value="{!objCuentaFact.DirCorresp__c}" required="true"  />
+				<script>document.getElementById( '{!$Component.inputDireccion}' ).disabled = true</script>-->
+				<!-- END - Manuel Medina - Ajuste para garantizar campo obligatorio - 13092016 -->
+				
+				<apex:outputPanel >
+					<!-- BEGIN - Manuel Medina - Cambio por inputField - 13092016 -->
+					<apex:outputLabel value="{!$Label.LTE_DireccionFacturacion}" style="color:#4a4a56;font-weight:bold;font-size:90%; position:relative; left:63px; top:11px;"/>
+					<!-- END - Manuel Medina - Cambio por inputField - 13092016 -->
+					
+					<div align="right" class="requiredInput" style="width:10px; position:relative; left: 190px; bottom:5px;" >
+						<div class="requiredBlock"/>
+						
+						<!-- BEGIN - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 -->
+						<input id='inputDireccion' value="{!objCuentaFact.DirCorresp__c}" disabled="true" />
+						<!--<input id='inputDireccion' value="{!objCuentaFact.DirCorresp__c}"/>-->
+						<!-- END - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 -->
+						
+						<apex:inputHidden value="{!objCuentaFact.DirCorresp__c}" id="inputDireccionH"/>
+						
+						<!-- BEGIN - Manuel Medina - Campo que se activa cuando se ingresa la direccion por el campo de observaciones - 05092016 -->
+						<apex:inputHidden value="{!objCuentaFact.AVX_ObservacionesIngresadas__c}" id="observacionesH"/>
+						<!-- END - Manuel Medina - Campo que se activa cuando se ingresa la direccion por el campo de observaciones - 05092016 -->
+						
+					</div>
+				</apex:outputPanel> 
+
+				<!-- <apex:inputField label="{!$Label.LTE_DireccionFacturacion}" value="{!objCuentaFact.DirCorresp__c}" required="true"  /> -->
+				<apex:inputField label="{!$Label.LTE_DireccionAlterna}" value="{!objCuentaFact.LTE_DireccionAlterna__c}" />
+				<apex:inputField label="{!$Label.LTE_CiudadFacturacion}" value="{!objCuentaFact.Ciudad__c}" required="true"/>
+				<apex:inputField label="{!$Label.LTE_CiudadAlterna}" value="{!objCuentaFact.LTE_CiudadAlterna__c}"/>                
+				<apex:outputText label="{!$Label.LTE_DepartamentoFacturacion}" value="{!strDptoFactSelec}" rendered="{!blnHabilitar}"/>
+				<apex:outputText label="{!$Label.LTE_DepartamentoAlterno}" value="{!strDptoAltSelec}" rendered="{!blnHabilitar}"/>      
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+
+	<!--<apex:includeScript value="{!URLFOR($Resource.jQueryUI, 'jquery-ui-1.10.4/js/jquery-1.10.2.js')}" />   
+	<script type="text/javascript">  
+		$j = jQuery.noConflict();
+
+		/* BEGIN - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 */
+		window.onLoad				= new function() { activar(); };
+		function activar(){
+			if( "{!$Setup.AVX_EstandarizarDirecciones__c.AVX_HabilitarCampoDireccion__c}" == 'false' ){
+				$j('[id$=inputDireccion]').prop('disabled', true);
+			}
+		}
+		/* END - Manuel Medina - Validacion que controla la edicion del campo de direccion - 09092016 */
+	</script>-->
+
+</apex:page>

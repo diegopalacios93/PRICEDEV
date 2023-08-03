@@ -1,0 +1,15 @@
+<apex:page controller="GenerarCSVAnexo_Observacion" action="{!exportToExcel}" readOnly="true" contentType="{!fileName}">
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!lstwrapper}" var="x">
+           <apex:column headerValue="Nombre">
+                {!x.Nombre}
+            </apex:column>
+             <apex:column headerValue="Descripcion">
+                {!x.Descripcion}
+            </apex:column>
+            <apex:column headerValue="Fecha de creacion">
+                {!x.FechaCreacion}
+            </apex:column> 
+        </apex:pageBlockTable>
+    </apex:pageBlock> 
+</apex:page>

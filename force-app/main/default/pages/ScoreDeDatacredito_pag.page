@@ -1,0 +1,10 @@
+<apex:page controller="ScoreDeDatacredito_ctr" action="{!inicio}">
+    <apex:sectionHeader title="" subtitle="{!$ObjectType.account.Fields.Datacredito_puntaje__c.Label}"/>
+    <apex:form id="idForm" >                
+        <apex:pageBlock id="idPageBlock1">
+        <apex:pageMessages escape="false" />
+
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

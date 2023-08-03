@@ -1,0 +1,35 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_SeleccionTramiteCambioPlan_ctr">
+	<apex:pagemessages id="TheMessages"/> 
+    <apex:form id="idForm">
+    	
+    	<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+		
+		<apex:actionFunction name="seleccionarSuspension" action="{!obtenerSubTOPP}" status="loading" reRender="idPage:idForm, TheMessages"/>
+		
+		<apex:sectionHeader title="" subtitle="{!$Label.LTE_Tramites_Header}" />
+		<apex:pageBlock title="" id="pbId">
+			<apex:pageBlockSection title="{!$Label.LTE_Tramites_Titulo_Page_Block}" columns="3" rendered="{!blnBotonContinuar}" id="pbsId" collapsible="false">
+				
+				<label for="sel" style="font: bold 11px Verdana;">{!$Label.LTE_Texto_Tipo_Tramite}</label>
+			        
+				<apex:selectList value="{!tipoOperacion}" size="1" id="sel" onchange="seleccionarSuspension()">
+					<apex:selectOptions value="{!items}"/>
+				</apex:selectList>
+				
+				<apex:selectList value="{!tipoTramite}" size="1" multiselect="false" disabled="{!blnDisabled}" id="slId">
+					<apex:selectOptions value="{!Types}" />
+				</apex:selectList>
+				
+			</apex:pageBlockSection>
+	        
+	        <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" rendered="{!blnBotonContinuar}" status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.Cerrar}" onclick="window.close();" rendered="{!NOT(blnBotonContinuar)}" />
+			</apex:pageBlockButtons> 
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,99 @@
+<template>
+    <lightning-card>
+      <div class="slds-m-around_medium">
+            <template if:true={config}>
+                <template for:each={config} for:item="section" for:index="sectionindex">
+                    <template if:true={section.key}>
+                        <div key={section.key} class="slds-section slds-is-open">
+                            <h3 class="slds-section__title">
+                              <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                <svg class="slds-section__title-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                  <use xlink:href="/_slds/icons/utility-sprite/svg/symbols.svg#switch"></use>
+                                </svg>
+                                <span class="slds-truncate" title={section.key}>{section.key}</span>
+                              </button>
+                            </h3>
+                        </div>
+                    </template>
+                    <div key={section.key} class="slds-form" role="list">
+                    
+                            <template for:each={section.rowVal} for:item="field" for:index="rowIndex">
+                                <div key={field.key} class="slds-form__row">
+                                    <!--Column1 Section-->
+                                    <div if:true={field.colLeft} class="slds-form__item" role="listitem">
+                                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent slds-form-element_horizontal">
+                                            <span class="slds-form-element__label">
+                                                {field.colLeft.value.DisplayLabel__c}
+                                            </span>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static">
+                                                    <template if:true={field.colLeft.value.isLookup}>
+                                                        <!--a href={field.colLeft.value.URL__c}>{field.colLeft.value.Value__r}</a!-->
+                                                        <a href="#" onclick={handlerLookupNavigate} data-sectionid={sectionindex} data-rowid={rowIndex} data-columpos='colLeft'>{field.colLeft.value.Value__r}</a>
+                                                    </template>
+                                                    <template if:true={field.colLeft.value.isText}>
+                                                        {field.colLeft.value.Value__c}
+                                                    </template>
+                                                    <template if:true={field.colLeft.value.MapConfig}>
+                                                        <lightning-formatted-address
+                                                                street={field.colLeft.value.Value__c}
+                                                                city=""
+                                                                country="BO"
+                                                                province=""
+                                                                postal-code=""
+                                                                latitude={field.colLeft.value.MapConfig.location.Latitude}
+                                                                longitude={field.colLeft.value.MapConfig.location.Longitude} 
+                                                                show-static-map>
+                                                        </lightning-formatted-address>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div if:false={field.colLeft} class="slds-form__item" role="listitem"></div>
+                                    <!--End Column1 Section-->
+
+                                    <!--Column2 Section-->
+                                    <div if:true={field.colRight} class="slds-form__item" role="listitem">
+                                        <div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent slds-form-element_horizontal">
+                                            <span class="slds-form-element__label">
+                                                {field.colRight.value.DisplayLabel__c}
+                                            </span>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static">
+                                                    <template if:true={field.colRight.value.isLookup}>
+                                                        <!--a href={field.colRight.value.URL__c}>{field.colRight.value.Value__r}</a-->
+                                                        <a href="#" onclick={handlerLookupNavigate} data-sectionid={sectionindex} data-rowid={rowIndex} data-columpos='colRight'>{field.colRight.value.Value__r}</a>
+                                                    </template>
+                                                    <template if:true={field.colRight.value.isText}>
+                                                        {field.colRight.value.Value__c}
+                                                    </template>
+                                                    <template if:true={field.colRight.value.isCheckbox}>
+                                                        <span class="uiImage uiOutputCheckbox" data-aura-class="uiImage uiOutputCheckbox"><img src="/auraFW/resources/aura/s.gif" class={field.colRight.value.Class__c} alt={field.colRight.value.Value__c}></span>
+                                                    </template>
+                                                    <template if:true={field.colRight.value.MapConfig}>
+                                                            <lightning-formatted-address
+                                                                    street={field.colRight.value.Value__c}
+                                                                    city=""
+                                                                    country="BO"
+                                                                    province=""
+                                                                    postal-code=""
+                                                                    latitude={field.colRight.value.MapConfig.location.Latitude}
+                                                                    longitude={field.colRight.value.MapConfig.location.Longitude} 
+                                                                    show-static-map>
+                                                            </lightning-formatted-address>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div if:false={field.colRight} class="slds-form__item" role="listitem"></div>
+                                    <!--EndColumn2 Section-->
+                                </div>
+                            </template>
+                    </div>
+                </template>
+            </template>
+      </div>
+    </lightning-card>
+  </template>

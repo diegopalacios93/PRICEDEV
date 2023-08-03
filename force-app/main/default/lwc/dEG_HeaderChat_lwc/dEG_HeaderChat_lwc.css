@@ -1,0 +1,106 @@
+:host {
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  height: 80px;
+  max-height: 80px;
+  background-color: #2791bb;
+  border-radius: 8px 8px 0 0;
+}
+
+/* .embeddedServiceSidebarDialogState .dialogState {
+  display: none !important;
+} */
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.img-content {
+  -webkit-clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);
+  background-color: #fff;
+  border-radius: 8px 0 0 0;
+  width: 100px;
+  height: 80px;
+  left: 0;
+}
+
+img {
+  margin-top: 6px;
+  margin-right: 12px;
+  width: 62px;
+}
+
+.title-header {
+  width: 10rem;
+  text-transform: uppercase;
+  margin-left: 8px;
+  color: white;
+  font-weight: 650;
+  font-size: 15px;
+}
+
+.title-header h2 {
+  text-align: initial;
+  align-self: center;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: lighter;
+  font-size: inherit;
+}
+
+.actions-chat {
+  position: absolute;
+  right: 20px;
+}
+
+.action-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.action-item {
+  width: 30px;
+  height: 30px;
+  float: right;
+  margin-left: 5px;
+}
+
+button,
+button:before {
+  background: #257ea1 !important;
+  border: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border-radius: 30px;
+  transition: all 0.1s;
+  fill: #fff;
+  display: block;
+  font-size: 17px;
+  line-height: 30px;
+}
+
+button:hover {
+  content: " ";
+  background: #fff !important;
+  fill: #2791bb;
+}
+/* 
+button.minimizeButton:hover:before {
+  right: 46px;
+}
+
+button.closeButton:hover:before {
+  right: 14px;
+}
+ */

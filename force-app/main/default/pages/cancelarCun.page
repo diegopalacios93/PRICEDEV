@@ -1,0 +1,17 @@
+<apex:page controller="cancelarCun_ctr">
+<apex:pageMessages id="msg" />
+<apex:pageBlock >
+	
+	<apex:form >
+	<apex:pageBlockSection title="Cancelar CUN" columns="2">
+	<label for="sel">Motivio Cancelacion</label>
+        <apex:selectList value="{!tipologia}" size="1" id="sel">
+            <apex:selectOptions value="{!items}"/>
+        </apex:selectList><p/>
+        </apex:pageBlockSection>
+        <apex:commandButton value="Cancelar" action="{!guardar}" />
+    </apex:form>
+
+</apex:pageBlock>
+
+</apex:page>

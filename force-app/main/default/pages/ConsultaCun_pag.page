@@ -1,0 +1,107 @@
+<apex:page Controller="ConsultaCun_ctr" action="{!ObtenerConf}">
+<apex:sectionHeader title=""/>
+<apex:pageMessages id="msg" />
+
+<apex:form id="frm">
+<apex:actionFunction name="validacionCunFuncionario"  action="{!aceptaValidarCunManual}" reRender="heredado" />         
+
+<!-- PASO 1 -->
+<apex:pageBlock rendered="{!paso1}" title="{!$ObjectType.Case.Fields.CodigouniconumericoCUN__c.Label}">
+<apex:pageBlockButtons >
+<apex:commandButton value="{!$Label.Continuar}" action="{!ConsultarCun}" rendered="{!Not manual}"/>
+<apex:commandButton value="{!$Label.Continuar}" action="{!ConsultarManual}" rendered="{!manual}"/>
+<apex:commandButton value="{!$Label.Cancelar}" action="{!Cancelar}" immediate="True" rendered="{!manual}"/>
+</apex:pageBlockButtons>
+
+
+<apex:pageBlockSection title="" columns="2" rendered="{!manual}">
+	<apex:outputLabel value="Por favor ingrese el cun del objeto" for="cunManual"/>
+	<apex:inputText value="{!cunManual}" id="cunManual"/>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="" columns="2" rendered="{!Not manual}">
+        <apex:selectRadio value="{!tipo}">
+            <apex:selectOption itemValue="nuevo" itemlabel="Nuevo"/>
+            <apex:selectOption itemValue="heredado" itemlabel="Heredado"/>
+        </apex:selectRadio>
+</apex:pageBlockSection>
+
+</apex:pageBlock>
+         <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <c:Loading Titulo="Cargando..."/>
+            </apex:facet>
+        </apex:actionStatus>
+        
+<!-- PASO HEREDADO -->
+<apex:pageBlock rendered="{!IF((tipo=='heredado'),true,false)}" id="heredado" title="{!$ObjectType.Case.Fields.CodigouniconumericoCUN__c.Label}">	
+	<apex:pageBlockButtons >
+		<apex:commandButton value="{!$Label.Continuar}" action="{!guardarHeredado}" disabled="{!heredBot}"/>
+	</apex:pageBlockButtons>
+	
+	<apex:pageBlockSection title="" columns="2">
+		<apex:outputLabel value="Ingrese el cun a seleccionar" for="cunManual"/>
+		<apex:inputText value="{!cunManual}" id="cunManual" />
+		<apex:commandButton value="Buscar" action="{!buscar}"/>
+	</apex:pageBlockSection>
+
+	<!-- Validacion Manual en CUN-Center -->
+	<apex:pageBlockSection title="Validación manual en Cun Center" rendered="{!blnProblemConexion}" columns="2" >
+		<apex:outputLabel value="Valide de forma manual en Peticionador CUN, si el CUN ingresado pertenece al cliente del caso. Para continuar active el check aceptando que realizo la validación de forma manual." />
+	  	<apex:inputCheckbox value="{!blnAceptaValidacionManual}" onchange="validacionManualCun()" />            
+	</apex:pageBlockSection>
+	
+	<apex:actionFunction name="buscarAction" action="{!buscar}" reRender="heredados" status="loading">
+	</apex:actionFunction>
+	
+	<!--
+	<apex:pageBlockTable value="{!ws}" var="item" id="heredados">
+		
+		<apex:column width="5%">
+		<apex:inputCheckbox value="{!item.opt}" styleClass="checkCun" onchange="limpiarCheck(this)"/>
+		</apex:column>
+		
+		<apex:column headerValue="{!$ObjectType.Case.Fields.CodigouniconumericoCUN__c.Label}" value="{!item.cun}"/>
+	
+	</apex:pageBlockTable>
+	-->
+
+	
+	
+	<script type="text/javascript">
+		function buscar(t){
+			if(t.value.length>4){
+				console.debug(t.value);	
+				buscarAction();
+			}
+		
+		}
+
+		function validacionManualCun(){
+			validacionCunFuncionario();
+		}
+		
+		function limpiarCheck(t){
+
+			var status=t.checked;
+			var ch=document.getElementsByClassName("checkCun");
+			
+			for (var i=0;i<ch.length;i++)
+			{
+		    	ch[i].checked=false;
+			}
+			t.checked=status;
+
+		}
+	</script>
+
+</apex:pageBlock>
+
+<!-- PASO NUEVO -->
+<apex:pageBlock rendered="{!IF((tipo=='nuevo'),true,false)}" id="nuevo" title="{!$ObjectType.Case.Fields.CodigouniconumericoCUN__c.Label}">
+		<apex:commandButton value="{!$Label.Continuar}" action="{!continuar}"/>
+</apex:pageBlock>
+
+</apex:form>
+
+</apex:page>

@@ -1,0 +1,35 @@
+<template>
+    <div class="doneStyle">
+        <div class="iconStyle">
+            <img src={statusImage} class="slds-size--12-of-12"></img>
+        </div>
+        <header>
+            <div class="titleMessage">{message.TopMessage}
+            </div>
+            <div class="slds-m-top_x-small">
+                {message.MiddleMessage}
+            </div>
+            <div class="orderMessage slds-m-top_x-small">{message.BottomMessage}
+            </div>
+            <div>
+                <lightning-button variant={validateNoOrder} onclick={openUrl} class="styleButton"
+                    label={message.LabelFirstButton}>
+                </lightning-button>
+            </div>
+            <!-- <div class="slds-m-top_x-small">
+                <lightning-button if:true={message.SecondButton} variant="outline-brand" onclick={openUrlOS}
+                    class="styleButton" label={message.LabelSecondButton}>
+                </lightning-button>
+            </div> -->
+        </header>
+    </div>
+    <div if:true={showCallSpinner} class="demo-only">
+        <div class="slds-spinner_container">
+            <div role="status" class="slds-spinner slds-spinner_large">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </div>
+</template>

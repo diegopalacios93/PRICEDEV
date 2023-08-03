@@ -1,0 +1,232 @@
+.slds-progress {
+  max-width: 30%;
+}
+.omni-hz-stepchart-label[vlocity_cmt-omniscriptStepChartItems_omniscriptStepChartItems_horizontal] {
+  text-transform: uppercase;
+  font-size: 0.63rem;
+  font-weight: 700;
+  color: #034589;
+  margin-top: 1rem;
+}
+/*.slds-progress__item.slds-is-completed .slds-progress__marker, .slds-progress__item.slds-is-active .slds-progress__marker {
+      border-color: #034589;
+  }*/
+.slds-button_brand {
+  background-color: #034589;
+  border-color: #034589;
+}
+.slds-button_brand:hover {
+  background-color: rgb(7, 47, 87);
+  border-color: rgb(7, 47, 87);
+}
+.slds-radio [type="radio"]:checked + .slds-radio__label .slds-radio_faux:after {
+  background-color: #034589;
+}
+.vlc-separator[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  border-width: 0.2rem !important;
+  width: 3rem !important;
+  border-color: #034589 !important;
+}
+.os-step-label[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  font-weight: 700 !important;
+  font-size: 18px;
+}
+.slds-progress__item.slds-is-completed .slds-progress__marker_icon,
+.slds-progress__item.slds-is-completed .slds-progress__marker--icon {
+  color: #034589;
+}
+.slds-progress-bar__value {
+  background: #034589;
+}
+.slds-progress__item.slds-is-active .slds-progress__marker {
+  background: var(--lwc-progressColorBackground, rgb(255, 255, 255));
+  border-color: #034589;
+}
+/*.slds-m-top_medium{
+      margin-top: 0;
+  }
+  .slds-m-top_x-small{
+      margin-bottom: 1.5rem;
+  }*/
+.slds-m-bottom_x-large {
+  margin-bottom: 1.5rem;
+}
+.slds-m-top_xx-large {
+  margin-top: 1.5rem;
+}
+
+.slds-m-bottom_xx-small {
+  margin-top: 1rem;
+}
+.slds-button_neutral {
+  color: #034589;
+}
+.slds-button_neutral:hover {
+  color: rgb(7, 47, 87);
+}
+
+p.font {
+  font-size: 12px;
+}
+
+.slds-form-element__legend {
+  font-weight: 400;
+}
+
+vlocity_cmt-omniscript-step:not([data-omni-key="Carrito"], [data-omni-key="ClientSearch"], [data-omni-key="SelectProducts"], [data-omni-key="ManageGroup"], [data-omni-key="ManageDiscount"]) {
+  padding-right: 13.72%;
+  padding-left: 13.72%;
+}
+div.omniscript-body
+  > div.slds-grid.slds-wrap.slds-gutters.slds-p-horizontal_medium {
+  margin-right: 13.72%;
+}
+
+.omni-typeahead {
+  margin-top: 0px;
+}
+.slds-p-right_small {
+  padding-right: 1rem;
+}
+
+.slds-accordion__summary-heading {
+  background-color: #f3f2f2;
+  height: 2rem;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="ServiceAddressBlock"]
+  > ul
+  > li
+  > section
+  > div.slds-accordion__summary
+  > div.slds-accordion__summary-heading,
+vlocity_cmt-omniscript-block[data-omni-key="BillingAddressBlock"]
+  > ul
+  > li
+  > section
+  > div.slds-accordion__summary
+  > div.slds-accordion__summary-heading {
+  display: none;
+}
+
+c-etb-manage-discount-english
+  > div
+  > article
+  > div.omniscript-body
+  > div.slds-grid.slds-wrap.slds-gutters.slds-p-horizontal_medium {
+  margin-right: 0;
+}
+
+c-etb-manage-discount-english
+  > div
+  > article
+  > div.omniscript-body
+  > div.slds-grid.slds-wrap.slds-gutters.slds-p-horizontal_medium 
+  > div.slds-col{
+  padding-right: 0.125rem;
+}
+
+
+[data-style-id^="state0element0block_element1block_element"] {
+  margin-top: 0px;
+}
+
+[data-style-id^="state1element0block_element2block_element"] {
+  margin-top: 0px;
+}
+.slds-input[disabled] {
+  padding-left: 0.75rem;
+}
+
+/* Nueva venta >> Direccion de Servicio */
+vlocity_cmt-omniscript-checkbox[data-omni-key="CreateServiceAddressCheckbox"]
+  > slot
+  > div {
+  margin-bottom: 0px !important;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="ServiceAddressBlock"]
+  > ul
+  > li
+  > section
+  > div.slds-accordion__summary {
+  display: none;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="ServiceAddressBlock"]
+  > ul
+  > li
+  > section.slds-accordion__section {
+  padding-top: 0px !important;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="ServiceAddressBlock"]
+  > ul
+  > li
+  > section
+  > div.slds-accordion__content {
+  padding-top: 0px !important;
+  padding-left: 0px !important;
+}
+
+
+/* Nueva venta >> Cuenta de Facturacion */
+vlocity_cmt-omniscript-checkbox[data-omni-key="CreateBillingAddressCheckbox"]
+  > slot
+  > div {
+  margin-bottom: 0px !important;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="BillingAddressBlock"]
+  > ul
+  > li
+  > section
+  > div.slds-accordion__summary {
+  display: none;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="BillingAddressBlock"]
+  > ul
+  > li
+  > section.slds-accordion__section {
+  padding-top: 0px !important;
+}
+
+vlocity_cmt-omniscript-block[data-omni-key="BillingAddressBlock"]
+  > ul
+  > li
+  > section
+  > div.slds-accordion__content {
+  padding-top: 0px !important;
+}
+
+Quicklinks
+Profiles Chamber
+Quick Console
+Home
+Quick Query
+Execute Anonymous
+Sobject fields
+Quick ORG Describe
+Replace API Names
+Convert SF Id
+Login As...
+Options
+Hide
+
+Quicklinks
+Profiles Chamber
+Quick Console
+Home
+Quick Query
+Execute Anonymous
+Sobject fields
+Quick ORG Describe
+Replace API Names
+Convert SF Id
+Login As...
+Options
+Hide
+Hands-On Low-Code Application Development with Salesforce: Build customized CRM applications that solve business challenges in just a few clicks - by Enrico Murru

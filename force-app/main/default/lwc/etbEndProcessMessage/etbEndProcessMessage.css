@@ -1,0 +1,38 @@
+.doneStyle {
+  text-align: center;
+  width: 100%;
+  margin-top: 2rem;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.iconStyle {
+  padding-block-end: 1rem;
+}
+.titleMessage {
+  font-weight: bold;
+  color: #272626;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 17px;
+  text-align: center;
+}
+.orderMessage {
+  padding-block-end: 1rem;
+  color: #272626;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: 17px;
+  text-align: center;
+}
+.styleButton {
+  color: #ffffff;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 4px;
+  background-color: #034589;
+}

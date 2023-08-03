@@ -1,0 +1,75 @@
+.slds-progress {
+  max-width: 30%;
+}
+.omni-hz-stepchart-label[vlocity_cmt-omniscriptStepChartItems_omniscriptStepChartItems_horizontal] {
+  text-transform: uppercase;
+  font-size: 0.63rem;
+  font-weight: 700;
+  color: #034589;
+  margin-top: 1rem;
+}
+/*.slds-progress__item.slds-is-completed .slds-progress__marker, .slds-progress__item.slds-is-active .slds-progress__marker {
+    border-color: #034589;
+}*/
+.slds-button_brand {
+  background-color: #034589;
+  border-color: #034589;
+}
+.slds-button_brand:hover {
+  background-color: rgb(7, 47, 87);
+  border-color: rgb(7, 47, 87);
+}
+.slds-radio [type="radio"]:checked + .slds-radio__label .slds-radio_faux:after {
+  background-color: #034589;
+}
+.vlc-separator[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  border-width: 0.2rem !important;
+  width: 3rem !important;
+  border-color: #034589 !important;
+}
+.os-step-label[vlocity_cmt-omniscriptStep_omniscriptStep] {
+  font-weight: 700 !important;
+  font-size: 18px;
+  font-family: sans-serif;
+}
+.slds-progress__item.slds-is-completed .slds-progress__marker_icon,
+.slds-progress__item.slds-is-completed .slds-progress__marker--icon {
+  color: #034589;
+}
+.slds-progress-bar__value {
+  background: #034589;
+}
+.slds-progress__item.slds-is-active .slds-progress__marker {
+  background: var(--lwc-progressColorBackground, rgb(255, 255, 255));
+  border-color: #034589;
+}
+/*.slds-m-top_medium{
+    margin-top: 0;
+}
+.slds-m-top_x-small{
+    margin-bottom: 1.5rem;
+}*/
+.slds-m-bottom_x-large{
+    margin-bottom: 1.5rem;
+}
+.slds-m-top_xx-large{
+    margin-top: 1.5rem;
+}
+
+.slds-m-bottom_xx-small{
+    margin-top:  1.1rem;
+}
+.slds-button_neutral{
+  color: #034589;
+}
+.slds-button_neutral:hover{
+  color: rgb(7, 47, 87);
+}
+
+p.font{
+  font-size: 12px;
+}
+
+.slds-form-element__legend{
+  font-weight: 400;
+}

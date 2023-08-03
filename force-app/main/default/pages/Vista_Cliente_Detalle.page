@@ -1,0 +1,313 @@
+<apex:page id="idPage" controller="Vista_Cliente_ctr">
+
+ <style type="text/css">
+        .td2 { font-weight: bold; }
+		.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader{color:#000;}
+		.VCinfo{color:red;}
+
+
+    .tablC{
+      font-size:10px;
+    }
+    </style>
+
+<script src="{!URLFOR($Resource.libraryjs,'jquery.js')}"/>
+<script src="{!URLFOR($Resource.libraryjs,'jquery-ui.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.libraryjs,'jquery-ui.css')}" />
+
+
+  <apex:pageMessages id="msg" />
+  <apex:sectionHeader title="Políticas e Instructivo de Uso" subtitle="VistaCliente"/>
+  
+<apex:form enctype="multipart/form-data">
+
+
+<apex:pageBlock rendered="{!mostrar && not continuar}">
+
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!Aceptar}" value="Aceptar"/>
+            </apex:pageBlockButtons>
+
+<apex:pageBlock title="Políticas:">
+<span style="font-weight: bold;">I.&nbsp;&nbsp;
+&nbsp;Información Disponible </span><br/>
+<br/>
+Es una herramienta para un&nbsp; cliente <span
+ style="font-weight: bold;">Empresarial y Gobierno,</span>
+esta herramienta consolida según los sistemas de información y fechas
+disponibles lo siguiente:<br/>
+<ol>
+  <li>Segmentación, sector y actividad económica del cliente </li>
+  <li>Mezcla de productos según su facturación</li>
+  <li>Ingreso total promedio en un determinado periodo
+(actualmente está incluida Enero de 2014 a octubre de 2014, pero se irá
+actualizando a medida que se entregue la información por parte de GCI)</li>
+  <li>Calificación de valor del cliente</li>
+  <li>Ingresos promedio en determinado periodo para: CAIP,
+Internet Dedicado (e Internet+), Enlaces de Voz, Larga Distancia
+Nacional ETB, Valor Único, Larga Distancia Internacional ETB y Red
+Inteligente (Cobro Revertido)</li>
+  <li>Dispersión de Larga Distancia y Red Inteligente
+(actualmente solo 07 y 007)</li>
+  <li>Inventario (cantidad) para Enlaces de Voz (únicamente lo
+que facture por RevChain).</li>
+</ol>
+<br/>
+La información que muestra la herramienta VistaCliente proviene de los
+informes&nbsp; entregados por los sistemas&nbsp; GCI y
+RevChain. Por esta razón, se advierte de forma necesaria&nbsp; que
+el Asesor Comercial&nbsp; debe validar esta información
+con&nbsp; el conocimiento que tenga del cliente u otra disponible,
+de tal forma que pueda asegurar la completitud y coherencia de la misma.<br/>
+<br/>
+Adicionalmente, el Asesor es responsable de la correcta información que
+adjunta (por ejemplo configurador, información de competencia, entre
+otros) necesarios en la herramienta para revisar la mejor oferta para
+CAIP e Internet Dedicado.<br/>
+<br/>
+<span style="font-weight: bold;">II.&nbsp;&nbsp;
+&nbsp;Usos&nbsp; de la Herramienta Vista Cliente</span><br/>
+<br/>
+<ol>
+  <li>Consulta general de la información disponible en sistemas
+ETB (según lo mencionado en el detalle de información) y fechas
+disponibles de un cliente Empresarial y Gobierno</li>
+  <li>Muestra&nbsp; la información disponible (según lo
+mencionado en el detalle de información)&nbsp; para el
+análisis&nbsp; de un cliente con el cual pueda&nbsp; determinar
+si una oferta es viable (rentable)&nbsp; o no al momento de hacer
+una oferta y validar con la mezcla de producto qué más se le puede
+ofrecer al cliente (hacer una estrategia). </li>
+  <li>Esta herramienta no se sobrepone a ningún configurador en
+cuanto a sus políticas y niveles de autorización (configurador de <span
+ style="font-weight: bold;">Datos e Internet</span>,
+configurador de <span style="font-weight: bold;">Soluciones
+TI</span> y modelo de análisis de <span
+ style="font-weight: bold;">Larga Distancia</span>),
+por ello se debe ver a la herramienta como un complemento para la
+realización de ofertas (ofertas costo – eficientes). Adicional, esta
+herramienta no se ha diseñado para realizar análisis de descuentos
+cruzados, ya que este tema no se maneja en ETB (cada producto debe ser
+sostenible por si solo y asegurar su&nbsp; PyG positivo).</li>
+  <li>Toda la información presentada por la herramienta es
+confidencial y solo puede ser vista y trabajada por personal de ETB, en
+ningún caso puede ser enviada a personal externo de la empresa, tal
+cual lo muestra la herramienta. El asesor deberá preparar la oferta
+según los formatos establecidos para ello.</li>
+
+
+<li>Para los clientes que comparten el mismo NIT (por ejemplo las Secretarias Distritales con el NIT de la respectiva Alcaldía), tener en cuenta que la herramienta mostrará en dicho NIT el consolidado de todos los que hacen parte de este.</li>
+
+<li>Cuando un cliente tiene varios NIT y entre ellos tiene NIT negativos, el NIT que listé en VistaCliente se maneja de forma individual (la herramienta no consolida los NIT por cliente o grupo empresarial).</li>
+
+
+
+</ol>
+
+
+
+        </apex:pageBlock>
+
+        <apex:pageBlock title="Fuentes:">
+1) El origen y el responsable de la información que soporta el siguiente modelo es:
+<ol>
+<li>CAIP e Internet --> GCI</li>
+<li>LOCAL (enlaces de voz) --> GCI y Revchain</li>
+<li>LARGA DISTANCIA --> GCI</li>
+</ol>		
+
+        </apex:pageBlock>
+
+
+</apex:pageBlock>
+
+<apex:pageBlock rendered="{!continuar}">
+
+<apex:pageBlockSection title="Resumen" columns="2">
+<apex:outputText value="{!cliente.Name}" />
+<apex:outputText value="{!cliente.Actividad_Economica__c}" />
+<apex:outputText value="{!cliente.Segmento__c}" />
+<apex:outputText value="{!cliente.SubSegmento__c}" />
+
+<apex:outputText value="{!cliente.ValordeCliente__c}" />
+
+<apex:outputText value="{!ingr.Mezcla_de_Productos__c}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.Mezcla_de_Productos__c.Label}"/>
+
+</apex:pageBlockSection>
+
+
+<apex:pageBlockSection columns="2" title="Convenciones" id="conv">
+
+<apex:outputPanel >
+<table class="tablC">
+<tr><td>AE+</td><td>Arrendamiento de Equipos</td></tr>
+<tr><td>C+</td><td>Conectividad</td></tr>
+<tr><td>DC+</td><td>Data Center</td></tr>
+<tr><td>OPD+</td><td>Otros Productos Datos</td></tr>
+<tr><td>P+</td><td>Portador</td></tr>
+<tr><td>BA+</td><td>Banda Ancha</td></tr>
+<tr><td>ID+</td><td>Internet Dedicado</td></tr>
+<tr><td>IM+</td><td>Internet Móvil</td></tr>
+<tr><td>OPI+</td><td>Otros Productos Internet</td></tr>
+<tr><td>CRA+</td><td>Cobro Revertido Automático</td></tr>
+<tr><td>LDI+</td><td>Larga Distancia Internacional</td></tr>
+<tr><td>LDN+</td><td>Larga Distancia Nacional</td></tr>
+<tr><td>LDVU+</td><td>Larga Distancia Valor Único</td></tr>
+<tr><td>OPLD+</td><td>Otros Productos Larga Distancia</td></tr>
+<tr><td>IPC+</td><td>Centrex</td></tr>
+</table>
+</apex:outputPanel>
+
+<apex:outputPanel >
+<table class="tablC">
+<tr><td>E1+</td><td>E1-PABX</td></tr>
+<tr><td>LT+</td><td>Línea Telefónica</td></tr>
+<tr><td>LTFO+</td><td>Línea Telefónica Fibra Óptica</td></tr>
+<tr><td>SLT+</td><td>Servicios Línea Telefónica</td></tr>
+<tr><td>A+</td><td>Alianzas</td></tr>
+<tr><td>AI+</td><td>Arrendamiento de Infraestructura</td></tr>
+<tr><td>CO+</td><td>Colaborador</td></tr>
+<tr><td>DT+</td><td>DirectorioTelefónico</td></tr>
+<tr><td>IX+</td><td>Interconexión</td></tr>
+<tr><td>NETW+</td><td>Networking</td></tr>
+<tr><td>PRO+</td><td>Productivización</td></tr>
+<tr><td>RV+</td><td>Red de Victimas</td></tr>
+<tr><td>RE+</td><td>Reventa Equipos</td></tr>
+<tr><td>SIT+</td><td>Semaforización</td></tr>
+<tr><td>SF+</td><td>Servicios de facturación</td></tr>
+<tr><td>TV+</td><td>Televisión</td></tr>
+</table>
+</apex:outputPanel>
+
+
+</apex:pageBlockSection>
+
+
+
+<apex:pageBlockSection title="Línea de Negocio" columns="2" id="opcion">
+	<apex:inputCheckbox value="{!caip}" label="CAIP e Internet Dedicado"/>
+	<!-- <apex:inputCheckbox value="{!local}" label="Enlaces de voz"/> -->
+	<apex:inputCheckbox value="{!ld}" label="Larga Distancia y Red Inteligente"/>
+		<apex:outputPanel styleClass="VCinfo">
+		Periodo de Información: 
+		<apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!ingr.Periodo_Inicio__c}" /></apex:outputText>-
+		<apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!ingr.Periodo_Fin__c}" /></apex:outputText>
+	</apex:outputPanel>
+	<apex:commandButton value="Ver" action="{!ver}" reRender="viewDatos,opcion,botonG,tablaModelo" rendered="{! not mostrarGuardar}"/>
+
+
+</apex:pageBlockSection>
+
+
+<apex:outputPanel id="viewDatos">
+
+
+<apex:pageBlockSection title="Línea de Negocio Conectividad Avanzada IP e Internet Dedicado" columns="1" rendered="{!caip}" id="viewCaip" collapsible="true">
+
+<apex:outputText value="{!conDecimal['Ingresos_de_CAIP__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.Ingresos_de_CAIP__c.Label}"/>
+
+<apex:outputText value="{!conDecimal['Ingresos_de_Internet_Dedicado__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.Ingresos_de_Internet_Dedicado__c.Label}"/>
+
+
+<apex:inputField value="{!ofC.Otros_ingresos__c}" label="{!$ObjectType.Oferta__c.fields.Otros_ingresos__c.label}" />
+
+<apex:inputField value="{!ofC.Oferta_economica_competencia_sin_IVA_Mes__c}" label="{!$ObjectType.Oferta__c.fields.Oferta_economica_competencia_sin_IVA_Mes__c.label}" />
+<apex:inputField value="{!ofC.Otros_costos_Mes__c}" />
+
+<apex:inputField value="{!ofC.Objetivo_CAIP_mensual__c}" />
+
+		
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="Línea de Negocio Larga distancia y Red Inteligente" columns="2" rendered="{!ld}" id="viewLd">
+
+<apex:outputText value="{!conDecimal['Facturacion_actual_LD_Nacional_mes']}"
+label="{!$ObjectType.Oferta__c.fields.Facturacion_actual_LD_Nacional_mes__c.Label}"/>
+
+<apex:outputText value="{!conDecimal['Facturacion_actual_Valor_unico_mes']}"
+label="{!$ObjectType.Oferta__c.fields.Facturacion_actual_Valor_unico_mes__c.Label}"/>
+
+<apex:outputText value="{!conDecimal['Facturacion_actual_LD_Internacional_mes']}"
+label="{!$ObjectType.Oferta__c.fields.Facturacion_actual_LD_Internacional_mes__c.Label}"/>
+
+<apex:outputText value="{!conDecimal['Facturacion_actual_RI_mes']}"
+label="{!$ObjectType.Oferta__c.fields.Facturacion_actual_RI_mes__c.Label}"/>
+<apex:outputText value=""/>
+<apex:outputText value="{!conDecimal['Total_LD_y_RI']}"
+label="{!$ObjectType.Oferta__c.fields.Total_LD_y_RI__c.Label}"/>
+
+<!-- <apex:outputText value="{!conDecimal['Rentabilidad_LD_y_RI']}" label="{!$ObjectType.Oferta__c.fields.Rentabilidad_LD_y_RI__c.Label}"/> -->
+
+ <!-- <apex:pageBlockSection title="Dispersión :" columns="2" rendered="{!ld}"> -->
+
+<apex:outputText value="Dispersión"/>
+<apex:outputText value=""/>
+<!--
+<apex:outputText value="{!ingr.G1_LD__c}"/>
+<apex:outputText value="{!ingr.G118000__c}"/>
+<apex:outputText value="{!ingr.G2_LD__c}"/>
+<apex:outputText value="{!ingr.G218000__c}"/>
+<apex:outputText value="{!ingr.G3_LD__c}"/>
+<apex:outputText value="{!ingr.G318000__c}"/>
+-->
+
+<apex:outputText value="{!conDecimal['G1_LD__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.G1_LD__c.Label}"/>
+<apex:outputText value="{!conDecimal['G118000__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.G118000__c.Label}"/>
+<apex:outputText value="{!conDecimal['G2_LD__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.G2_LD__c.Label}"/>
+<apex:outputText value="{!conDecimal['G218000__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.G218000__c.Label}"/>
+<apex:outputText value="{!conDecimal['G3_LD__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.G3_LD__c.Label}"/>
+<apex:outputText value="{!conDecimal['G318000__c']}" label="{!$ObjectType.Manejo_de_ofertas__c.fields.G318000__c.Label}"/>
+
+
+<!-- </apex:pageBlockSection>  -->
+
+
+</apex:pageBlockSection>
+
+
+<!-- 
+<apex:pageBlockSection title="Inventario enlaces de voz" columns="2" rendered="{!local}" id="viewLocal">
+
+<apex:outputText value="{!conDecimal['Facturacion_actual_enlaces_de_voz_mes']}"
+label="{!$ObjectType.Oferta__c.fields.Facturacion_actual_enlaces_de_voz_mes__c.Label}"/>
+<apex:inputField value="{!ofC.Oferta_economica_Competencia_local__c}"/>
+
+<apex:outputText value="{!ingr.E1__c}" />
+<apex:outputText value="{!ingr.E1PABX__c}"/>
+
+<apex:outputText value="{!conDecimal['Rentabilidad_actual_enlaces_de_voz']}"
+label="{!$ObjectType.Oferta__c.fields.Rentabilidad_actual_enlaces_de_voz__c.Label}"/>
+ 
+
+</apex:pageBlockSection>
+-->
+
+
+
+<apex:pageBlockSection title="Guardar" columns="2" rendered="{!mostrarGuardar}">
+
+	
+        
+        <!-- <apex:pageBlockSectionItem >
+          <apex:outputLabel value="File" for="file" rendered="{!caip}"/>
+          <apex:inputFile value="{!attachment.body}" filename="{!attachment.name}" id="file" required="true" rendered="{!caip}"/>
+        </apex:pageBlockSectionItem> -->
+        <apex:outputText ></apex:outputText>
+        <apex:commandButton action="{!Guardar}" value="Guardar" rendered="{!mostrarGuardar}" />
+</apex:pageBlockSection>
+
+</apex:outputPanel>
+
+
+
+</apex:pageBlock>
+
+
+
+</apex:form>
+
+
+
+
+
+</apex:page>

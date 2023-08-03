@@ -1,0 +1,3 @@
+let styleDefinition =
+      {"state0element0block_element0":[{"conditions":"default","styleObject":{"class":"slds-col  condition-element slds-text-align_center slds-border_bottom  slds-size_12-of-12   slds-text-link_reset ","style":"background-color:#ffffff; background-image:url(/resource/ETB_StaticResources/img/Group27.png); background-repeat:no-repeat; background-size:cover !important;; background-position:left; border-bottom: #cccccc 0px solid; \n    border-radius:5px; height:72px;    background-size: cover !important;","styleProperties":{}}}]};
+  export default styleDefinition

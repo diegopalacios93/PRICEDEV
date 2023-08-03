@@ -1,0 +1,10 @@
+<template>
+    <div>
+        <lightning-combobox name="Ordenes" label="Ordenes" value={value} placeholder="" options={options} onchange={handleChange}></lightning-combobox>
+    </div>
+    <div class="slds-p-around_xx-small">
+        <template for:each={allValues} for:item="val">
+            <lightning-pill key={val.value} label={val.value} name={val.value} onremove={handleRemove}></lightning-pill>
+        </template>
+    </div>
+</template>

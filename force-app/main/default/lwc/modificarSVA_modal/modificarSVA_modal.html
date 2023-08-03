@@ -1,0 +1,114 @@
+<!--
+  @description       : 
+  @author            : Miguel R. Gómez  miguel.rafael.gomez@accenture.com
+  @group             : 
+  @last modified on  : 01-05-2022
+  @last modified by  : Miguel R. Gómez  miguel.rafael.gomez@accenture.com
+-->
+<template>
+
+    <template if:true={showModal}>
+
+
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_medium"
+            aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <lightning-icon class="slds-modal__close" icon-name="utility:close" size="medium"
+                        onclick={closeModal}></lightning-icon>
+
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modificar Servicio</h2>
+                </header>
+
+
+
+                <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+                    <lightning-record-edit-form onsuccess={handleSave} onsubmit={handleSubmit} onload={handleOnLoad}
+                        object-api-name="LTE_SpecificationGroupXA__c">
+
+                        <template if:true={loading}>
+                            <div class="demo-only" style="height:6rem;position:relative">
+                                <div class="slds-spinner_container">
+                                    <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <lightning-messages> </lightning-messages>
+                        <template if:true={msgError}>
+                            <span> {msgError} </span>
+                        </template>
+
+                        <template if:false={loading}>
+
+                            <lightning-accordion allow-multiple-sections-open active-section-name={activeSections}
+                                class="accordion slds-grid slds-grid_vertical slds-gutters">
+
+                                <template for:each={mapData} for:item="mapKey">
+                                    <lightning-accordion-section class="accordion-section" key={mapKey.key}
+                                        name={mapKey.key} label={mapKey.key}>
+                                        <div class="slds-grid slds-gutters slds-wrap">
+                                            <template for:each={mapKey.value} for:item="mapValue">
+                                                <div class="slds-col slds-size_1-of-5 slds-m-around_x-small"
+                                                    key={mapValue.Id}>
+                                                    <template if:false={mapValue.respuestas}>
+                                                        <label class="slds-form-element__label"
+                                                            for={mapValue.Id}>{mapValue.Name}</label>
+                                                        <lightning-input-field class="inputs"
+                                                            required={mapValue.LTE_ParametroFacturacion__r.Obligatorio__c}
+                                                            onchange={handleChange} data-keyid={mapKey.key}
+                                                            data-mapvalueid={mapValue.Id} field-name="LTE_Value__c"
+                                                            variant="label-hidden" value={mapValue.LTE_Value__c}
+                                                            id={mapValue.Id}>
+                                                        </lightning-input-field>
+                                                    </template>
+                                                    <template if:true={mapValue.respuestas}>
+                                                        <lightning-combobox name={mapValue.Id} label={mapValue.Name}
+                                                        value={mapValue.Value} placeholder="Seleccione una opción"
+                                                        options={mapValue.respuestas} onchange={OnHandleChange}
+                                                        id={mapValue.Id} key={mapValue.Id} required={mapValue.Obligatorio}></lightning-combobox>
+                                                    </template>
+                                                </div>
+                                            </template>                                           
+                                        </div>
+                                    </lightning-accordion-section>
+                                </template>
+
+                            </lightning-accordion>
+
+
+
+
+
+
+
+                        </template>
+
+                    </lightning-record-edit-form>
+
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="neutral" label="Cancelar" onclick={closeModal}
+                        class="slds-var-p-around_x-small">
+                    </lightning-button>
+                    <lightning-button class="slds-var-p-around_x-small" variant="brand" type="button" name="update"
+                        label="Guardar" disabled={disabled} onclick={onSubmit}>
+                    </lightning-button>
+
+                </footer>
+
+
+            </div>
+
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

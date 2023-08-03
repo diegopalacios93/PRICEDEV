@@ -1,0 +1,127 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_ModificacionPeriodoSuspension_ctr" docType="html-5.0" >
+    <apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">
+        
+        <script>
+        	function ocultarSeccion()
+        	{
+            	document.getElementById('idPage:idForm:pbId:bloqueServicios:seccionServicios:pbtId1').disabled = true;
+            	var nodes = document.getElementById('idPage:idForm:pbId:bloqueServicios:seccionServicios:pbtId1').getElementsByTagName('*');
+            	for(var i = 0; i < nodes.length; i++)
+            	{
+            		nodes[i].disabled = true;
+				}
+       		}
+        
+         	function seleccionarRegistroScript(activoId){
+        	seleccionarRegistro(activoId);
+        	}
+        
+        	function validarFechaScript(){
+        		validarFecha();
+        	}
+		</script>
+        
+        <apex:actionFunction name="seleccionarRegistro" reRender="idPage:idForm:pbId:_bloqueServicios:_seccionServicios:pbtId, TheMessages" action="{!selectRecords}" status="loading">
+			<apex:param name="firsParam" assignTo="{!strActivoId}" value=""/>
+		</apex:actionFunction>
+        <apex:actionFunction name="validarFecha" reRender="idPage:idForm, TheMessages" action="{!validarFecha}"  status="loading"> 
+			<apex:param name="firsParam" value=""/>
+		</apex:actionFunction>	
+        
+        <apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+        
+        <apex:pageBlock title="" id="pbId">
+            <apex:pageBlockSection title="Modificación Período Suspensión Voluntaria" id="_bloqueBuscar" columns="2" collapsible="false">
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput">
+						<label for="numConexiones">{!$ObjectType.ActivoETB__c.fields.NumeroConexion__c.Label}</label>
+						<apex:inputText value="{!numerosConexion}" id="numConexiones" style="margin-left:2%;"/>
+						<apex:commandButton value="{!$Label.Buscar}" action="{!buscarSuspendidos}" rendered="{!blnBuscar}" status="loading" reRender="idForm, TheMessages" style="margin-left:10%" />
+					</apex:outputPanel>
+					<apex:outputPanel id="_panelNumCaso" styleClass="lookupInput">  
+						<label for="numCaso" style="margin-left:15%;font-family: 'Arial','Helvetica',sans-serif; font-size: 91%; font-weight: bold;">{!$Label.LTE_Etiqueta_Caso}</label>
+						<apex:outputText value="{!numeroCaso}" id="numCaso"/> 
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+        
+         <apex:pageBlockSection title="{!$Label.LTE_Cambio_Plan_Plan}" columns="1" id="_bloqueServicios" rendered="{!blnBloqueServicios}" collapsible="false">
+				<apex:pageBlockSection title="Servicios - Pagina {!pageNumber} - Total Registros: {!intCantidadReg}" id="_seccionServicios" columns="1" collapsible="false" rendered="{!blnOcultarTabla}">
+					<apex:pageBlockTable value="{!lstActivosSuspendidosWrapper}" var="sw" id="pbtId" >
+						<apex:column width="25px">
+							<apex:facet name="header"> 
+		                        <apex:inputCheckbox value="{!blnAllChecked}"> 
+		                            <apex:actionSupport event="onclick" action="{!seleccionarTodos}" rerender="_seccionServicios,_botonera" status="loading"/>
+		                         </apex:inputCheckbox>
+		                     </apex:facet>
+							<apex:inputCheckbox value="{!sw.checked}" disabled="{!sw.desactivado}" id="checkboxId" onchange="seleccionarRegistroScript('{!sw.suspendido.Id}');"/> 
+ 						</apex:column>
+						<apex:column value="{!sw.suspendido.Name}" headerValue="Servicio"/>
+						<apex:column value="{!sw.suspendido.NumeroConexion__c}" headerValue="Numero Conexion"/>
+						<apex:column value="{!sw.suspendido.Estado__c}" headerValue="Estado"/>
+						<apex:column headerValue="OC de Reconexión">
+							<apex:repeat value="{!sw.suspendido.Operaciones_Comerciales__r}" var="oc">
+								<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+							</apex:repeat> 
+						</apex:column> 
+						<apex:column headerValue="Fecha Reconexión" >
+                             <apex:outputText value="{!sw.strFechaReconexion}" />                          
+						</apex:column>
+						<apex:column headerValue="Nueva Fecha Reconexión" > <!-- nueva columna-->
+                            <apex:input value="{!sw.dtNuevaFechaReconexion}" type="date" onchange="validarFechaScript();"/>
+                        </apex:column>
+					</apex:pageBlockTable> 
+					<apex:panelGrid columns="4" id="_botonera">
+						<apex:commandLink action="{!first}" rendered="{!blnmostrarPrimero}" reRender="_seccionServicios,_botonera">Primero</apex:commandlink>
+						<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="_seccionServicios,_botonera">Anterior</apex:commandlink>
+						<apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="_seccionServicios,_botonera">Siguiente</apex:commandlink>
+						<apex:commandLink action="{!last}" rendered="{!blnmostrarUltimo}" reRender="_seccionServicios,_botonera">Último</apex:commandlink>
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+	        </apex:pageBlockSection>
+            
+	        <apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" status="loading" reRender="idForm, TheMessages" style="margin-left: auto;
+    				margin-right: auto; display: block;" rendered="{!blnBotonContinuar}" oncomplete="ocultarSeccion()"> <!-- oncomplete="ocultarSeccion()" -->	
+    			<apex:param name="firsParam" assignTo="{!strActivoId}" value="" />
+    		</apex:commandButton>
+            
+            <!-- Tabla de Resultados -->
+    		
+    		<apex:pageBlockSection title="Resultados" columns="1" id="bloqueServicios" rendered="{!blnMostrarResultados}" collapsible="false">
+				<apex:pageBlockSection title="Servicios - Pagina {!pageNumber} - Total Registros: {!intCantidadReg}" id="seccionServicios" columns="1" collapsible="false" >
+					<apex:pageBlockTable value="{!lstActivosSuspendidosSeleccionados}" var="actSusSelect" id="pbtId1" >
+						<apex:column value="{!actSusSelect.suspendido.Name}" headerValue="Servicio"/>
+						<apex:column value="{!actSusSelect.suspendido.NumeroConexion__c}" headerValue="Numero Conexion"/>
+						<apex:column value="{!actSusSelect.suspendido.Estado__c}" headerValue="Estado"/>
+						<apex:column headerValue="OC de Reconexion">
+							<apex:repeat value="{!actSusSelect.suspendido.Operaciones_Comerciales__r}" var="oc">
+									<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+							</apex:repeat>
+						</apex:column>
+						<apex:column headerValue="Fecha Reconexión" id="columnDateId1">
+                             <apex:outputText value="{!actSusSelect.strFechaReconexion}" />						
+						</apex:column>
+						<apex:column headerValue="Fecha Reconexión" > 
+                            <apex:input value="{!actSusSelect.dtNuevaFechaReconexion}" type="date" disabled="true"/>
+                        </apex:column>
+					</apex:pageBlockTable> 
+					<apex:panelGrid columns="4" id="botonera">
+						<apex:commandLink action="{!first}" rendered="{!blnmostrarPrimero}" reRender="_seccionServicios,_botonera">Primero</apex:commandlink>
+						<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="_seccionServicios,_botonera">Anterior</apex:commandlink>
+						<apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="_seccionServicios,_botonera">Siguiente</apex:commandlink>
+						<apex:commandLink action="{!last}" rendered="{!blnmostrarUltimo}" reRender="_seccionServicios,_botonera">Último</apex:commandlink>
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+	        </apex:pageBlockSection>
+	        
+	        <apex:commandButton value="Actualizar" action="{!actualizarOC}" status="loading" reRender="idForm, TheMessages" style="margin-left: auto;
+    				margin-right: auto; display: block;" rendered="{!blnBotonActualizar}"/>
+    		<apex:commandButton value="{!$Label.Regresar}" action="{!regresar}" rendered="{!blnBotonRegresar}" status="loading" reRender="idForm, TheMessages"/>
+    	</apex:pageBlock>
+    </apex:form>
+</apex:page>

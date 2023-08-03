@@ -1,0 +1,64 @@
+<template>
+  <div class="slds-box slds-align_absolute-center slds-box_xx-small">
+    <div class="img-header">
+      <img src="/resource/ETB_StaticResources/img/Group-21.png">
+      <div class="slds-grid slds-m-top_large">
+        <template for:each={structToShowSummaryAB} for:item="summarySection" for:index="indexSection">
+          <div class="slds-col column-border slds-size_1-of-2" key={summarySection.id}>
+            <span class="title">{summarySection.title}</span>
+            <table class="slds-table slds-table_cell-buffer slds-table_header-hidden">
+              <template for:each={summarySection.elements} for:item="summaryElement">
+                <tr class="slds-hint-parent table" key={summaryElement.label}>
+                  <th scope="row">
+                    <div class="slds-truncate">
+                      <span tabindex="-1" class="label">{summaryElement.label}</span>
+                    </div>
+                  </th>
+                  <td>
+                    <div>
+                      <span class="value">{summaryElement.value}</span>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </table>
+          </div>
+        </template>
+      </div>
+      <div class="slds-grid">
+        <div class="slds-col column-border slds-size_1-of-2"></div>
+        <div class="slds-col column-border slds-size_1-of-2">
+          <hr class="horizontal-line">
+        </div>
+      </div>
+      <div class="slds-grid">
+        <template for:each={structToShowSummaryCD} for:item="summarySectionTotals" for:index="indexSectionTotals">
+          <div class="slds-col column-border slds-size_1-of-2" key={summarySectionTotals.id}>
+            <span class="title">{summarySectionTotals.title}</span>
+            <table class="slds-table slds-table_cell-buffer slds-table_header-hidden">
+              <template for:each={summarySectionTotals.elements} for:item="summaryElement">
+                <tr class="slds-hint-parent table" key={summaryElement.lable}>
+                  <th class="widthTotals" scope="row">
+                    <div class="slds-truncate">
+                      <span if:false={summaryElement.total} tabindex="-1"
+                        class="labelTotalsFalse">{summaryElement.label}</span>
+                      <span if:true={summaryElement.total} tabindex="-1"
+                        class="labelTotalsTrue">{summaryElement.label}</span>
+                    </div>
+                  </th>
+                  <td>
+                    <div>
+                      <span if:false={summaryElement.total} class="valueTotalsFalse">{summaryElement.value}</span>
+                      <span if:true={summaryElement.total} class="valueTotalsTrue">{summaryElement.value}</span>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+            </table>
+          </div>
+        </template>
+      </div>
+      <div class="divisor"></div>
+    </div>
+  </div>
+</template>

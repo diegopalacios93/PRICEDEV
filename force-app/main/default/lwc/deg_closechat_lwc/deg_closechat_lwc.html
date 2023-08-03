@@ -1,0 +1,36 @@
+<!--
+  @description       : 
+  @author            : Pablo Arrieta
+  @group             : 
+  @last modified on  : 01-10-2022
+  @last modified by  : j.martinez.mercado
+  Modifications Log 
+  Ver   Date         Author          Modification
+  1.0   06-02-2021   Pablo Arrieta   Initial Version
+-->
+<template>
+    <div class="page">
+      <div class="container">
+        <div class="dialog">
+          <div class="dialogText">
+            <h3 class="dialogTextTitle">¿Finalizar sesión de chat?</h3>
+            <div class="dialogTextBody">
+              <div dir="ltr" class="uiOutputRichText">No se preocupe, después de que finalice la
+                sesión de
+                chat podrá guardar la transcripción. Haga clic en Guardar transcripción en la parte
+                inferior
+                de la ventana de chat.</div>
+            </div>
+          </div>
+          <div class="dialogButtons">
+            <button class="buttonsClose closeButtonChat" onclick={endChat} type="button">
+              Confirmar finalización de chat
+            </button>
+            <button class="buttonsClose returnButtonChat" onclick={closeModal} type="button">
+              Regresar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</template>

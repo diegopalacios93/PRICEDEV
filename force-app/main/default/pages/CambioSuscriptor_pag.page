@@ -1,0 +1,207 @@
+<apex:page id="pgActivos" controller="CambioSuscriptor_ctr" lightningStylesheets="true">
+
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+<apex:form id="frmActivos">
+
+
+
+<apex:outputPanel >
+<apex:pageBlock id="bloqueTabla" title="Cambio de Suscriptor" tabStyle="Account" >
+<apex:pageMessages />
+ 
+ 	<apex:pageBlockSection title="Cuenta origen" columns="2">
+		<apex:outputField value="{!objCuenta.name}" />
+		<apex:outputField value="{!objCuenta.AccountNumber}" />
+				
+	</apex:pageBlockSection>
+	<apex:actionRegion >
+		<apex:pageBlockSection title="Operaciones comerciales" columns="2">
+					
+					<!-- <apex:inputField value="{!objOperacion.Contacto_Administrativo__c}"  /> -->			
+					<!-- <apex:inputField value="{!objOperacion.Contacto_Tecnico__c}" required="true" /> -->
+					
+					
+			<apex:outputpanel >
+				<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.Contacto_Administrativo__c.Label}"
+					for="contactoTec" />
+				<div class="requiredInput">
+				<div class="requiredBlock"></div>
+				<apex:inputText html-readonly="true" value="{!iLupas.contactoAdm}" id="contactoAdm"
+					styleClass="textol" /> <apex:image style="cursor:pointer;" value="/servlet/servlet.FileDownload?file={!idImgLupa}"
+					styleClass="lookupIcon"
+					onClick="buscarProducto('{!$Component.contactoAdm}','{!$Component.contactoAdmId}','{!ContactoInfo}')" />
+				</div>
+				<apex:inputHidden value="{!iLupas.contactoAdmId}"
+					id="contactoAdmId" />
+			</apex:outputpanel>
+			
+			
+			<apex:outputpanel >
+				<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.Contacto_Tecnico__c.Label}"
+					for="contactoTec" />
+				<div class="requiredInput">
+				<div class="requiredBlock"></div>
+				<apex:inputText html-readonly="true"  value="{!iLupas.contactoTec}" id="contactoTec" 
+					styleClass="textol" /> <apex:image style="cursor:pointer;" value="/servlet/servlet.FileDownload?file={!idImgLupa}"
+					styleClass="lookupIcon"  
+					onClick="buscarProducto('{!$Component.contactoTec}','{!$Component.contactoTecId}','{!ContactoInfo}')" />
+				</div>
+				<apex:actionFunction name="seleccionJS" action="{!getSeleccion}">
+		        	<apex:param name="firstParam" assignTo="{!showCFac}" value=""/>
+				</apex:actionFunction>
+				
+				<apex:inputHidden value="{!iLupas.contactoTecId}"
+					id="contactoTecId" />
+			</apex:outputpanel>
+					
+					
+					
+			<apex:outputpanel >
+				<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.CuentaCliente__c.Label}"
+					for="cuentaCliente" />
+				<div class="requiredInput">
+				<div class="requiredBlock"></div>
+				<apex:outputpanel id="opCuentaCliente">
+				<apex:inputText value="{!iLupas.cuentaCliente}" id="cuentaCliente" onchange="seleccion(this)"
+					styleClass="textol" /> <apex:image style="cursor:pointer;" value="/servlet/servlet.FileDownload?file={!idImgLupa}"
+					styleClass="lookupIcon" 
+					onClick="buscarProducto('{!$Component.cuentaCliente}','{!$Component.cuentaClienteId}','{!CuentaInfo}')" />
+					
+					 </apex:outputpanel>
+				</div>
+				<apex:inputHidden value="{!iLupas.cuentaClienteId}"
+					id="cuentaClienteId" />
+					
+						
+			           
+		          
+			</apex:outputpanel>
+			
+			
+			<apex:outputpanel id="counter" rendered="{!showCFac}">
+				<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.CuentaFacturacion__c.Label}"
+					for="cuentaFacturacion" />
+				<div class="requiredInput">
+				
+				<apex:inputText html-readonly="true"  value="{!iLupas.cuentaFacturacion}" id="cuentaFacturacion"
+					styleClass="textol" /> 
+				
+					<apex:image style="cursor:pointer;" value="/servlet/servlet.FileDownload?file={!idImgLupa}"
+					styleClass="lookupIcon"
+					 onClick="buscarProducto('{!$Component.cuentaFacturacion}','{!$Component.cuentaFacturacionId}','{!CuentaFacturacionInfo}')"  />
+					
+				</div>
+				<apex:inputHidden value="{!iLupas.cuentaFacturacionId}"
+					id="cuentaFacturacionId" />
+					
+				 <apex:inputHidden value="{!strUrl}"
+					id="Url" />
+		            
+		       
+			</apex:outputpanel>
+					
+					
+			
+			<!-- <apex:inputField value="{!objOperacion.CuentaCliente__c}" required="true" /> -->
+			<!-- <apex:inputField value="{!objOperacion.CuentaFacturacion__c}" required="true" /> -->
+			
+					
+					
+		</apex:pageBlockSection>
+	</apex:actionRegion>
+
+	<apex:outputPanel id="out">
+	<apex:actionRegion >
+	<apex:actionFunction name="checkAll" action="{!checkAll}" rerender="out"/>
+		<apex:actionFunction name="habilitarFact" action="{!habilitarCuentaFact}" >
+		<apex:param name="firstParam" assignTo="{!cuenta}" value=""/>
+	</apex:actionFunction>
+	<apex:actionFunction name="sample" action="{!getCuentaFacturacionInfo}" rerender="opCuentaCliente,counter" oncomplete="buscarProducto('{!$Component.cuentaFacturacion}','{!$Component.cuentaFacturacionId}','{!CuentaFacturacionInfo}')"/>
+    <apex:pageBlockSection id="sectabla" Columns="1" title="Servicios ETB" >
+
+
+        <apex:pageBlockTable value="{!wActivos}" var="Est" align="center" id="tablaRegistros"  styleClass="checkableTable">
+         
+         <!-- <apex:column headerValue=" ">
+        <apex:inputCheckbox value="{!Est.blnChecked}"/>
+    	</apex:column> -->
+    	<apex:column >
+	    <apex:facet name="header">
+	     	
+	        <apex:inputCheckbox value="{!blncheckedAll}" onchange="checkAll()"/>
+	    </apex:facet>
+	    <apex:inputCheckbox value="{!Est.blnChecked}"/>
+	</apex:column>
+			 <apex:column headerValue="Servicio ETB" value="{!Est.activo.Name}"/>
+            <apex:column headerValue="Nombre del producto" value="{!Est.activo.NombredelProducto__r.Name}"/>
+            <apex:column headerValue="Oportunidad" value="{!Est.activo.Oportunidad__r.Name}"/>
+            <apex:column headerValue="{!$ObjectType.ActivoETB__c.fields.NumeroConexion__c.Label}" value="{!Est.activo.NumeroConexion__c}"/>
+            <apex:column headerValue="{!$ObjectType.ActivoETB__c.fields.IDservicio__c.Label}" value="{!Est.activo.IDservicio__c}"/>
+           
+               <apex:facet name="footer">
+                        <apex:outputPanel id="paginacion">
+                            <apex:outputText value="Pagina {!paginator.pageNumberDisplayFriendly} de {!paginator.pageCount} en {!paginator.recordCount} Resultados "/>
+                            <apex:outputPanel >    </apex:outputPanel>
+                            <apex:commandLink value=" Anterior" action="{!paginator.previous}"
+                                rendered="{!IF(paginator.hasPrevious,'true','false')}"/>
+                            <apex:outputText value="Anterior" rendered="{!IF(NOT(paginator.hasPrevious),'true','false')}"/>
+                            <apex:outputPanel > | </apex:outputPanel>
+                            <apex:commandLink value="Siguiente" action="{!paginator.next}"
+                                rendered="{!IF(paginator.hasNext,'true','false')}"/>
+                            <apex:outputText value="Siguiente" rendered="{!IF(NOT(paginator.hasNext),'true','false')}"/>
+                        </apex:outputPanel>
+                    </apex:facet>    
+             
+        </apex:pageBlockTable>  
+    </apex:pageBlockSection>
+        <apex:commandButton style="margin-left: 40%;" value="Cambiar suscriptor" action="{!cambiarSuscriptor}"/>
+        <apex:commandButton value="Cerrar" action="{!cerrarPagina}"/>                        
+        </apex:actionRegion>
+        </apex:outputPanel>
+</apex:pageBlock>
+
+</apex:outputPanel>
+</apex:form>
+
+<script type="text/javascript">
+	
+	function seleccion(sel){
+		seleccionJS(sel.value);
+	}
+	
+	var cuenta;
+	var elementObj;
+	var elementObjH;
+	var idcuenta;
+	
+    function buscarProducto(id,id2,url){
+    		elementObj=document.getElementById(id);
+    		elementObjH=document.getElementById(id2);
+    		
+			ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+    }
+    
+    function asignar(elId,elNombre){
+   
+    	console.log(elId+'---'+elNombre);
+    	elementObjH.value=elId;
+    	elementObj.value=elNombre;
+    	console.log(elementObjH.value+'---'+elementObj.value);
+    	
+    	if( elId.substring(0,3) == '001' ){
+    	
+    		cuenta = elId;
+    		habilitarFact(cuenta);
+    	}
+    }
+    
+    function buscarCuenta(url,idt){
+			ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+			idcuenta=document.getElementById(idt);
+    }
+    
+    function cuenta(lacuenta){
+    	idcuenta.value=lacuenta;
+    }
+    </script>
+</apex:page>

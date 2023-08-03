@@ -1,0 +1,5 @@
+<apex:page standardController="Quote" extensions="ETB_PricingService" action="{!invokeBatch}">
+<apex:form >   
+    <apex:commandButton value="{!Quote.Id}"/>
+</apex:form>
+</apex:page>

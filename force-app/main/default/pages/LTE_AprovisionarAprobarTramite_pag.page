@@ -1,0 +1,26 @@
+<apex:page id="idPage" showHeader="false" sidebar="false"  controller="LTE_AprovisionarAprobarTramite_ctr">
+	<apex:pagemessages id="TheMessages"/> 
+    <apex:form id="idForm">
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="Generando..."/>
+			</apex:facet>
+		</apex:actionStatus>		
+		<apex:sectionHeader title="Operar Trámites - Posventa" />
+		<apex:pageBlock title="" >
+			<apex:pageBlockSection title="Información Caso" columns="2" >
+				<apex:outputText value="{!objCaso.casenumber}"/>	
+				<apex:outputText value="{!objCaso.Account.name}"/>
+				<apex:outputText value="{!objCaso.Aprobaciones__c}"/>
+				<apex:outputText value="{!objCaso.Subject}"/>
+				<apex:outputText value="{!objCaso.Status}"/>
+	        </apex:pageBlockSection> 
+	        
+	        <apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.Cerrar}" 					onclick="window.close();" 				 />				
+				<apex:commandButton value="{!$Label.Aprobar_descuentos}" 		action="{!enviarAprobacionDescuento}" 	rendered="{!blnBotonAproDcto}" 	status="loading" reRender="idForm, TheMessages"/>
+				<apex:commandButton value="{!$Label.Enviar_aprovisionamiento}" 	action="{!enviarAprovisionamiento}" 	rendered="{!blnBotonEnvAprov}" 	status="loading" reRender="idForm, TheMessages"/>
+			</apex:pageBlockButtons> 
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

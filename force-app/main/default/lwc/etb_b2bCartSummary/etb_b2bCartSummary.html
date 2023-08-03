@@ -1,0 +1,42 @@
+<template>
+    <!--template if:true={openReliesOnQuoteModal}>
+        <c-etb-_-relies-on-modal></c-etb-_-relies-on-modal>
+   </template-->
+   <vlocity_cmt-b2b-cart-summary name-list={nList}>
+       <!-- existing slot override -->
+       <div slot="action">
+<!--Existing buttons code is needed here if customer wants to reuse the existing feature provided, along with the new button implementation-->
+           <div class="nds-grid nds-grid_vertical-align-center nds-grid_align-end">
+               <div class="nds-large-order_1 nds-grid nds-grid_align-center nds-wrap">
+                   <div class="nds-m-left_medium">
+                       <vlocity_cmt-b2b-button theme="nds" variant="neutral" label={labels.CMEXAddProducts}
+                           icon-name="utility:add" icon-size="x-small" onclick={addProduct}>
+                       </vlocity_cmt-b2b-button>
+                   </div>                   
+                 <!-- Injecting code for sample custom implementation for new button -->
+                   <div class="nds-m-left_medium">
+                       <vlocity_cmt-b2b-button theme="nds" variant="neutral" label="Gestión de Cuentas" icon-size="x-small"
+                           onclick={createServiceAccount}>
+                       </vlocity_cmt-b2b-button>
+                   </div>
+               </div>
+               <!-- utility actions code is needed here if customer wants to reuse the existing feature provided, along with the new button implementation-->
+               <div class="nds-large-order_2 nds-b2b-m-left_medium">
+                   <vlocity_cmt-menu theme="nds" icon-name="utility:threedots_vertical" position="right">
+                       <template for:each={actionList} for:item="item">
+                           <vlocity_cmt-menu-item theme="nds" name={item.label} key={item.label} record={item}
+                               data-method={item.method} onclick={executeAction}></vlocity_cmt-menu-item>
+                       </template>
+                   </vlocity_cmt-menu>
+               </div>
+           </div>
+       </div>
+       <div slot="tabs">
+        <vlocity_cmt-tabset id="quoteTab" if:true={tabRender} theme="nds" active-tab-value={activeTab}
+            class="nds-b2b-tabs_default" ontabchange={handleTabChange}>
+            <vlocity_cmt-tab tab-id="Product" label={sumLabel}></vlocity_cmt-tab>
+            <vlocity_cmt-tab tab-id="Location" label={locLabel}></vlocity_cmt-tab>
+        </vlocity_cmt-tabset>
+        </div>
+   </vlocity_cmt-b2b-cart-summary>
+</template>

@@ -1,0 +1,66 @@
+<apex:page controller="GenerarCSV_SemaforoContrato_ctr" action="{!exportToExcel}"  lightningStylesheets="true"  contentType="{!fileName}">    
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!lstwrapper}" var="x">
+            <apex:column headerValue="ESTADO CONTRATO/ANEXO">
+                {!x.Estado}
+            </apex:column>            
+            <apex:column headerValue="ALIADO/PROVEEDOR">
+                {!x.Aliado}
+            </apex:column>           
+            <apex:column headerValue="CLIENTE">
+                {!x.Cliente}
+            </apex:column>   
+            <apex:column headerValue="OBJETO">
+                {!x.Objeto}
+            </apex:column>            		   
+            <apex:column headerValue="N. DE CONTRATO">
+                {!x.Anexo}
+            </apex:column>                                  
+            <apex:column headerValue="FECHA DE INICIO">
+                {!x.FechaInicio}
+            </apex:column>   
+            <apex:column headerValue="FECHA SUSCRIPCION">
+                {!x.FechaSuscrip}
+            </apex:column>               
+            <apex:column headerValue="FECHA TERMINACION">
+                {!x.FechaFin}
+            </apex:column> 
+            <apex:column headerValue="SUPERVISOR">
+                {!x.SupervisorAd}
+            </apex:column>  
+            <apex:column headerValue="TIPO DE CONTRATO">
+                {!x.TipoContrato}
+            </apex:column>         
+            <apex:column headerValue="VALOR DEL CONTRATO">
+                {!x.valorContrato}
+            </apex:column> 
+            <apex:column headerValue="VALOR DE ADICIONES">
+                {!x.valorAdiciones}
+            </apex:column> 
+            <apex:column headerValue="VALOR DE CONTRATO + ADICIONES">
+                {!x.sumaContratoAdici}
+            </apex:column> 
+            <apex:column headerValue="VALOR EJECUTADO">
+                {!x.valorEjecutado}
+            </apex:column> 
+            <apex:column headerValue="VALOR FACTURADO (CONCILIADO)">
+                {!x.FacturadoConcil}
+            </apex:column> 
+            <apex:column headerValue="SALDO">
+                {!x.SaldoCalc}
+            </apex:column>
+            <apex:column headerValue="FACTURADO EXP. CLIENTE">
+                {!x.FacturadoExpCli}
+            </apex:column> 
+            <apex:column headerValue="HECHOS RELEVANTES">
+                {!x.HechoRel}
+            </apex:column>  
+            <apex:column headerValue="ESCALAMIENTO RESPONSABLE">
+                {!x.Escalamiento}
+            </apex:column>  
+            <apex:column headerValue="MESES EN MORA">
+                {!x.MesesMora}
+            </apex:column>
+        </apex:pageBlockTable>       
+    </apex:pageBlock>
+</apex:page>

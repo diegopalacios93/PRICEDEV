@@ -1,0 +1,299 @@
+<apex:page standardController="Opportunity"
+	extensions="TramitesCrearPbx_ctr" sidebar="false">
+	<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" />
+	<style type="text/css">
+.centrar {
+	width: 100%;
+	text-align: center;
+}
+</style>
+
+	<apex:pageMessages escape="false" />
+	<apex:form >
+		<apex:pageBlock title="Servicios Pbx">
+			<div class="centrar"></div>
+			<apex:pageBlockSection title="Conformar PBX" columns="2">
+				<apex:outputField value="{!opt.Account.name}" />
+				<apex:outputField value="{!opt.name}" />
+				
+			</apex:pageBlockSection>
+			
+
+			<apex:pageBlockSection title="Arranque" columns="2" rendered="{!not opcionN}" id="Arranque">
+
+				<apex:outputpanel >
+				 
+					<apex:outputLabel value="Servicio Arranque"
+						for="arranque" />
+					<div class="requiredInput">
+					<div class="requiredBlock"></div>
+					<apex:inputText value="{!iLupas.arranque}" id="arranqueCon"
+						styleClass="textol" /> <apex:image value="/s.gif"
+						styleClass="lookupIcon"
+						onClick="buscarProducto('{!$Component.arranqueCon}','{!$Component.arranqueId}','{!ArranqueInfo}')" />
+					</div>
+					<apex:inputHidden value="{!iLupas.arranqueId}"
+						id="arranqueId" />
+						 
+				</apex:outputpanel>
+
+			</apex:pageBlockSection>
+
+
+			<apex:pageBlockSection title="Operaciones Comerciales" columns="2" id="oc">
+				
+		<apex:outputpanel >
+		<apex:outputLabel value="Tipo de venta" for="opcionN"/><br/>
+        <apex:selectList id="opcionN" value="{!opcionN}" size="1" onchange="seleccion(this)" >
+            <apex:selectOption itemValue="True" itemLabel="Venta Nueva"/>
+            <apex:selectOption itemValue="False" itemLabel="Nuevas Troncales"/>
+            <apex:actionFunction name="seleccionJS" action="{!getSeleccion}">
+            	<apex:param name="firstParam" assignTo="{!opcionN}" value=""/>
+			</apex:actionFunction>
+        </apex:selectList>
+		</apex:outputpanel>
+				
+				
+				
+				<apex:outputpanel rendered="{!opcionN}">
+					<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.SucursalOrigen__c.Label}"
+						for="contactoTec" />
+					<div class="requiredInput">
+					<div class="requiredBlock"></div>
+					<apex:inputText value="{!iLupas.sucursalOrg}" id="sucursalOrg"
+						styleClass="textol" /> <apex:image value="/s.gif"
+						styleClass="lookupIcon"
+						onClick="buscarProducto('{!$Component.sucursalOrg}','{!$Component.sucursalOrgId}','{!SucursalInfo}')" />
+					</div>
+					<apex:inputHidden value="{!iLupas.sucursalOrgId}"
+						id="sucursalOrgId" />
+				</apex:outputpanel>
+
+
+				<apex:outputpanel >
+					<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.Contacto_Administrativo__c.Label}"
+						for="contactoTec" />
+					<div class="requiredInput">
+					<div class="requiredBlock"></div>
+					<apex:inputText value="{!iLupas.contactoAdm}" id="contactoAdm"
+						styleClass="textol" /> <apex:image value="/s.gif"
+						styleClass="lookupIcon"
+						onClick="buscarProducto('{!$Component.contactoAdm}','{!$Component.contactoAdmId}','{!ContactoInfo}')" />
+					</div>
+					<apex:inputHidden value="{!iLupas.contactoAdmId}"
+						id="contactoAdmId" />
+				</apex:outputpanel>
+
+				<apex:outputpanel >
+					<apex:outputLabel value="{!$ObjectType.OperacionComercial__c.Fields.Contacto_Tecnico__c.Label}"
+						for="contactoTec" />
+					<div class="requiredInput">
+					<div class="requiredBlock"></div>
+					<apex:inputText value="{!iLupas.contactoTec}" id="contactoTec"
+						styleClass="textol" /> <apex:image value="/s.gif"
+						styleClass="lookupIcon"
+						onClick="buscarProducto('{!$Component.contactoTec}','{!$Component.contactoTecId}','{!ContactoInfo}')" />
+					</div>
+					<apex:inputHidden value="{!iLupas.contactoTecId}"
+						id="contactoTecId" />
+				</apex:outputpanel>
+			</apex:pageBlockSection>
+
+
+
+
+			<apex:pageBlockSection title="Cantidad de servicios" columns="2">
+				<apex:outputPanel id="num">
+					<apex:inputText id="numeroServicios" title="Cantidad de servicios"
+						value="{!numeroServicios}" />
+					<button type="button" id="generar">Generar Operaciones Comerciales</button>
+				</apex:outputPanel>
+				<div id='ilimitado'>...</div>
+			</apex:pageBlockSection>
+
+			<div class="centrar">
+			<button type="button" id="CrearACOC">Crear Servicios y Operaciones Comerciales</button>
+			<apex:actionFunction name="crearActivosJS" action="{!crearActivos}"/>
+
+			
+			<apex:actionFunction name="guardarJS" action="{!guardar}"/>
+				
+				</div>
+
+			<apex:pageBlockTable value="{!ocs}" var="item" id="tabla">
+
+				<apex:column >
+					<apex:facet name="header">{!$ObjectType.OperacionComercial__c.Fields.Tipodeprogramacion__c.Label}</apex:facet>
+					<apex:inputField value="{!item.Tipodeprogramacion__c}" required="true"
+						styleClass="Lineas" />
+				</apex:column>
+
+				<apex:column >
+					<apex:facet name="header">{!$ObjectType.OperacionComercial__c.Fields.ValorTarifaPlan__c.Label}</apex:facet>
+					<apex:inputField value="{!item.ValorTarifaPlan__c}" required="true"/>
+				</apex:column>
+				
+				<apex:column >
+					<apex:facet name="header">{!$ObjectType.OperacionComercial__c.Fields.Valorunicavez__c.Label}</apex:facet>
+					<apex:inputField value="{!item.Valorunicavez__c}" required="true"/>
+				</apex:column>
+
+				<apex:column >
+					<apex:facet name="header">{!$ObjectType.OperacionComercial__c.Fields.Categoria__c.Label}</apex:facet>
+					<apex:inputField value="{!item.Categoria__c}" required="true"/>
+				</apex:column>
+
+				<apex:column >
+					<apex:facet name="header">{!$ObjectType.OperacionComercial__c.Fields.Plan__c.Label}</apex:facet>
+					<apex:inputField value="{!item.Plan__c}" styleclass="plan" required="true"/>
+				</apex:column>
+
+				<apex:column >
+					<apex:facet name="header">{!$ObjectType.OperacionComercial__c.Fields.Incidencia_en_ingresos__c.Label}</apex:facet>
+					<apex:inputField value="{!item.Incidencia_en_ingresos__c}" required="true"/>
+				</apex:column>
+
+			</apex:pageBlockTable>
+
+
+
+		</apex:pageBlock>
+	</apex:form>
+
+	<script type="text/javascript">
+	
+	function seleccion(sel){
+		seleccionJS(sel.value);
+	}
+	
+	
+	var elementObj;
+	var elementObjH;
+	var idcuenta;
+	
+    function buscarProducto(id,id2,url){
+    		elementObj=document.getElementById(id);
+    		elementObjH=document.getElementById(id2);
+			ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+    }
+    //
+    
+    
+    function asignar(elId,elNombre){
+    	console.log(elId+'---'+elNombre);
+    	elementObjH.value=elId;
+    	elementObj.value=elNombre;
+    }
+    
+    function buscarCuenta(url,idt){
+			ventana=window.open(url,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=no');
+			idcuenta=document.getElementById(idt);
+    }
+    
+    function cuenta(lacuenta){
+    	idcuenta.value=lacuenta;
+    }
+    
+    $( document ).ready(function() {
+    	$('.textol').attr('readonly', true);
+
+    	if($(".plan").length==0){
+    		$( "#CrearACOC" ).hide();
+    	}
+    	
+		function crearActivos(){
+			var contactoAdmId=$( "input[id$='contactoAdmId']" ).val();
+			var contactoTecId=$( "input[id$='contactoTecId']" ).val();
+			var sucursalOrgId=$( "input[id$='sucursalOrgId']" ).val();
+			var numeroServicios=$("input[id$='numeroServicios']" ).val();
+			
+			if(contactoAdmId=='' || contactoTecId=='' || sucursalOrgId==''){
+				alert('Por favor diligencie toda la seccion de Operaciones Comerciales');
+				return false;
+			}
+			{!if(opcionN,'var serv=1;','var serv=0;')}
+			
+			
+			if(isNaN(numeroServicios) || numeroServicios=='' || numeroServicios<=serv){
+				alert('El numero ingresado en cantidad de servicios no es valido');
+				return false;		
+			}
+			
+			if(numeroServicios>40){
+				alert('El numero ingresado en cantidad de servicios es muy grande');
+				return false;			
+			}
+			
+			crearActivosJS();
+			
+			
+		}
+		
+		function guardar(){
+			var arr=0;
+			var tron=0;
+			var otro=0;
+			var ilimi=0;
+			
+			$(".Lineas").each(function( index ) {
+				if($(this).val()=='Troncal'){tron++;}
+				if($(this).val()=='Arranque'){arr++;}
+				if($(this).val()!='Troncal' && $(this).val()!='Arranque'){otro++;}
+			});
+			
+			$(".plan").each(function( index ) {
+				if($(this).val().toLowerCase().indexOf("ilimitado")>=0){
+					ilimi++;									
+				}
+			});
+			if(ilimi<=0){
+				alert('Al menos un plan debe ser ilimitado');
+				return false;
+			}
+			console.log(ilimi);
+			
+			{!if(opcionN,
+			'if(arr!=1){alert("Debe Existir solo un arranque");return false;}',
+			'')}
+			{!if(not opcionN,
+			'if(arr!=0){alert("No debe Existir arranque para venta de nuevas troncales");return false;}',
+			'')}
+			
+			if(otro!=0){
+				alert('Seleccione Arranque o Troncal');
+				return false;			
+			}
+			
+			guardarJS();
+			
+		
+		}
+		
+		$( "#CrearACOC" ).click(function() {
+			guardar();
+		});
+		
+		
+		$( "#generar" ).click(function() {
+			crearActivos();
+		});
+		
+		
+		/*
+		$(".plan").change(function() {
+			console.log($(this).val());
+		});
+		*/
+
+		
+    	
+
+    	 
+    });
+    
+</script>
+
+
+
+
+</apex:page>

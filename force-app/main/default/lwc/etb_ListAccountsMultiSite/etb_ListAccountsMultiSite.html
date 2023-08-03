@@ -1,0 +1,256 @@
+<template>
+    <div class="slds-size_1-of-1">
+        <div class="slds-size_1-of-1 slds-m-bottom_medium">
+            <div class="slds-grid slds-size_1-of-1 slds-p-vertical_x-small">
+                <div class="slds-size_1-of-2">
+                    <span class="c-slds-border_bottom c-color-blue-nogroup slds-text-heading_small">{opportunityName}</span>
+                </div>
+                <div class="slds-size_1-of-2" >
+                    <div class="slds-float_right">
+                        <span class="slds-p-right_small"> Grupo:</span>
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button_brand" data-show="true" onclick={showHideGroup}>Mostrar</button>
+                            <button class="slds-button slds-button_neutral c-customColor" data-show="false" onclick={showHideGroup}>Ocultar</button>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <lightning-tabset class="slds-tabs_default slds-tabs_medium c-text-bold slds-text-body_regular">
+            <lightning-tab label="Dirección de Servicio" class="slds-text-body_regular" value="1">
+
+                <div class="slds-spinner_container" if:true={displaySpinner}>
+                    <div class="slds-spinner_brand slds-spinner slds-spinner_medium" aria-hidden="false" role="alert">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-size_1-of-1 slds-p-bottom_medium">
+                    <div class="slds-size_3-of-12 c-display-in-flex">
+                        <span class="c-display-vertical-center">{unGroupedMemberTotalCountGet} Direcciones de Servicio</span>
+                        <!-- <button class="slds-button slds-button_neutral slds-m-left_x-small">Filter</button>
+                        ng-click="context.showFilter = !context.showFilter"
+                        <button class="slds-button slds-p-left_small" >Clear Filter</button>
+                        ng-if="enableClearFiltersButton(context)" ng-click="clearFilters(context)"
+                        <span class="slds-m-left_small">{context.numberOfFiltersApplied} Filters Applied</span>
+                        ng-if="context.numberOfFiltersApplied > 0" -->
+                    </div>
+        
+                    <div class="slds-size_9-of-12">
+                        <div class="slds-button-group slds-float_right" role="group">
+                            <lightning-button class="c-button-border-color slds-m-right_x-small" label="Crear Grupo" icon-name="utility:add" onclick={openCloseModal} if:true={displayCreateGroupGet}></lightning-button> 
+                            <lightning-button class="c-button-border-color slds-m-right_x-small" label="Eliminar miembro" onclick={handleDeleteMember} if:true={groupedItemSelectedGet}></lightning-button>  
+                            <lightning-button class="c-button-border-color" label="Eliminar grupo" onclick={deleteGroups} if:true={groupSelectedGet}></lightning-button> 
+                        </div>
+                        <div class="slds-float_right" if:true={ungroupedItemSelectedGet}>
+                            <span class="slds-p-right_x-small c-display-in-flex c-p-top-ungrupedItem" if:true={labelUngrupedItemSelectedGet}>{context.ungroupedItemSelected} Item(s) seleccionado(s)</span>
+                            <div class="slds-button_last slds-m-right_x-small c-display-in-flex" if:true={showGroup}>
+                                <lightning-button-menu label="Añadir al grupo" class="button-menu c-button-border-color" variant="brand">
+                                    <template if:true={showGroup}>
+                                        <template for:each={context.groupList} for:item="dato" for:index="index">
+                                            <lightning-menu-item label={dato.Name.value} value="item2" data-item={index} key={dato.Name.value} onclick={handleAddToGroup}></lightning-menu-item>
+                                        </template>
+                                        <lightning-menu-item label="Crear nuevo grupo" value="item1" onclick={openCloseModal}></lightning-menu-item>
+                                    </template>
+                                </lightning-button-menu>
+                            </div>
+                        </div>
+                        <span class="slds-p-right_x-small slds-float_right slds-p-top_xx-small c-display-in-flex" if:true={groupedItemSelectedGet}>{context.groupedItemSelected} Items(s) agrupados seleccionado(s)</span>
+                    </div>
+                </div>
+                <div class="table-section slds-is-relative">
+                    <template if:true={showDatos}>
+                        <table aria-multiselectable="true" class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered" role="grid">
+                            <thead>
+                                <tr class="slds-text-heading--label">
+                                    <th class="slds-text-align_left c-wfirst-col" scope="col">                                        
+                                        <div class="slds-checkbox">
+                                            <input type="checkbox" data-th-selected="true" name="select-all-ungrouped-item-Premises" id="select-all-ungrouped-checkbox-Premises" 
+                                            tabindex="0" aria-labelledby="select-all-ungrouped-item-Premises column-group-header" onchange={selecAllUngroupedItem}/>
+                                            <!-- ng-change="selecAllUngroupedItem(context, context.selectedAll)"  -->
+                                            <label class="slds-checkbox__label" for="select-all-ungrouped-checkbox-Premises" id="select-all-ungrouped-item-Premises">
+                                                <span class="slds-checkbox_faux"></span>
+                                                <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th for:each={context.fieldList} for:item="field" key={field.label} aria-label="" aria-sort="ascending" class="sortable-column slds-is-resizable slds-is-sortable">
+                                        {field.fieldLabel}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template if:true={noData}>
+                                    <tr class="grouped-item-row">
+                                        <td colspan="10" class="slds-text-align_center c-bcolor-nogroup">
+                                            <span class="c-color-blue-nogroup">No se encontraron registros.</span>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <!-- start groups and members -->
+                                <template if:true={rootLevelFlagShowGroups}>
+                                    <template if:true={showGroup}>
+                                        <template for:each={context.groupList} for:item="group" for:index="i">
+                                            <tr key={group.Id.value} class="group-row c-bcolor-group">
+                                                <td>
+                                                    <lightning-icon icon-name="utility:drag_and_drop" size="xx-small" class="slds-icon-text-default group-name-icon icon-groups slds-m-right_x-small c-color-blue-icon" variant="bare"></lightning-icon>
+                                                    <div class="slds-checkbox">
+                                                        <lightning-input type="checkbox" class="c-slds-checkbox_faux" label="" data-item={i} checked={group.isSelected} name="item-select-label-Premises" onchange={groupSelectionChange}></lightning-input>
+                                                    </div>
+                                                    <lightning-icon onclick={changeShowGroup} data-item={i} icon-name="utility:chevronright" size="xx-small" class="slds-icon-text-default group-name-icon icon-groups c-color-blue-icon" variant="bare"></lightning-icon>
+                                                </td>
+                                                <td colspan={context.fieldList.length}>
+                                                    {group.Name.value}({group.itemsCount})
+                                                </td>
+                                            </tr>
+                                            <tr key={group.Id.value} class="" if:true={group.isLoading}>
+                                                <td colspan="10" class="slds-text-align_center loading-top-padding">
+                                                    <div class="slds-spinner_brand slds-spinner slds-spinner_x-small" aria-hidden="false" role="alert">
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <template if:true={group.showItems}>
+                                                <tr key={group.Id.value} class="grouped-item-row" if:false={group.itemsCount}>
+                                                    <td colspan="10" class="slds-text-align_center c-bcolor-nogroup">
+                                                        <span class="c-color-blue-nogroup">No se encontraron registros.</span>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <template if:true={showItemsGroup}>
+                                                <template if:true={group.showItems}>
+                                                    <tr for:each={group.members} for:item="member" key={member.Id.value} for:index="mindex"  class="group-row">
+                                                        <td class="slds-text-align_left " role="gridcell">
+                                                            <div class="slds-checkbox slds-p-left_xx-large">
+                                                                <lightning-input type="checkbox" label="" name="item-select-label-Premises" data-index={i} data-mindex={mindex} checked={member.isSelected} onchange={groupedItemSelectionChange}></lightning-input>
+                                                            </div>
+                                                        </td>
+                                                        <td >
+                                                            <!-- {member.vlocity_cmt__PremisesId__r.vlocity_cmt__PremisesIdentifier__c} -->
+                                                            {member.vlocity_cmt__PremisesId__r.vlocity_cmt__AutoNumber__c}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.Name}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.PrincipalType__c}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.vlocity_cmt__StreetAddress__c}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.vlocity_cmt__City__c}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.vlocity_cmt__State__c}
+                                                        </td>
+                                                        <!-- <td>
+                                                            {member.vlocity_cmt__PremisesId__r.PrincipalType__c}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.Name}
+                                                        </td> -->
+                                                        <!-- <td>
+                                                            {member.vlocity_cmt__PremisesId__r.vlocity_cmt__PremisesType__c}
+                                                        </td>
+                                                        <td>
+                                                            {member.vlocity_cmt__PremisesId__r.vlocity_cmt__ActivationDate__c}
+                                                        </td> -->
+                                                    </tr>
+                                                </template>
+                                            </template>
+                                        </template>
+                                    </template>
+                                </template>
+                                <!-- end of groups and members -->
+                                <!-- start ungrouped list -->
+                                <template if:true={showUngroup}>
+                                    <tr for:each={context.ungroupedItemList} for:item="dato" key={dato.Id.value} for:index="index"  class="group-row">
+                                        <td class="slds-text-align_left" role="gridcell">
+                                            <div class="slds-checkbox">
+                                                <lightning-input type="checkbox" label="" name="item-select-label-Premises" data-item={index} checked={dato.isSelected} onchange={ungroupedItemSelectionChange}></lightning-input>
+                                            </div>
+                                        </td>
+                                        <td >
+                                            <!-- {dato.vlocity_cmt__PremisesIdentifier__c.value} -->
+                                            {dato.vlocity_cmt__AutoNumber__c.value}
+                                        </td>
+                                        <td>
+                                            {dato.Name.value}
+                                        </td>
+                                        <td>
+                                            {dato.PrincipalType__c.value}
+                                        </td>
+                                        <td>
+                                            {dato.vlocity_cmt__StreetAddress__c.value}
+                                        </td>
+                                        <td>
+                                            {dato.vlocity_cmt__City__c.value}
+                                        </td>
+                                        <td>
+                                            {dato.vlocity_cmt__State__c.value}
+                                        </td>                                        
+                                        <!-- <td>
+                                            {dato.vlocity_cmt__PremisesType__c.value}
+                                        </td>
+                                        <td>
+                                            {dato.vlocity_cmt__ActivationDate__c.value}
+                                        </td> -->
+                                    </tr>
+                                </template>
+                                <!-- end of ungrouped list -->
+                            </tbody>
+                        </table>
+                    </template>
+                </div>
+            </lightning-tab>
+        </lightning-tabset>
+
+        <div class="slds-grid slds-m-top_small slds-float_right" if:true={showButtonsStep}>
+            <div class="slds-col">
+                <div class="slds-button-group" role="group">
+                    <lightning-button label="Volver" class="slds-m-right_x-small c-button-border-color" onclick={previousPage}></lightning-button> 
+                    <lightning-button label="Continuar" onclick={nextPage} disabled={disabledButtonNext} variant="brand"></lightning-button> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template if:true={showModal}>
+        <section class="manage-group-popup slds-modal slds-fade-in-open" aria-hidden="true" role="dialog">
+            <div class="slds-modal__container" name="groupForm">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-button_icon-inverse slds-modal__close" onclick={openCloseModal}>
+                        <lightning-icon onclick={openCloseModal} icon-name="utility:close" size="x-small" class="slds-button__icon slds-button__icon_large" variant="bare"></lightning-icon>
+                        <span class="slds-assistive-text">Cerrar</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Crear Grupo</h2>
+                </div>
+    
+                <div class="slds-modal__content slds-p-around_medium" >
+                    <div class="slds-form-element slds-m-around_small">
+                        <div class="slds-form-element__control">
+                            <lightning-input type="text" placeholder="Nombre del grupo" label="Nombre del grupo" data-id="newGroupName" onchange={onChangeGroupName} required message-when-value-missing="Complete este campo."></lightning-input>
+                        </div>
+                    </div>      
+    
+                    <div class="slds-form-element slds-m-around_small">
+                        <div class="slds-form-element__control">
+                            <lightning-input type="text" id="description-input-id" label="Descripción del grupo" data-id="newGroupDescription" placeholder="Descrinción del grupo"></lightning-input>
+                        </div>
+                    </div>
+    
+                </div>
+    
+                <div class="slds-modal__footer">
+                    <button type="button" class="slds-button slds-button_neutral" onclick={openCloseModal}>Cancelar</button>
+                    <button type="button" class="slds-button slds-button_brand" onclick={createNewGroup} disabled={modalButtonSaveDis}>Guardar</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+</template>

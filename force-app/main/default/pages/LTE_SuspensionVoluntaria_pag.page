@@ -1,0 +1,172 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Case" extensions="LTE_SuspensionVoluntaria_ctr" docType="html-5.0" >
+	<apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">
+    <script>
+		function ocultarSeccion()
+        {
+        	//alert(document.getElementById('iniciativaXAfiliadoPag:FormPrincipal:DetalleServ'));
+            document.getElementById('idPage:idForm:pbId:bloqueServicios:seccionServicios:pbtId1').disabled = true;
+            var nodes = document.getElementById('idPage:idForm:pbId:bloqueServicios:seccionServicios:pbtId1').getElementsByTagName('*');
+            for(var i = 0; i < nodes.length; i++)
+            {
+            	nodes[i].disabled = true;
+			}
+       	}
+            
+        function cargarFechaScript(activoId)
+        {
+        	cargarFecha(activoId);
+        }
+        
+        function seleccionarRegistroScript(activoId)
+        {
+        	seleccionarRegistro(activoId);
+        }
+         function validarFechaScript(activoId)
+        {
+        	validarFecha(activoId);
+        }
+	</script>
+	
+		<apex:actionStatus id="loading">
+			<apex:facet name="start">
+				<c:Loading Titulo="{!$Label.LTE_Procesando_Pagina}"/>
+			</apex:facet>
+		</apex:actionStatus>
+		<apex:actionFunction name="seleccionarRegistro" reRender="idPage:idForm:pbId:_bloqueServicios:_seccionServicios:pbtId, TheMessages" action="{!selectRecords}" status="loading">
+			<apex:param name="firsParam" assignTo="{!strActivoId}" value=""/>
+		</apex:actionFunction>
+		
+		<apex:actionFunction name="cargarFecha" reRender="idPage:idForm, TheMessages" action="{!cargarFecha}"  status="loading"> 
+			<apex:param name="firsParam" assignTo="{!strActivoId}" value=""/>
+
+        </apex:actionFunction>
+        <apex:actionFunction name="validarFecha" reRender="idPage:idForm, TheMessages" action="{!validarFecha}"  status="loading"> 
+			<apex:param name="firsParam" assignTo="{!strActivoId}" value=""/>
+		</apex:actionFunction>
+		 
+		<apex:pageBlock title="" id="pbId">
+			<apex:pageBlockSection title="Suspensión Voluntaria" id="_bloqueBuscar" columns="2" collapsible="false"> <!-- {!$Label.LTE_Cambio_Plan_Lineas} -->
+				<apex:pageBlockSectionItem >
+					<apex:outputPanel id="_panelNumConexiones" styleClass="lookupInput">
+						<label for="numConexiones">{!$ObjectType.ActivoETB__c.fields.NumeroConexion__c.Label}</label>
+						<apex:inputText value="{!numerosConexion}" id="numConexiones" style="margin-left:2%;"/>
+						<apex:commandButton value="{!$Label.Buscar}" action="{!buscarActivos}" rendered="{!blnBuscar}" status="loading" reRender="idForm, TheMessages" style="margin-left:10%" />
+					</apex:outputPanel>
+					
+					<apex:outputPanel id="_panelNumCaso" styleClass="lookupInput">  
+						<label for="numCaso" style="margin-left:15%;font-family: 'Arial','Helvetica',sans-serif; font-size: 91%; font-weight: bold;">{!$Label.LTE_Etiqueta_Caso}</label>
+						<apex:outputText value="{!numeroCaso}" id="numCaso"/> 
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+	        
+	        <apex:pageBlockSection title="{!$Label.LTE_Cambio_Plan_Plan}" columns="1" id="_bloqueServicios" rendered="{!blnBloqueServicios}" collapsible="false">
+				<apex:pageBlockSection title="Servicios - Pagina {!pageNumber} - Total Registros: {!intCantidadReg}" id="_seccionServicios" columns="1" collapsible="false" rendered="{!blnOcultarTabla}">
+					<apex:pageBlockTable value="{!lstActivosWrapper}" var="aw" id="pbtId" >
+						<apex:column width="25px">
+							<apex:facet name="header"> 
+		                        <apex:inputCheckbox value="{!blnAllChecked}"> 
+		                            <apex:actionSupport event="onclick" action="{!seleccionarTodos}" rerender="_seccionServicios,_botonera" status="loading"/>
+		                         </apex:inputCheckbox>
+		                     </apex:facet>
+							<apex:inputCheckbox value="{!aw.checked}" disabled="{!aw.desactivado}" id="checkboxId" onchange="seleccionarRegistroScript('{!aw.activo.Id}');"/> <!-- -->
+ 						</apex:column>
+						<apex:column value="{!aw.activo.Name}" headerValue="Servicio"/>
+						<apex:column value="{!aw.activo.NumeroConexion__c}" headerValue="Numero Conexion"/>
+						<apex:column value="{!aw.activo.Estado__c}" headerValue="Estado"/>
+						<apex:column headerValue="Fecha Suspensión" >
+                            <apex:outputText value="{!aw.strFechaCiclo}" rendered="{! !aw.fechaPersonalizada}" />
+                        </apex:column>
+						<apex:column headerValue="OC's en Vuelo">
+							<apex:repeat value="{!aw.activo.Operaciones_Comerciales__r}" var="oc">
+									<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+									<apex:outputText value=": {!oc.Estado__c} " />
+									<apex:outputText value=": {!oc.TOPP__r.TipodeOperacionporplan__c}" /><br />
+							</apex:repeat>
+						</apex:column>
+						<apex:column headerValue="Fecha Reconexión" id="columnDateId">
+							<apex:selectList multiselect="false" size="1"  value="{!aw.strFechaSeleccionada}" id="listId" onchange="cargarFechaScript('{!aw.activo.Id}');" rendered="{! !aw.fechaPersonalizada}" > 
+								<apex:selectOptions value="{!aw.lstFechas}" />
+							</apex:selectList>										
+						</apex:column>
+                       	<apex:column headerValue="Fecha Personalizada?"> <!-- nueva columna-->
+                            <apex:inputCheckbox value="{!aw.fechaPersonalizada}" onchange="validarFechaScript('{!aw.activo.Id}');">
+                              <apex:actionSupport event="onclick"  rerender="pbtId" /> 
+                            </apex:inputCheckbox>
+						</apex:column>
+						<apex:column headerValue="Fecha Suspensión" > <!-- nueva columna-->
+                            <apex:input type="date" value="{!aw.dtFechaSuspensionManual}" rendered="{!aw.fechaPersonalizada}" onchange="validarFechaScript('{!aw.activo.Id}');" /> 
+                        </apex:column>
+						<apex:column headerValue="Fecha Reconexión" > <!-- nueva columna-->
+                            <apex:input value="{!aw.dtFechaReconexionManual}" type="date" rendered="{!aw.fechaPersonalizada}" onchange="validarFechaScript('{!aw.activo.Id}');"/>
+                        </apex:column>
+						<apex:column headerValue="Respuesta Suspenda" id="responseId" value="{!aw.strRespuestaSuspenda}"/>
+                        <apex:column headerValue="Mensaje Respuesta Suspenda" id="MessageResponseId" value="{!aw.strMensajeRespuestaSuspenda}"/>
+						<apex:column headerValue="Validado" id="informationId" value="{!aw.strMensaje}"/>
+					</apex:pageBlockTable> 
+					<apex:panelGrid columns="4" id="_botonera">
+						<apex:commandLink action="{!first}" rendered="{!blnmostrarPrimero}" reRender="_seccionServicios,_botonera">Primero</apex:commandlink>
+						<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="_seccionServicios,_botonera">Anterior</apex:commandlink>
+						<apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="_seccionServicios,_botonera">Siguiente</apex:commandlink>
+						<apex:commandLink action="{!last}" rendered="{!blnmostrarUltimo}" reRender="_seccionServicios,_botonera">Último</apex:commandlink>
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+	        </apex:pageBlockSection>
+	        <apex:commandButton value="{!$Label.Continuar}" action="{!continuar}" status="loading" reRender="idForm, TheMessages" style="margin-left: auto;
+    				margin-right: auto; display: block;" rendered="{!blnBotonContinuar}" oncomplete="ocultarSeccion()"> <!-- oncomplete="ocultarSeccion()" -->	
+    			<apex:param name="firsParam" assignTo="{!strActivoId}" value="" />
+    		</apex:commandButton>
+    		
+    		<!-- Tabla de Resultados -->
+    		
+    		<apex:pageBlockSection title="Resultados" columns="1" id="bloqueServicios" rendered="{!blnMostrarResultados}" collapsible="false">
+				<apex:pageBlockSection title="Servicios - Pagina {!pageNumber} - Total Registros: {!intCantidadReg}" id="seccionServicios" columns="1" collapsible="false" >
+					<apex:pageBlockTable value="{!lstActivosSeleccionados}" var="actSelect" id="pbtId1" >
+						<apex:column value="{!actSelect.activo.Name}" headerValue="Servicio"/>
+						<apex:column value="{!actSelect.activo.NumeroConexion__c}" headerValue="Numero Conexion"/>
+						<apex:column value="{!actSelect.activo.Estado__c}" headerValue="Estado"/>
+						<apex:column headerValue="Fecha Suspensión">
+                         	<apex:outputText value="{!actSelect.strFechaCiclo}" rendered="{! !actSelect.fechaPersonalizada}" />
+                        </apex:column>
+						<apex:column headerValue="OC's en Vuelo">
+							<apex:repeat value="{!actSelect.activo.Operaciones_Comerciales__r}" var="oc">
+									<apex:outputText style="font-weight:700" value="{!oc.Name} " /> 
+									<apex:outputText value=": {!oc.Estado__c} " />
+									<apex:outputText value=": {!oc.TOPP__r.TipodeOperacionporplan__c}" /><br />
+							</apex:repeat>
+						</apex:column>
+						<apex:column headerValue="Fecha Reconexión" id="columnDateId1">
+							<apex:selectList multiselect="false" size="1"  value="{!actSelect.strFechaSeleccionada}" id="listId1" rendered="{! !actSelect.fechaPersonalizada}">
+								<apex:selectOptions value="{!actSelect.lstFechas}" />
+							</apex:selectList>										
+						</apex:column>
+                        <apex:column headerValue="Fecha Personalizada?">
+                            <apex:inputCheckbox value="{!actSelect.fechaPersonalizada}" rendered="{!actSelect.fechaPersonalizada}" disabled="true"/>
+                        </apex:column>
+                        <apex:column headerValue="Fecha Suspensión" >
+                            <apex:input type="date" value="{!actSelect.dtFechaSuspensionManual}" rendered="{!actSelect.fechaPersonalizada}" disabled="true"/> 
+                        </apex:column>
+						<apex:column headerValue="Fecha Reconexión" >
+                            <apex:input value="{!actSelect.dtFechaReconexionManual}" type="date" rendered="{!actSelect.fechaPersonalizada}" disabled="true"/>
+                        </apex:column>
+						<apex:column headerValue="Respuesta Suspenda" id="responseId1" value="{!actSelect.strRespuestaSuspenda}"/>
+                        <apex:column headerValue="Mensaje Respuesta Suspenda" id="MessageResponseId1" value="{!actSelect.strMensajeRespuestaSuspenda}"/>
+						<apex:column headerValue="Validado" id="informationId1" value="{!actSelect.strMensaje}"/>
+					</apex:pageBlockTable> 
+					<apex:panelGrid columns="4" id="botonera">
+						<apex:commandLink action="{!first}" rendered="{!blnmostrarPrimero}" reRender="_seccionServicios,_botonera">Primero</apex:commandlink>
+						<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" reRender="_seccionServicios,_botonera">Anterior</apex:commandlink>
+						<apex:commandLink action="{!next}" rendered="{!hasNext}" reRender="_seccionServicios,_botonera">Siguiente</apex:commandlink>
+						<apex:commandLink action="{!last}" rendered="{!blnmostrarUltimo}" reRender="_seccionServicios,_botonera">Último</apex:commandlink>
+					</apex:panelGrid>
+				</apex:pageBlockSection>
+	        </apex:pageBlockSection>
+	        
+	        <apex:commandButton value="Guardar" action="{!guardarOC}" status="loading" reRender="idForm, TheMessages" style="margin-left: auto;
+    				margin-right: auto; display: block;" rendered="{!blnBotonGuardar}"/>
+    		<apex:commandButton value="{!$Label.Regresar}" action="{!regresar}" rendered="{!blnBotonRegresar}" status="loading" reRender="idForm, TheMessages"/>
+    		
+	    </apex:pageBlock>
+    </apex:form>
+</apex:page>

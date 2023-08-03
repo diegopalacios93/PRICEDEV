@@ -1,0 +1,54 @@
+<template>
+  <div class="nds-grid nds-wrap nds-b2b-total-bar nds-b2b-align-footer">
+    <div class="nds-col nds-size_6-of-12 nds-large-size_3-of-12 nds-p-horizontal_medium nds-p-bottom_small">
+      <slot name="totalBarLeftActions">
+
+      </slot>
+    </div>
+    <div
+      class="nds-col nds-size_6-of-12 nds-large-size_6-of-12 nds-p-horizontal_medium nds-p-bottom_small nds-b2b-footer">
+      <slot name="locations">
+        <div class="nds-b2b-quantity">
+          <p class="nds-b2b-configure_label">{memberType}</p>
+          <p>
+            <input disabled class="nds-b2b-qty-box" type="text" value={members} />
+            <vlocity_cmt-icon icon-name="utility:warning" size="xx-small" color="#FF487D" if:false={members}
+              extraclass="nds-icon-text-default" class="nds-m-left_xx-small"></vlocity_cmt-icon>
+          </p>
+        </div>
+      </slot>
+      <slot name="oneTimeTotal">
+        <div class="nds-b2b-total">
+          <p class="nds-b2b-configure_label">{labels.CMEXOneTimeTotal}</p>
+          <p class="nds-b2b-configure_locations">{dueTotal}</p>
+        </div>
+      </slot>
+      <slot name="monthlyTotal">
+        <div class="nds-b2b-total">
+          <p class="nds-b2b-configure_label nds-text-align_right">{labels.CMEXMonthlyTotal}</p>
+          <p class="nds-b2b-configure_locations">{recurringTotal}</p>
+        </div>
+      </slot>
+      <slot name="totalBarCenterActions">
+
+      </slot>
+    </div>
+    <div
+      class="nds-col nds-size_6-of-12 nds-large-size_3-of-12 nds-p-horizontal_medium nds-p-bottom_small nds-b2b-price_container nds-b2b-footer-btn">
+      <slot name="totalbarBtn">
+        <div if:true={showStatusBar}>
+          <button class="nds-button nds-b2b-location-button" onclick={addToLocations}
+            if:false={disableAddProduct}>{labels.CMEXAddTo} {memberType}</button>
+          <button class="nds-button nds-b2b-location-button" disabled if:true={disableAddProduct}>{labels.CMEXAddTo}
+            {memberType}</button>
+        </div>
+      </slot>
+      <slot name="totalBarRightActions">
+
+      </slot>
+    </div>
+    <div class="slds-spinner_container" if:true={loading}>
+      <lightning-spinner alternative-text={labels.CMEXLoading} size="large" variant="brand"></lightning-spinner>
+    </div>
+  </div>
+</template>

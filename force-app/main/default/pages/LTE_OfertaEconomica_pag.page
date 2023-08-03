@@ -1,0 +1,587 @@
+<apex:page id="idPage" showHeader="false" sidebar="false" standardController="Opportunity" extensions="LTE_OfertaEnonomica_ctr" lightningStylesheets="true">
+    <style>
+        .cantidad 
+        {
+        height:15px; 
+        width: 40px;
+        //top:100px;
+        //overflow: auto;
+        }
+        .descuento
+        {
+        height:15px; 
+        width: 90px;
+        //top:100px;
+        //overflow: auto;
+        }
+        .panel
+        {
+        height:15px; 
+        width: 100px;
+        //top:100px;
+        //overflow: auto;
+        }
+        .mayor
+        {
+        color:red;           
+        }
+        .menor
+        {
+        color:green;
+        }
+        
+        .enlinea{
+        display: inline;
+        }
+        body
+        {
+        width: 1500px;
+        }
+
+        .sva{
+            width: 100;
+        }
+
+        .sva .svaCerrar{
+            cursor: pointer;
+            float: right;
+        }
+        .div-minuto-voz-true input, .div-datos-navegacion-true input {
+            background-color: rgb(235, 235, 228);
+            color: rgb(84, 84, 84);
+            pointer-events: none;
+        }
+        
+        .div-minuto-voz-true a, .div-datos-navegacion-true a {
+            display : none
+        }
+        
+        .etb-custom-label {
+            padding-top: 2px;
+            padding-right: 10px;
+            padding-bottom: 2px;
+            padding-left: 2px;
+            text-align: right;
+            font-size: 91%;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+    <script>
+    function setDescuentoInput( Type, Id, Name, Index )
+    {          
+        updateDescuentoInfo( Type, Id, Name, Index );
+    }
+    
+    function soloNumeros(e)
+    {
+        var unicode=e.charCode? e.charCode : e.keyCode
+        if (unicode!=8)
+        { //if the key isn't the backspace key (which we should allow)
+            if ((unicode<48||unicode>57) && unicode != 46) //if not a number
+                return false //disable key press
+                }
+    }
+    </script>
+    
+    <apex:pagemessages id="TheMessages"/>
+    <apex:form id="idForm">
+        <apex:actionStatus id="loading">
+            <apex:facet name="start">
+                <c:Loading Titulo="Procesando..."/>
+            </apex:facet>
+        </apex:actionStatus>        
+        <apex:actionFunction action="{!actualizarTabla}" name="updateDescuentoInfo"  rerender="idPage:idForm" oncomplete="onbeforedomupdate()">
+            <apex:param name="firstParam" assignTo="{!strType}" value=""/>
+            <apex:param name="secondParam" assignTo="{!strNivelId}" value=""/>
+            <apex:param name="thirdParam" assignTo="{!strNivel}" value=""/>
+            <apex:param name="fourthparam" assignTo="{!intRow}" value=""/>        
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="fnOcultarColumnas" action="{!ocultaColumnasPortabilidad}" status="loadingStatus"/>     
+        <apex:actionFunction name="Cambio" reRender="idPage:idForm" action="{!ocultarDescuentoPlan}" oncomplete="onbeforedomupdate()"/>
+        <apex:actionFunction name="ControlFlags" reRender="idPage:idForm" action="{!validaSeleccionFlgs}" oncomplete="onbeforedomupdate()"/>
+        <apex:actionFunction action="{!actualizarAPN}" name="updateEmergente"  rerender="idPage:idForm">
+	        <apex:param name="firstParam" assignTo="{!strNivelAPNId}" value=""/>
+	        <apex:param name="secondParam" assignTo="{!strNivelAPN}" value=""/>
+	        <apex:param name="thirdParam" assignTo="{!strInfoParamAPN}" value=""/>
+    	</apex:actionFunction>        
+        <apex:sectionHeader title="Administrar" subtitle="Oferta Económica" />         		
+            <apex:pageBlock title="" id="pgBlock">                                 
+            <apex:pageBlockSection title="Información General" columns="2" >
+                <apex:inputField value="{!objOportunidad.LTE_NumeroLinea__c}" required="true" rendered="{!numLineas}" onchange="ControlFlags()"/>                                
+				<apex:outputPanel id="_panelAPN">
+                    <label for="_panelAPN" class="etb-custom-label" >{!$Label.LTE_APN} </label>
+                    <apex:inputText value="{!objAPN.NameAPN}" onchange="EnCambioEmergente(this,'APN');" id="_APN" styleClass="panel" />
+                    <apex:commandLink reRender="nothing"
+                                      onclick="window.open('{!URLAPN}', 'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1', false);" rendered="true">
+                        <img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+                    </apex:commandLink>
+				</apex:outputPanel>                
+                <apex:selectList value="{!BolsaCompartidaExistente}"  size="1" id="tipoTramite" onchange="ControlFlags()" rendered="{!blnFlgControlesBolsaCompartida}" label="Condición bolsa compartida (Nueva / Existente)">
+                	<apex:selectOptions value="{!BolsaCompartidaExistenteLst}"/>                                
+                </apex:selectList> 
+                
+                <apex:inputField value="{!objOportunidad.Servicio_Bolsa_Compartida_Padre__c}" rendered="{!blnFlgControlesBolsaCompartida}" onchange="ControlFlags()"/>
+            	<apex:inputField value="{!objOportunidad.Requiere_Pago_Mensualizado_Equipo__c}" rendered="{!NOT(blnFlgMensualizado)}" onchange="ControlFlags()"/>
+            	<apex:inputField value="{!objOportunidad.Numero_de_cuotas__c}" label="Número de cuotas pago mensualizado Equipo" styleClass="cantidad" rendered="{!(blnPagoMensualizado)}"/>
+            	
+            	<!-- Se comenta para estandarizar las pantallas. -->
+                <!-- <apex:inputField value="{!objOportunidad.Servicio_APN_Relacionado__c}" rendered="{!numLineas}"/>-->            
+                <apex:inputField value="{!objOportunidad.LTE_RequiereDescuentos__c}" rendered="{!NOT(blnContinuarFlags)}" onchange="ControlFlags()"/>
+                <!-- Se comenta le Requiere bolsas a petición del Cliente, por no tener casos de prueba -->
+                <!-- <apex:inputField value="{!objOportunidad.LTE_RequiereBolsas__c}" rendered="{!NOT(blnContinuar)}"/> -->
+                <apex:inputField value="{!objOportunidad.LTE_RequiereSVAS__c}" rendered="{!NOT(blnContinuar)}"/> 
+                <apex:inputField value="{!objOportunidad.LTE_PagoAnticipado__c}" rendered="{!NOT(blnContinuarFlags)}" onchange="ControlFlags()"/>
+                <apex:inputField value="{!objOportunidad.LTE_Bolsa_Compartida__c}" rendered="{!NOT(blnContinuarFlags)}" onchange="ControlFlags()"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="OfertaEconomica" title="Oferta Económica" rendered="{!blnContinuar && NOT(blnDetalles)}" columns="1">
+                <apex:pageBlockTable value="{!lstOfertas}" var="oferta" id="pbtOfertas">
+                    <apex:column headerValue="Tipo de línea - Bolsa compartida" rendered="{!objOportunidad.LTE_Bolsa_Compartida__c}">                        
+                        <div style="text-align:center;">
+                        	<apex:outputLabel value="{!oferta.Tipo_linea_bolsa_compartida__c}"/>
+                        </div>
+                    </apex:column>
+                    <apex:column headerValue="Cantidad">
+                        <apex:inputField value="{!oferta.LTE_CantidadPlanes__c}" styleClass="cantidad" required="true" style="width:60%;"/> 
+                    </apex:column>
+                    <apex:column headerValue="Equipo" width="100%">
+                    <div id="elSvaEquipo-{!oferta.LTE_Indice__c}" rel="{!oferta.Equipo__c}">
+                        <apex:inputField value="{!oferta.Equipo__c}"/>
+                    </div>
+                    
+                    </apex:column>
+                    <apex:column headerValue="Pago Anticipado" rendered="{!objOportunidad.LTE_PagoAnticipado__c}" >
+                        <apex:inputField value="{!oferta.LTE_Equipos_Pago_Anticipado__c}" styleClass="cantidad" style="width:60%;"/>
+                    </apex:column>
+                    <apex:column headerValue="%Dto. Equipos" width="50%" rendered="{!objOportunidad.LTE_RequiereDescuentos__c}">
+                        <apex:inputField value="{!oferta.LTE_DescuentoEquipos__c}" styleClass="descuento"/>
+                    </apex:column>
+                    
+                    <apex:column headerValue="Plan" width="100%">
+                        <apex:inputField value="{!oferta.LTE_Plan__c}" required="true" onchange="Cambio()"/>
+                    </apex:column> 
+                    
+                    <apex:column headerValue="%Descuento Plan" rendered="{!objOportunidad.LTE_RequiereDescuentos__c}" >
+							<apex:outputPanel id="DctoPlan" styleClass="lookupInput" rendered="{!NOT(oferta.LTE_PlanMedida__c)}">
+								<apex:inputText value="{!oferta.LTE_DescuentoPlanAux__c}" styleClass="panel"/>
+								<apex:commandLink reRender="nothing"                            
+												  onclick="window.open('{SitePrefix}/apex/LTE_Descuento_pag?type=DtoPlan&name='+'{!oferta.LTE_DescuentoPlanAux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+									<img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+							</apex:commandLink> 
+						</apex:outputPanel> 
+					</apex:column>
+                    
+					<apex:column headerValue="Voz" width="100%">
+							<div class="div-minuto-voz-{!oferta.LTE_MinutosVozConfigurado__c}">
+								<apex:inputField value="{!oferta.LTE_MinutoVoz__c}" rendered="{!oferta.LTE_PlanMedida__c}"  />    
+							</div>
+						</apex:column>   
+                    
+						<apex:column headerValue="%Descuento Voz" rendered="{!objOportunidad.LTE_RequiereDescuentos__c}">
+							<apex:outputPanel styleClass="lookupInput" rendered="{!oferta.LTE_PlanMedida__c}">
+								<apex:inputText value="{!oferta.LTE_DescuentoVozAux__c}" styleClass="panel"/>
+								<apex:commandLink reRender="nothing"                            
+												  onclick="window.open('{SitePrefix}/apex/LTE_Descuento_pag?type=DtoVoz&name='+'{!oferta.LTE_DescuentoVozAux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+									<img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+							</apex:commandLink> 
+						</apex:outputPanel> 
+					</apex:column>
+					<apex:column headerValue="Datos" width="100%">
+						<div class="div-datos-navegacion-{!oferta.LTE_DatosNavegacionConfigurado__c}">
+							<apex:inputField value="{!oferta.LTE_DatosNavegacion__c}" rendered="{!oferta.LTE_PlanMedida__c}" />
+						</div>
+					</apex:column>
+					<apex:column headerValue="%Descuento Datos" rendered="{!objOportunidad.LTE_RequiereDescuentos__c}">
+						<apex:outputPanel styleClass="lookupInput" rendered="{!oferta.LTE_PlanMedida__c}">
+							<apex:inputText value="{!oferta.LTE_DescuentoDatosAux__c}" styleClass="panel"/>
+							<apex:commandLink reRender="nothing"                            
+											  onclick="window.open('/apex/LTE_Descuento_pag?type=DtoDato&name='+'{!oferta.LTE_DescuentoDatosAux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+								<img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+						</apex:commandLink> 
+					</apex:outputPanel> 
+					</apex:column>
+					<apex:column headerValue="Bolsa Recurrente Voz" width="100%" rendered="{!objOportunidad.LTE_RequiereBolsas__c}">
+						<apex:inputField value="{!oferta.LTE_BolsaRecurrenteVoz__c}"/>
+					</apex:column>
+					<apex:column headerValue="%Dto. Bolsa Voz" rendered="{!(objOportunidad.LTE_RequiereBolsas__c && objOportunidad.LTE_RequiereDescuentos__c)}">
+							<apex:outputPanel styleClass="lookupInput">
+								<apex:inputText value="{!oferta.LTE_DescuentoBolsaVozAux__c}" styleClass="panel"/>
+								<apex:commandLink reRender="nothing"                            
+												  onclick="window.open('{SitePrefix}/apex/LTE_Descuento_pag?type=BolsaVoz&name='+'{!oferta.LTE_DescuentoBolsaVozAux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+									<img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+							</apex:commandLink> 
+						</apex:outputPanel> 
+					</apex:column>
+					<apex:column headerValue="Bolsa Recurrente Datos" width="100%" rendered="{!objOportunidad.LTE_RequiereBolsas__c}">
+						<apex:inputField value="{!oferta.LTE_BolsaRecurrenteDatos__c}"/>
+					</apex:column>              
+					<apex:column headerValue="%Dto. Bolsa Datos" rendered="{!(objOportunidad.LTE_RequiereBolsas__c && objOportunidad.LTE_RequiereDescuentos__c)}">
+						<apex:outputPanel styleClass="lookupInput">
+							<apex:inputText value="{!oferta.LTE_DescuentoBolsaDatosAux__c}" styleClass="panel"/>
+							<apex:commandLink reRender="nothing"                            
+											  onclick="window.open('{SitePrefix}/apex/LTE_Descuento_pag?type=BolsaDatos&name='+'{!oferta.LTE_DescuentoBolsaDatosAux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true">
+								<img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+						</apex:commandLink> 
+					</apex:outputPanel> 
+				</apex:column>
+			<apex:column headerValue="SVA" width="100%" rendered="{!objOportunidad.LTE_RequiereSVAS__c}">
+
+				<div id="elSva-{!oferta.LTE_Indice__c}" class="svaBlock" rel="{!oferta.LTE_Plan__c}" data-col="{!oferta.LTE_Indice__c}">
+				<apex:selectList size="1">
+				<apex:selectOptions value="{!OptionsSva}"/>
+				</apex:selectList>
+				<div class='SVAopciones'>
+					<input type="text" id="{!oferta.LTE_Indice__c}Name" readonly="true"/>
+					<img src="{!$Resource.search}" class="lookupIcon" onclick="abrirVentana('{!oferta.LTE_Indice__c}')"/>
+					<input type="hidden" id="{!oferta.LTE_Indice__c}Id" readonly="true"/>
+					<button type="button" onclick="guardarSVAjs('{!oferta.LTE_Indice__c}')">{!$Label.LTE_Asignar_SVA}</button>
+				</div>                    
+				<div class="SVAasignados" rel="{!mapJson[oferta.LTE_Indice__c]}" data-col="{!oferta.LTE_Indice__c}">
+				</div>
+				</div>                                
+             </apex:column>
+             <apex:column headerValue="%Descuento SVA Datos" rendered="{!objOportunidad.LTE_RequiereDescuentos__c}">
+                 <apex:outputPanel styleClass="lookupInput" rendered="{!if(mapJson[oferta.LTE_Indice__c]=='{}',false,true)}">
+                     <apex:inputText value="{!oferta.LTE_DescuentoSVAAux__c}" styleClass="panel" />
+                     <apex:commandLink reRender="nothing"                            
+                                       onclick="window.open('{SitePrefix}/apex/LTE_Descuento_pag?type=DtoSVA&name='+'{!oferta.LTE_DescuentoSVAAux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true" >
+                         <img Id="ImageCaseTypeNameSVA" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+                     </apex:commandLink> 
+                 </apex:outputPanel> 
+             </apex:column>   
+             <apex:column headerValue="%Descuento SVA Voz" rendered="{!objOportunidad.LTE_RequiereDescuentos__c}">
+                 <apex:outputPanel styleClass="lookupInput" rendered="{!if(mapJson[oferta.LTE_Indice__c]=='{}',false,true)}">
+                     <apex:inputText value="{!oferta.Descuento_SVAs_Voz_Aux__c}" styleClass="panel" />
+                     <apex:commandLink reRender="nothing"                            
+                                       onclick="window.open('{SitePrefix}/apex/LTE_Descuento_pag?type=DtoSVAVoz&name='+'{!oferta.Descuento_SVAs_Voz_Aux__c}'+'&row='+'{!oferta.LTE_Indice__c}'+'&opp='+'{!objOportunidad.Id}', '_blank', 'width=800,height=300,location=no,dependent=no,resizable=yes,toolbar=no,status=no,directories=no,menubar=no,scrollbars=yes', false);" rendered="true" >
+                         <img Id="ImageCaseTypeNameSVA" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"/>
+                     </apex:commandLink> 
+                 </apex:outputPanel> 
+             </apex:column>   
+                    <apex:column headerValue="Valor mensual por cada equipo" width="100%" rendered="{!(blnPagoMensualizado)}">
+                        <apex:inputField value="{!oferta.Valor_mensual_equipo__c}"/> 
+                    </apex:column>                    
+                    <apex:column headerValue="Eliminar" width="50%" rendered="true">
+                        <apex:inputField value="{!oferta.LTE_Eliminar__c}"/>
+                    </apex:column>
+				</apex:pageBlockTable>
+			</apex:pageBlockSection>   
+            <apex:pageBlockSection title="Valores Oferta" columns="1" rendered="{!blnContinuar}">
+                <apex:outputField value="{!objOportunidad.LTE_ValorOferta__c}" styleClass="menor" />
+                <!--<apex:outputField value="{!objOportunidad.LTE_ValorOferta__c}" styleClass="mayor" />-->
+                <apex:outputField value="{!objOportunidad.LTE_ScoringMensual__c}" />
+                <apex:outputField value="{!objOportunidad.LTE_Valor_equipos__c}"/>
+                <apex:outputField value="{!objOportunidad.LTE_Valor_planes__c}"/>
+                <apex:outputField value="{!objOportunidad.LTE_Valor_SVA__c}"/>     
+            </apex:pageBlockSection>
+
+		<apex:pageBlockSection title="Actualizacion Masiva" columns="1" rendered="{!blnMostrarDetalles && lstDetallesOferta.size>0}">
+        <apex:outputPanel id="_panelSucursal">
+            <div style="width:300px;text-align:right;">
+            <label for="_panelSucursal" class="etb-custom-label" >{!$ObjectType.LTE_DetalleOferta__c.fields.LTE_Sucursal__c.Label} </label>
+    		<apex:actionRegion >
+            <apex:actionFunction action="{!actualizarAPN}" name="updateSucursal"  rerender="idPage:idForm" >
+                <apex:param name="firstParam" assignTo="{!strNivelAPNId}" value=""/>
+                <apex:param name="secondParam" assignTo="{!strNivelAPN}" value=""/>
+                <apex:param name="thirdParam" assignTo="{!strInfoParamAPN}" value=""/>
+            </apex:actionFunction>
+            <apex:inputText value="{!objAPN.NameSucursal}" onchange="EnCambioEmergente(this,'SRL');" id="_SucursalBulk" styleClass="panel" style="width:200px;"/>
+            <apex:commandLink reRender="nothing"
+                              onclick="window.open('{!URLSucursales}', 'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1', false);" rendered="true">
+                <img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+            </apex:commandLink>
+            </apex:actionRegion>
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel id="_panelContacto">
+            <div style="width:300px;text-align:right;">
+            <label for="_panelContacto" class="etb-custom-label" >{!$ObjectType.LTE_DetalleOferta__c.fields.LTE_ContactoEntrega__c.Label} </label>
+    		<apex:actionRegion >
+            <apex:actionFunction action="{!actualizarAPN}" name="updateContacto"  rerender="idPage:idForm" >
+                <apex:param name="firstParam" assignTo="{!strNivelAPNId}" value=""/>
+                <apex:param name="secondParam" assignTo="{!strNivelAPN}" value=""/>
+                <apex:param name="thirdParam" assignTo="{!strInfoParamAPN}" value=""/>
+            </apex:actionFunction>
+            <apex:inputText value="{!objAPN.NameContacto}" onchange="EnCambioEmergente(this,'CNT');" id="_APN2" styleClass="panel" style="width:130px;"/>
+            <apex:commandLink reRender="nothing"
+                              onclick="window.open('{!URLContactos}', 'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1', false);" rendered="true">
+                <img Id="ImageCaseTypeName" src="{!$Resource.search}" alt="Lookup (New Window)" class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="Lookup (New Window)"></img>
+            </apex:commandLink>
+            </apex:actionRegion>
+            </div>
+        </apex:outputPanel>
+        <apex:outputPanel id="_panelbtnMasivo">
+            <div style="width:200px;text-align:right;">
+    		<apex:actionRegion >
+                <apex:commandButton value="{!$Label.Asignar}" action="{!SeleccionMasiva}" rendered="{!blnGuardarDetalleBoton}" status="loading" reRender="idForm,TheMessages,TheMessagesBottom"/>
+            </apex:actionRegion>
+            </div>
+        </apex:outputPanel>
+</apex:pageBlockSection>
+        
+<apex:pageBlockSection title="Detalle Oferta Económica" rendered="{!blnMostrarDetalles && lstDetallesOferta.size>0}">
+    <apex:pageBlockTable value="{!lstDetallesOferta}" var="detalle" >
+        <apex:column headerValue="Tipo de línea - Bolsa compartida" rendered="{!objOportunidad.LTE_Bolsa_Compartida__c}">                        
+            <div style="text-align:center;">
+                <apex:outputLabel value="{!detalle.Tipo_linea_bolsa_compartida__c}"/>
+            </div>
+        </apex:column>
+        <apex:column headerValue="Referencia Equipo" >
+            <apex:outputField value="{!detalle.LTE_ReferenciaEquipo__c}"/>
+        </apex:column>
+        
+        
+        <apex:column headerValue="Sucursal" width="100%">
+            <apex:inputField value="{!detalle.LTE_Sucursal__c}" required="true"/>
+        </apex:column>
+        
+        <apex:column headerValue="{!$ObjectType.LTE_DetalleOferta__c.Fields.LTE_ContactoEntrega__c.Label}" width="100%">
+            <apex:inputField value="{!detalle.LTE_ContactoEntrega__c}" required="true"/>
+        </apex:column>
+        
+        <apex:column headerValue="Plan" width="100%">
+            <apex:outputText value="{!detalle.Plan__r.Name}" />
+        </apex:column>
+        
+        <apex:column headerValue="Campañas/Promoción Plan" width="100%">
+			<apex:selectList size="1" value="{!detalle.LTE_Componente_de_la_Campana__c}" >
+				<apex:selectOptions value="{!MostrarComponenteCampana[detalle.Id] }"/>
+                <apex:actionSupport event="onchange" reRender="a"/>
+			</apex:selectList> 
+		</apex:column>
+
+      <!-- <apex:column headerValue="Campañas/Promoción SVA Bolsa Recurrente Datos" width="100%">
+            <apex:outputText value="{!detalle.LTE_BolsaRecurrenteDatos__r.Name}" rendered="{!if(detalle.LTE_BolsaRecurrenteDatos__c != null, 'true','false')}" />
+			<apex:selectList size="1" value="{!detalle.LTE_CampanaBolsaRecurrenteDatos__c}" rendered="{!if(detalle.LTE_BolsaRecurrenteDatos__c != null, 'true','false')}"  >
+				<apex:selectOptions value="{!MostrarComponenteCampanaSVADatos[detalle.id][detalle.LTE_BolsaRecurrenteDatos__c] }" />
+                <apex:actionSupport event="onchange" reRender="a"/>
+			</apex:selectList>
+		</apex:column> -->
+
+       <!-- <apex:column headerValue="Campañas/Promoción SVA Bolsa Recurrente Voz" width="100%">
+            <apex:outputText value="{!detalle.LTE_BolsaRecurrenteVoz__r.Name}" rendered="{!if(detalle.LTE_BolsaRecurrenteVoz__c != null, 'true','false')}" />
+		    <apex:selectList size="1" value="{!detalle.LTE_CampanaBolsaRecurrenteVoz__c}" rendered="{!if(detalle.LTE_BolsaRecurrenteVoz__c != null, 'true','false')}" >
+				<apex:selectOptions value="{!MostrarComponenteCampanaSVAVoz[detalle.id][detalle.LTE_BolsaRecurrenteVoz__c]  }"/>
+                
+                <apex:actionSupport event="onchange" reRender="a"/>
+			</apex:selectList>  
+		</apex:column> -->
+
+
+        <apex:column headerValue="Voz" width="100%">
+            <apex:outputText value="{!detalle.LTE_MinutoVoz__r.Name}" />
+        </apex:column>
+        <apex:column headerValue="Datos" width="100%">
+            <apex:outputText value="{!detalle.LTE_DatosNavegacion__r.Name}" />
+        </apex:column>
+        <apex:column headerValue="IMEI" width="100%">
+            <apex:inputField value="{!detalle.LTE_IMEI__c}" style="width:125px" onkeypress="return soloNumeros(event)" rendered="{!detalle.LTE_EquipoTraido__c}" required="true"/>
+        </apex:column>
+        <apex:column headerValue="Estado" width="80%">
+            <apex:inputField value="{!detalle.LTE_Estado__c}"/>
+        </apex:column>
+        <apex:column headerValue="M2M" width="100%">
+            <div align="center"><apex:inputField value="{!detalle.NumeracionM2M__c}" onchange="fnOcultarColumnas();"/></div>
+        </apex:column>
+        <apex:column headerValue="Requiere Portación" width="100%">
+            <div align="center"><apex:inputField value="{!detalle.LTE_RequierePortacion__c}" onchange="fnOcultarColumnas();"/></div>
+        </apex:column>
+        
+
+
+        <apex:column headerValue="Número de Línea" width="100%" >
+            <apex:inputField value="{!detalle.LTE_NumeroLinea__c}" style="width:100%" rendered="{!detalle.LTE_RequierePortacion__c}" onkeypress="return soloNumeros(event)"/>
+        </apex:column>
+        <apex:column headerValue="Donante" width="100%" rendered="{!detalle.LTE_RequierePortacion__c}">
+            <apex:inputField value="{!detalle.LTE_Donante__c}" />
+        </apex:column>
+        <apex:column headerValue="Tipo de Servicio" width="100%" rendered="{!detalle.LTE_RequierePortacion__c}">
+            <apex:inputField value="{!detalle.LTE_Tipo_de_Servicio__c}" />
+        </apex:column>
+        <apex:column headerValue="Portado con Cedula" width="100%" rendered="{!detalle.LTE_RequierePortacion__c}">
+            <div align="center"><apex:inputField value="{!detalle.Portado_con_Cedula__c}"/></div>
+        </apex:column>
+    </apex:pageBlockTable>
+</apex:pageBlockSection>
+<apex:pageBlockButtons location="both">    
+    <apex:commandButton value="Continuar" action="{!continuar}" rendered="{!NOT(blnContinuar)}" status="loading" reRender="idForm"/>
+    <apex:commandButton value="Agregar Item" action="{!agregarOferta}" rendered="{!blnContinuar && blnBotonesGestion}" status="loading" reRender="idForm" oncomplete="onbeforedomupdate()"/>
+    <apex:commandButton value="Eliminar Item" action="{!eliminarOferta}" rendered="{!blnContinuar && blnBotonesGestion}" status="loading" reRender="idForm" oncomplete="onbeforedomupdate()"/>
+    <apex:commandButton value="Calcular Oferta" action="{!calcularOferta}" rendered="{!blnContinuar && blnBotonesGestion}" status="loading" reRender="idForm" oncomplete="onbeforedomupdate()"/>
+    <apex:commandButton value="Guardar Oferta" action="{!guardarOferta}" rendered="{!blnContinuar && blnBotonesGestion}" status="loading" reRender="idForm,TheMessages,TheMessagesBottom" oncomplete="onbeforedomupdate()"/>
+    <apex:commandButton value="Detalle Oferta" status="loading" action="{!detalleOferta}" rendered="{!blnDetalleOfertaBoton}" reRender="idForm,TheMessages,TheMessagesBottom"/>
+    <apex:commandButton value="Guardar Detalle" action="{!guardarDetalle}" rendered="{!blnGuardarDetalleBoton}" status="loading" reRender="idForm,TheMessages,TheMessagesBottom"/>
+    <apex:commandButton value="Regresar" action="{!cerrarPagina}" rendered="{!blnGuardarDetalleBoton}" status="loading" reRender="idForm,TheMessages,TheMessagesBottom"/>
+    <apex:outputPanel rendered="{!blnExportarBoton}">
+        <button type="button" class="btn" onclick="exportar()" style="padding: 4px 3px;">Exportar Detalle</button>
+    </apex:outputPanel>
+</apex:pageBlockButtons> 
+<apex:pagemessages id="TheMessagesBottom"/>
+</apex:pageBlock>
+
+<apex:actionFunction action="{!guardarSVA}" name="guardarSVA" rerender="idPage:idForm" oncomplete="onbeforedomupdate()">
+<apex:param name="firstParam" assignTo="{!svaInfo}" value=""/>
+<apex:param name="secondParam" assignTo="{!svaIndice}" value=""/>
+</apex:actionFunction>
+
+<apex:actionFunction action="{!eliminarSVA}" name="eliminarSVA" rerender="idPage:idForm" oncomplete="onbeforedomupdate()">
+<apex:param name="firstParam" assignTo="{!svaTipo}" value=""/>
+<apex:param name="secondParam" assignTo="{!svaIndice}" value=""/>
+</apex:actionFunction>
+
+</apex:form>
+<apex:outputPanel rendered="true">
+    <apex:includeScript value="{!URLFOR($Resource.jQueryUI, 'jquery-ui-1.10.4/js/jquery-1.10.2.js')}" />
+    <script type="text/javascript">
+    $j = jQuery.noConflict();
+    
+    var oculto;
+    var texto;
+    
+    function idSalesforce(field){
+        
+        texto=$j(".Name"+field).first();
+        oculto=$j(".id"+field).first();
+    }
+    
+    function EnCambioEmergente(field,info){
+        asignar('','',info);
+    }
+    
+    function asignar(rel,title,info){
+        if(info=='APN'){
+            updateEmergente(rel,title,info);
+        } else if (info=='CNT') {
+            updateContacto(rel,title,info);
+        } else if (info=='SRL') {
+            updateSucursal(rel,title,info);
+        }else{
+            $j('#'+info+'Name').val(title);
+            $j('#'+info+'Id').val(rel);
+        }
+    }
+    
+    $j( document ).ready(function( $ ) {
+        Maximize();
+        onbeforedomupdate();
+        prepago();
+        
+    });
+    
+    function exportar(){
+        window.location = "{SitePrefix}/apex/LTE_GenerarCSV_pag?Id={!objOportunidad.Id}";
+    }
+    
+    function Maximize() 
+    {
+        window.moveTo(0, 0);
+        window.resizeTo(screen.width, screen.height);
+    }
+
+    function guardarSVAjs(index){
+        var name= $j('#'+index+'Id').val();
+        guardarSVA(name,index);
+
+    }
+    
+    function eliminarSVAjs(name,index){
+    
+        console.log(name);
+        eliminarSVA(name,index);   
+    
+    }
+    
+    var filtros={!filtros};
+    
+    function abrirVentana(index){
+        var opcion =$j("#elSva-"+index).find("select").find(":selected").text(),
+        equipo=$j("#elSvaEquipo-"+index).find('input[type=hidden]').val(),
+        equipoId=$j("#elSvaEquipo-"+index).attr("rel"),
+        flujo={};
+
+
+        for (var i=0;filtros.length>i;i++){
+            if(filtros[i].tipo==opcion){
+                flujo=filtros[i];
+            }
+        }
+
+        if(flujo.valorDefecto!=null){
+            var eq=equipo || equipoId;
+
+            automaticoSVA(flujo.valorDefecto,eq,index);
+
+        }else{
+
+        ventana=window.open(flujo.url+index,'mywindow', 'location=0,status=0,scrollbars=1,width=800,height=600,menubar=1,toolbar=1');
+        }
+        
+    }
+
+function prepago(){
+    var plaPrep={!prepago};
+
+    $j('.svaBlock').each(function() {
+        var este= $j(this);
+        var svaOpt=este.attr('rel');        
+        $j.each(plaPrep, function(idx, obj) {
+            if(obj===svaOpt){
+                este.empty();
+            }
+        });
+
+    });
+}    
+    
+    
+ function automaticoSVA(flujo, eq,index) {
+
+        console.log('automaticoSVA');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.LTE_OfertaEnonomica_ctr.automaticoSVA}',
+            flujo,eq,index,
+            function(result, event){
+                if (event.status) {
+                    console.log(result);
+                    if(result.error!=''){
+                        alert(result.error);
+                        return;
+                    }
+                    asignar(result.obj.LTE_SVASeguro__c,result.obj.LTE_SVASeguro__r.Name,result.index);                    
+
+                } else if (event.type === 'exception') {
+                    console.log(event.message + " " + event.where);
+                } else {
+                    console.log(event.message);
+                }
+            }, 
+            {escape: true}
+        );
+    }
+    
+    function onbeforedomupdate(){
+
+        $j('.SVAasignados').each(function() {
+            var value=JSON.parse($j( this ).attr('rel'));
+            var column=$j( this ).attr('data-col');
+            var este=$j(this);
+
+            $j.each(value, function(idx, obj) {
+                console.log(obj);
+                var svaCerrar=$j('<div class="svaCerrar" ><strong style="color:red; font-size: 13px">X</strong></div>').attr( "onclick", "eliminarSVAjs('"+obj.subPlan.LTE_TipoSubplan__c+"','"+column+"');" );
+                var sva=$j('<div class="sva"></div>').append(obj.subPlan.Name).append(svaCerrar);
+
+
+                este.append(sva);
+            });
+
+        });
+
+        prepago();
+    }
+        
+        </script>
+</apex:outputPanel>
+
+</apex:page>
